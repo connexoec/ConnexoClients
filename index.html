@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/connexo-iso-o.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexo</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#ff6600" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Connexo" />
+    <link rel="apple-touch-icon" href="/connexo-iso-o.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Poppins:wght@400;600&family=Roboto+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=Tomorrow:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        /* Connexo Strict Branding Palette */
+        --background-dark: #210900;
+        --primary-orange: #ff6600;
+        --dark-orange: #962700;
+        --peach: #ffa35d;
+        --brand-text: #ffefe5;
+        --pure-black: #000000;
+        --pure-white: #ffffff;
+
+        /* Semantic Text Colors */
+        --text-primary: #ffefe5;
+        --text-secondary: rgba(255, 239, 229, 0.7);
+        --text-muted: rgba(255, 239, 229, 0.5);
+        
+        /* Functional Backgrounds */
+        --background-card: #210900;
+        --background-elevated: rgba(150, 39, 0, 0.15); /* Derived from Dark Orange */
+        --card-border: rgba(150, 39, 0, 0.4);
+        
+        /* Typography Tokens */
+        --font-heading: 'Tomorrow', sans-serif;
+        --font-body: 'Space Grotesk', sans-serif;
+        
+        /* Spacing & Radii */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 20px;
+        --radius-xl: 32px;
+      }
+      
+      html[data-theme='light'] {
+        --background-dark: #ffefe5;
+        --background-card: #ffffff;
+        --background-elevated: #fff8f5;
+        --primary-orange: #ff6600;
+        --primary-orange-hover: #ff8533;
+        --dark-orange: #962700;
+        --text-primary: #210900;
+        --text-secondary: #3d1400;
+        --text-muted: #962700;
+        --card-background: rgba(255, 255, 255, 0.9);
+        --card-border: rgba(150, 39, 0, 0.2);
+        --nav-background: rgba(255, 255, 255, 0.95);
+        --shadow-glow: 0 0 20px rgba(255, 102, 0, 0.25);
+      }
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        overflow-x: clip; /* evita scroll horizontal y barra horizontal en mobile */
+      }
+
+      body {
+        background-color: var(--background-dark);
+        color: var(--text-primary);
+        font-family: var(--font-body);
+        transition: background-color 0.3s ease, color 0.3s ease;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* Premium Scrollbar - desktop only */
+      @media (min-width: 769px) {
+        ::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+          background: var(--background-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+          background: var(--background-elevated);
+          border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: var(--text-muted);
+        }
+      }
+      @media (max-width: 768px) {
+        ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; }
+      }
+      
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: none; /* none (no translateY(0) scale(1)) para no atrapar position:fixed hijos */
+        }
+      }
+      
+      @keyframes slide-in-right {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes pulse-glow {
+        0%, 100% {
+          box-shadow: 0 0 5px rgba(245, 158, 11, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+        }
+      }
+      
+      .animate-fade-in-up {
+        animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      
+      .animate-slide-in-right {
+        animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      
+      .animate-pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+
+      /* ── CINEMATIC SYSTEM ─────────────────────────────────── */
+
+      @keyframes cinema-grain {
+        0%,100% { transform: translate(0,0) }
+        10%  { transform: translate(-2%,-3%) }
+        20%  { transform: translate(-5%, 2%) }
+        30%  { transform: translate( 4%,-1%) }
+        40%  { transform: translate(-3%, 4%) }
+        50%  { transform: translate( 3%, 1%) }
+        60%  { transform: translate(-2%, 3%) }
+        70%  { transform: translate( 5%,-2%) }
+        80%  { transform: translate(-1%, 4%) }
+        90%  { transform: translate( 2%,-3%) }
+      }
+
+      @keyframes cinema-fade {
+        from { opacity:0; transform:translateY(16px) scale(0.99); }
+        to   { opacity:1; transform:translateY(0)    scale(1);    }
+      }
+
+      @keyframes glow-pulse {
+        0%,100% { opacity:0.4; transform:scale(1); }
+        50%     { opacity:0.7; transform:scale(1.08); }
+      }
+
+      @keyframes spotlight-in {
+        from { opacity:0; transform:scale(1.06); }
+        to   { opacity:1; transform:scale(1); }
+      }
+
+      .cinema-animate-in {
+        animation: cinema-fade 0.6s cubic-bezier(0.16,1,0.3,1) both;
+      }
+      .cinema-animate-in-delay-1 {
+        animation: cinema-fade 0.6s cubic-bezier(0.16,1,0.3,1) 0.08s both;
+      }
+      .cinema-animate-in-delay-2 {
+        animation: cinema-fade 0.6s cubic-bezier(0.16,1,0.3,1) 0.16s both;
+      }
+      .cinema-animate-in-delay-3 {
+        animation: cinema-fade 0.6s cubic-bezier(0.16,1,0.3,1) 0.24s both;
+      }
+      .cinema-animate-in-delay-4 {
+        animation: cinema-fade 0.6s cubic-bezier(0.16,1,0.3,1) 0.32s both;
+      }
+
+      .cinema-grain {
+        position: fixed;
+        top: -25%; left: -25%;
+        width: 150%; height: 150%;
+        pointer-events: none;
+        z-index: 9998;
+        opacity: 0.022;
+        will-change: transform;
+        transform: translateZ(0);
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        animation: cinema-grain 1.2s steps(1) infinite;
+      }
+      /* En móvil, la animación del grano causa artefactos visuales (línea
+         horizontal parpadeante) por los saltos bruscos del elemento fixed de
+         150vw repintando la pantalla. Se desactiva la animación — el grano
+         estático sigue presente. */
+      @media (max-width: 768px) {
+        .cinema-grain {
+          /* Sin animación y sin overflow en móvil — evita artefacto de línea */
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          animation: none;
+          will-change: auto;
+        }
+      }
+
+      .cinema-hero-cover {
+        animation: spotlight-in 0.9s cubic-bezier(0.16,1,0.3,1) both;
+      }
+
+      .cinema-glow-ring {
+        animation: glow-pulse 3s ease-in-out infinite;
+      }
+
+      /* Cinematic card glass — blur reducido a 4px para perf */
+      .cinema-card {
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        contain: paint;
+      }
+
+      /* Variante sin blur para listas largas */
+      .cinema-card-flat {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+      }
+
+      /* Loading screen */
+      @keyframes breath {
+        0%,100% { opacity:0.4; transform:scale(0.97); }
+        50%     { opacity:1;   transform:scale(1);    }
+      }
+      .cinema-breath { animation: breath 2s ease-in-out infinite; }
+
+      /* ── ELEGANT DEFAULT PROFILE (premium, oscuro, sin animaciones pesadas) ── */
+      /* Halo ambiental estático y sutil — profundidad sin costo de animación */
+      .brutal-orb {
+        position: absolute; border-radius: 50%;
+        filter: blur(96px); pointer-events: none;
+      }
+      @media (max-width: 768px) {
+        .brutal-orb { filter: blur(70px); }
+      }
+
+      /* Etiqueta de sección — fina, muteada, con tick de acento discreto */
+      .brutal-label {
+        display:flex; align-items:center; gap:9px;
+        font-size:10px; letter-spacing:.34em; text-transform:uppercase;
+        font-weight:600; color: rgba(255,255,255,0.5);
+      }
+      .brutal-label::before {
+        content:''; width:16px; height:1px; flex-shrink:0;
+        background: var(--accent); opacity:.85;
+      }
+
+      /* Tarjeta premium — casi negra, borde hairline, hover discreto */
+      .brutal-card {
+        position:relative;
+        background: rgba(255,255,255,0.022);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 18px;
+        transition: border-color .3s ease, background .3s ease;
+      }
+      .brutal-card:hover {
+        border-color: rgba(255,255,255,0.13);
+        background: rgba(255,255,255,0.03);
+      }
+
+      /* Botón fantasma con realce mínimo */
+      .brutal-accent-btn {
+        transition: border-color .25s ease, background .25s ease, transform .25s ease;
+      }
+      .brutal-accent-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.07); }
+
+      /* ─────────────────────────────────────────────────────────────────────
+         Capa de Apariencia: ajustes que el cliente activa desde el panel.
+
+         Estas clases las pone `profileStyleLayer()` en el contenedor raíz del
+         perfil, y SOLO cuando el dueño eligió algo distinto del valor por
+         defecto. Un perfil que nunca tocó Apariencia no recibe ninguna, así
+         que cada plantilla se ve exactamente igual que antes.
+
+         Alcance deliberado: botones y enlaces. Es donde el cliente espera que
+         apliquen "estilo de botón", "sombra" y "borde"; extenderlo a todos los
+         contenedores deformaría el diseño de cada plantilla.
+         `:where()` mantiene la especificidad en 0 para no pelear con nada más
+         que lo que estas reglas marcan explícitamente.
+         ───────────────────────────────────────────────────────────────────── */
+      .cnx-btn-sharp :where(button, a[class*="rounded"], a[class*="px-"]) {
+        border-radius: 0 !important;
+      }
+      .cnx-btn-pills :where(button, a[class*="rounded"], a[class*="px-"]) {
+        border-radius: 9999px !important;
+      }
+
+      .cnx-shadow-soft :where(button, a[class*="rounded"], a[class*="px-"]) {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.30) !important;
+      }
+      .cnx-shadow-hard :where(button, a[class*="rounded"], a[class*="px-"]) {
+        box-shadow: 0 8px 0 rgba(0, 0, 0, 0.55) !important;
+      }
+
+      .cnx-bordered :where(button, a[class*="rounded"], a[class*="px-"]) {
+        border-width: var(--cnx-border-width, 0) !important;
+        border-style: solid !important;
+        border-color: var(--cnx-border-color, currentColor) !important;
+      }
+
+      .cnx-btn-text :where(button, a[class*="rounded"], a[class*="px-"]) {
+        color: var(--cnx-btn-text) !important;
+      }
+
+      /* Colores de texto de productos y testimonios (PRO). Cada plantilla
+         marca con estas clases los textos de sus fichas de producto y de sus
+         reseñas; si el cliente no eligió color, la variable no existe y el
+         texto conserva el color propio de la plantilla. */
+      .cnx-products-text .cnx-product-text {
+        color: var(--cnx-products-text, inherit) !important;
+      }
+      .cnx-testimonials-text .cnx-testimonial-text {
+        color: var(--cnx-testimonials-text, inherit) !important;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.4",
+    "recharts": "https://aistudiocdn.com/recharts@^3.3.0"
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

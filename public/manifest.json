@@ -1,0 +1,26 @@
+{
+  "name": "Connexo Ecuador",
+  "short_name": "Connexo",
+  "description": "Tu panel de perfil digital profesional",
+  "start_url": "/auth",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#210900",
+  "theme_color": "#ff6600",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/connexo-iso-o.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/connexo-iso-o.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

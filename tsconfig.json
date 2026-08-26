@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "module": "ESNext",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "types": [
+      "node",
+      "vite/client"
+    ],
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "comment:0a: Edge Functions: corren en DENO (global Deno, imports por URL y",
+    "comment:0b: npm:), no en el bundle de Vite. Con este tsconfig solo generan",
+    "comment:0c: ruido. Se revisan con `deno check`, no aquí.",
+    "supabase/functions",
+    "comment:0d: Script muerto que aún importa Firebase (retirado hace tiempo).",
+    "scripts",
+    "comment:1: Copias muertas de LinksTab con JSX roto. No están importadas en",
+    "comment:2: ningún sitio, pero al tener errores de SINTAXIS hacían que tsc se",
+    "comment:3: quedara en el análisis sintáctico y NUNCA ejecutara el análisis",
+    "comment:4: semántico del resto del proyecto: 'tsc --noEmit' salía en verde",
+    "comment:5: con errores reales escondidos (así se coló el ReferenceError que",
+    "comment:6: dejó el panel en negro en v0.43.1). Excluirlas restaura el chequeo.",
+    "components/tabs/LinksTab_clean.tsx",
+    "components/tabs/LinksTab_content.tsx",
+    "components/tabs/LinksTab_fixed.tsx",
+    "components/tabs/LinksTab_footer.tsx",
+    "components/tabs/LinksTab_new.tsx",
+    "components/tabs/LinksTab_truncated.tsx",
+    "components/tabs/LinksTab_v2.tsx"
+  ]
+}
