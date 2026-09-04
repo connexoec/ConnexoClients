@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { BulkProductImport } from './BulkProductImport';
+import { PhotoCatalogImport } from './PhotoCatalogImport';
 import { useDebouncedValue, matchesQuery } from '../../hooks/useCatalogSearch';
 import { supabase } from '../../src/lib/supabase';
 import type { Product, ProductExtra, ProductExtraOption, EcomPriceTier, PaymentGatewaysConfig } from '../../types';
@@ -695,6 +696,15 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
           </div>
         )}
       </div>
+
+      {/* ── Cargar desde una foto (ULTRA) ─────────────────────── */}
+      <PhotoCatalogImport
+        products={products}
+        onImport={persistProducts}
+        showNotification={showNotification}
+        isUltra={isUltra}
+        accent="#00e5a0"
+      />
 
       {/* ── Importación masiva (ULTRA) ────────────────────────── */}
       <BulkProductImport
