@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   FaCamera, FaChevronDown, FaTimes, FaCheckCircle, FaExclamationTriangle,
-  FaCrown, FaMagic, FaTrash, FaPlus, FaToggleOn, FaToggleOff, FaImage,
+  FaCrown, FaMagic, FaTrash, FaPlus, FaImage,
 } from 'react-icons/fa';
 import {
   fileToResizedImage, extractCatalogFromImages, normalizeExtracted, duplicateFlags,
-  cropRegionToBlob, enhanceImageBlob, type VisionImage, type VisionProduct,
+  cropRegionToBlob, downscaleImageBlob, type VisionImage, type VisionProduct,
 } from '../../src/lib/catalogVision';
 import { mergeCatalog } from '../../src/lib/csvImport';
 import { supabase } from '../../src/lib/supabase';
@@ -37,7 +37,6 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
   const [crops, setCrops] = useState<Record<string, Crop>>({});
   const [excluded, setExcluded] = useState<Set<string>>(new Set());
   const [analyzed, setAnalyzed] = useState(false);
-  const [enhance, setEnhance] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const captureRef = useRef<HTMLInputElement>(null);
 
@@ -98,10 +97,7 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
         const src = images[idx];
         if (!row.box || !src) continue;
         try {
-          let blob = await cropRegionToBlob(src.file, row.box);
-          if (enhance) {
-            try { blob = await enhanceImageBlob(blob); } catch { /* deja el recorte sin mejorar */ }
-          }
+          const blob = await cropRegionToBlob(src.file, row.box);
           newCrops[row.id] = { blob, url: URL.createObjectURL(blob) };
         } catch { /* sin foto para este producto */ }
       }
@@ -145,6 +141,21 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
       const { [id]: _drop, ...rest } = prev;
       return rest;
     });
+  };
+  // Cambiar/subir la foto de un producto detectado (reemplaza el recorte automático).
+  const setRowPhoto = async (id: string, files: FileList | null) => {
+    const file = files?.[0];
+    if (!file) return;
+    try {
+      const blob = await downscaleImageBlob(file);
+      const objUrl = URL.createObjectURL(blob);
+      setCrops(prev => {
+        if (prev[id]) URL.revokeObjectURL(prev[id].url);
+        return { ...prev, [id]: { blob, url: objUrl } };
+      });
+    } catch (err: any) {
+      showNotification(`No se pudo cargar la imagen: ${err?.message ?? err}`, 'error');
+    }
   };
   const toggleExclude = (id: string) => {
     setExcluded(prev => {
@@ -289,23 +300,6 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
 
                 {images.length > 0 && (
                   <>
-                    {/* Toggle: mejorar calidad de las fotos recortadas (opcional) */}
-                    <button type="button" onClick={() => setEnhance(v => !v)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left ${
-                        enhance ? 'bg-white/[0.05]' : 'bg-black/20 border-white/8'
-                      }`}
-                      style={enhance ? { borderColor: `${accent}55` } : undefined}>
-                      {enhance
-                        ? <FaToggleOn className="text-2xl shrink-0" style={{ color: accent }} />
-                        : <FaToggleOff className="text-2xl shrink-0 text-white/25" />}
-                      <span className="min-w-0">
-                        <span className="block text-xs font-bold text-white/85">Mejorar calidad de las fotos</span>
-                        <span className="block text-[10px] text-white/40 mt-0.5">
-                          Ajusta luz, color y nitidez del recorte. Aplícalo antes de analizar.
-                        </span>
-                      </span>
-                    </button>
-
                     <button type="button" onClick={handleAnalyze} disabled={analyzing}
                       className="px-5 py-2.5 rounded-xl text-black text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                       style={{ backgroundColor: accent }}>
@@ -334,15 +328,16 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
                       </p>
                     )}
                     <p className="text-[10px] text-white/35">
-                      Revisa y corrige lo que haga falta antes de agregar. Destilda una fila para no importarla.
+                      Revisa y corrige lo que haga falta antes de agregar. Toca la foto de un producto para
+                      cambiarla o subir la tuya. Destilda una fila para no importarla.
                     </p>
                     {Object.keys(crops).length > 0 && (
                       <p className="text-[10px] text-amber-300/70 flex items-start gap-1.5 pt-1 border-t border-white/5 mt-1">
                         <FaExclamationTriangle size={9} className="mt-0.5 shrink-0" />
                         <span>
                           Consejo: verifica que cada foto corresponda al producto real. Las imágenes se recortan
-                          {enhance ? ' y se ajustan' : ''} automáticamente; publicar una foto que no coincida con lo
-                          que vendes puede generar reclamos o problemas legales. Si dudas, quita la foto con la ✕.
+                          automáticamente de la carta; publicar una foto que no coincida con lo que vendes puede
+                          generar reclamos o problemas legales. Si dudas, quita la foto con la ✕ o sube la correcta.
                         </span>
                       </p>
                     )}
@@ -365,20 +360,29 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
                                 onChange={() => toggleExclude(row.id)}
                                 className="w-4 h-4 shrink-0" style={{ accentColor: accent }} />
                             )}
-                            {crops[row.id] ? (
-                              <div className="relative shrink-0">
-                                <img src={crops[row.id].url} alt="foto"
-                                  className="w-10 h-10 rounded-lg object-cover border border-white/10" />
+                            {/* Foto del producto: toca para cambiar/subir; ✕ para quitar */}
+                            <div className="relative shrink-0">
+                              <label className="block w-11 h-11 rounded-lg overflow-hidden border border-white/10 bg-black/30 cursor-pointer"
+                                title="Cambiar o subir foto">
+                                {crops[row.id] ? (
+                                  <img src={crops[row.id].url} alt="foto" className="w-full h-full object-cover" />
+                                ) : (
+                                  <span className="w-full h-full flex items-center justify-center text-white/25 text-sm">🛍️</span>
+                                )}
+                                <span className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-black/70 border border-white/15 flex items-center justify-center"
+                                  style={{ color: accent }}>
+                                  <FaCamera size={7} />
+                                </span>
+                                <input type="file" accept="image/*" className="hidden"
+                                  onChange={e => { const el = e.currentTarget; setRowPhoto(row.id, el.files).finally(() => { el.value = ''; }); }} />
+                              </label>
+                              {crops[row.id] && (
                                 <button type="button" onClick={() => removeCrop(row.id)} title="Quitar foto"
                                   className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center">
                                   <FaTimes size={7} />
                                 </button>
-                              </div>
-                            ) : (
-                              <div className="w-10 h-10 rounded-lg bg-black/30 border border-white/8 flex items-center justify-center text-white/25 shrink-0 text-sm">
-                                🛍️
-                              </div>
-                            )}
+                              )}
+                            </div>
                             <input value={row.name}
                               onChange={e => updateRow(row.id, 'name', e.target.value)}
                               placeholder="Nombre del producto"

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { BulkProductImport } from './BulkProductImport';
 import { PhotoCatalogImport } from './PhotoCatalogImport';
 import { useDebouncedValue, matchesQuery } from '../../hooks/useCatalogSearch';
-import { enhanceImageBlob, downscaleImageBlob } from '../../src/lib/catalogVision';
+import { downscaleImageBlob } from '../../src/lib/catalogVision';
 import { supabase } from '../../src/lib/supabase';
 import type { Product, ProductExtra, ProductExtraOption, EcomPriceTier, PaymentGatewaysConfig } from '../../types';
 import {
@@ -51,7 +51,6 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
   const [form, setForm] = useState<Partial<EcomProduct>>(emptyForm());
   const [isOpen, setIsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [imgEnhance, setImgEnhance] = useState(false);
   const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const imgCamRef = useRef<HTMLInputElement>(null);
@@ -71,14 +70,13 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
   );
   const [savingGateways, setSavingGateways] = useState(false);
 
-  const openNew = () => { setEditing(null); setForm(emptyForm()); setImgEnhance(false); setIsOpen(true); };
+  const openNew = () => { setEditing(null); setForm(emptyForm()); setIsOpen(true); };
   const openEdit = (p: EcomProduct) => {
     setEditing(p);
     setForm({ ...p, imageURLs: productImages(p), extras: p.extras ? JSON.parse(JSON.stringify(p.extras)) : [] });
-    setImgEnhance(false);
     setIsOpen(true);
   };
-  const closeModal = () => { setEditing(null); setForm(emptyForm()); setImgEnhance(false); setIsOpen(false); };
+  const closeModal = () => { setEditing(null); setForm(emptyForm()); setIsOpen(false); };
 
   const persistProducts = async (list: EcomProduct[]) => {
     const { error } = await supabase.from('profiles').update({ products: list }).eq('id', user.id);
@@ -114,7 +112,7 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
     try {
       const added: string[] = [];
       for (const file of chosen) {
-        const blob = imgEnhance ? await enhanceImageBlob(file) : await downscaleImageBlob(file);
+        const blob = await downscaleImageBlob(file);
         const key = `products/${user.id}/${slotId}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
         const { error } = await supabase.storage.from('assets')
           .upload(key, blob, { upsert: true, contentType: 'image/jpeg' });
@@ -336,17 +334,9 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
         <div className="p-5 space-y-4">
           {/* Fotos del producto (hasta 4). La primera es la principal. */}
           <div className="space-y-2.5">
-            <div className="flex items-center justify-between">
-              <p className="text-[11px] text-white/50 uppercase tracking-widest font-bold">
-                Fotos del producto ({(form.imageURLs ?? []).length}/{MAX_PRODUCT_IMAGES})
-              </p>
-              <button type="button" onClick={() => setImgEnhance(v => !v)}
-                className="flex items-center gap-1.5 text-[11px] font-bold transition-colors"
-                style={{ color: imgEnhance ? '#00e5a0' : 'rgba(255,255,255,.4)' }}>
-                {imgEnhance ? <FaToggleOn className="text-lg" /> : <FaToggleOff className="text-lg" />}
-                Mejorar calidad
-              </button>
-            </div>
+            <p className="text-[11px] text-white/50 uppercase tracking-widest font-bold">
+              Fotos del producto ({(form.imageURLs ?? []).length}/{MAX_PRODUCT_IMAGES})
+            </p>
 
             <div className="grid grid-cols-4 gap-2">
               {(form.imageURLs ?? []).map((u, i) => (
@@ -388,7 +378,7 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
               )}
             </div>
             <p className="text-[10px] text-white/25">
-              La primera imagen es la principal. Activa «Mejorar calidad» antes de subir para ajustar luz, color y nitidez.
+              La primera imagen es la principal. Puedes agregar hasta {MAX_PRODUCT_IMAGES}.
             </p>
           </div>
 
