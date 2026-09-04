@@ -703,6 +703,7 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
         onImport={persistProducts}
         showNotification={showNotification}
         isUltra={isUltra}
+        userId={user.id}
         accent="#00e5a0"
       />
 

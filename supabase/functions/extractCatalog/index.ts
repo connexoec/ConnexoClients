@@ -70,15 +70,22 @@ Deno.serve(async (req: Request) => {
       '"Bebidas", "Cortes de cabello"). Si no hay secciones, deja "".\n' +
       '- "price": el precio tal como aparece, incluyendo el símbolo si lo tiene ' +
       '(ej. "$12.50", "8,00"). Si no tiene precio visible, deja "".\n' +
-      '- "description": la descripción o ingredientes si aparecen; si no, deja "".\n\n' +
+      '- "description": la descripción o ingredientes si aparecen; si no, deja "".\n' +
+      '- "imageIndex": el número (empezando en 0) de la imagen donde aparece este ' +
+      "producto. Si solo se envió una imagen, usa 0.\n" +
+      '- "box": si junto al producto hay una FOTO real de ese producto, su recuadro ' +
+      "en la forma [ymin, xmin, ymax, xmax] con enteros de 0 a 1000 (proporción " +
+      "respecto al alto y ancho de la imagen, en ese orden exacto). Si el producto " +
+      "NO tiene una foto propia (p.ej. es un menú solo de texto), usa null.\n\n" +
       "Reglas:\n" +
       "- Extrae SOLO lo que realmente se ve; no inventes productos, precios ni descripciones.\n" +
+      "- El \"box\" debe rodear ÚNICAMENTE la fotografía del producto, no su texto ni su precio.\n" +
       "- Respeta el idioma original del texto de la imagen.\n" +
       "- Si un producto tiene varios tamaños/precios, crea una entrada por variante e " +
       'indícalo en el nombre (ej. "Pizza Margarita (Grande)").\n' +
       "- Ignora encabezados, teléfonos, direcciones, horarios y textos que no sean productos.\n\n" +
       'Responde ÚNICAMENTE con JSON válido con esta forma exacta: ' +
-      '{"products":[{"name":"","category":"","price":"","description":""}]}';
+      '{"products":[{"name":"","category":"","price":"","description":"","imageIndex":0,"box":null}]}';
 
     const parts: any[] = valid.map((img) => ({
       inline_data: { mime_type: img.mediaType, data: img.data },
@@ -120,14 +127,30 @@ Deno.serve(async (req: Request) => {
       products = [];
     }
 
+    // Valida el recuadro: 4 números finitos, acotados a 0..1000 y con área real.
+    const sanitizeBox = (raw: unknown): number[] | null => {
+      if (!Array.isArray(raw) || raw.length !== 4) return null;
+      const nums = raw.map((n) => Number(n));
+      if (nums.some((n) => !isFinite(n))) return null;
+      const clamp = (n: number) => Math.max(0, Math.min(1000, Math.round(n)));
+      const [ymin, xmin, ymax, xmax] = nums.map(clamp);
+      if (ymax - ymin < 2 || xmax - xmin < 2) return null; // recuadro vacío/inválido
+      return [ymin, xmin, ymax, xmax];
+    };
+
     // Saneamiento básico: solo strings, y descarta entradas sin nombre.
     const clean = products
-      .map((p) => ({
-        name: String(p?.name ?? "").trim(),
-        category: String(p?.category ?? "").trim(),
-        price: String(p?.price ?? "").trim(),
-        description: String(p?.description ?? "").trim(),
-      }))
+      .map((p) => {
+        const idx = Number(p?.imageIndex);
+        return {
+          name: String(p?.name ?? "").trim(),
+          category: String(p?.category ?? "").trim(),
+          price: String(p?.price ?? "").trim(),
+          description: String(p?.description ?? "").trim(),
+          imageIndex: Number.isInteger(idx) && idx >= 0 && idx < valid.length ? idx : 0,
+          box: sanitizeBox(p?.box),
+        };
+      })
       .filter((p) => p.name.length > 0)
       .slice(0, 300);
 

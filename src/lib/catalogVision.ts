@@ -25,7 +25,17 @@ export interface ExtractedRow {
   category?: string;
   price?: string;
   description?: string;
+  /** Índice (0-based) de la imagen enviada donde aparece el producto. */
+  imageIndex?: number;
+  /** Recuadro de la foto del producto: [ymin, xmin, ymax, xmax] en 0..1000. null si no tiene foto. */
+  box?: number[] | null;
 }
+
+/** `ImportedProduct` + los datos para recortar su foto de la imagen original. */
+export type VisionProduct = ImportedProduct & {
+  imageIndex?: number;
+  box?: number[] | null;
+};
 
 // ── Normalización de nombres (para deduplicar) ──────────────────────────────
 export const nameKey = (name: unknown): string =>
@@ -125,17 +135,17 @@ export const duplicateFlags = (
   return flags;
 };
 
-/** Convierte la salida cruda de la IA en `ImportedProduct[]` con id y precio normalizado. */
+/** Convierte la salida cruda de la IA en `VisionProduct[]` con id, precio normalizado y datos de recorte. */
 export const normalizeExtracted = (
   rows: ExtractedRow[],
   idPrefix = 'cam',
-): ImportedProduct[] => {
+): VisionProduct[] => {
   const stamp = Date.now();
-  const out: ImportedProduct[] = [];
+  const out: VisionProduct[] = [];
   rows.forEach((row, i) => {
     const name = String(row?.name ?? '').trim();
     if (!name) return;
-    const product: ImportedProduct = {
+    const product: VisionProduct = {
       id: `${idPrefix}_${stamp}_${i}`,
       name,
       available: true,
@@ -146,7 +156,55 @@ export const normalizeExtracted = (
     if (price) product.price = normalizePrice(price);
     const description = String(row?.description ?? '').trim();
     if (description) product.shortDescription = description;
+    product.imageIndex = Number.isInteger(row?.imageIndex) && (row!.imageIndex as number) >= 0
+      ? row!.imageIndex : 0;
+    if (Array.isArray(row?.box) && row!.box!.length === 4) product.box = row!.box;
     out.push(product);
   });
   return out;
 };
+
+/**
+ * Recorta la región `box` ([ymin, xmin, ymax, xmax] en 0..1000) de la imagen
+ * original y devuelve un JPEG. Se recorta del archivo original (buena calidad);
+ * como el box es proporcional, no importa que la imagen enviada a la IA fuera
+ * reescalada: el recorte cae en la misma zona.
+ */
+export const cropRegionToBlob = (
+  file: File,
+  box: number[],
+  quality = 0.9,
+): Promise<Blob> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('No se pudo leer el archivo.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('No se pudo leer la imagen.'));
+      img.onload = () => {
+        try {
+          const [ymin, xmin, ymax, xmax] = box;
+          const W = img.naturalWidth, H = img.naturalHeight;
+          const sx = Math.max(0, Math.round((xmin / 1000) * W));
+          const sy = Math.max(0, Math.round((ymin / 1000) * H));
+          const sw = Math.min(W - sx, Math.round(((xmax - xmin) / 1000) * W));
+          const sh = Math.min(H - sy, Math.round(((ymax - ymin) / 1000) * H));
+          if (sw < 2 || sh < 2) { reject(new Error('Recorte vacío.')); return; }
+          const canvas = document.createElement('canvas');
+          canvas.width = sw;
+          canvas.height = sh;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) { reject(new Error('No se pudo procesar la imagen.')); return; }
+          ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+          canvas.toBlob(
+            (blob) => blob ? resolve(blob) : reject(new Error('No se pudo generar el recorte.')),
+            'image/jpeg', quality,
+          );
+        } catch (err: any) {
+          reject(new Error(err?.message ?? 'No se pudo recortar la imagen.'));
+        }
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  });

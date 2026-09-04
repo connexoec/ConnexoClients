@@ -5,9 +5,10 @@ import {
 } from 'react-icons/fa';
 import {
   fileToResizedImage, extractCatalogFromImages, normalizeExtracted, duplicateFlags,
-  type VisionImage,
+  cropRegionToBlob, type VisionImage, type VisionProduct,
 } from '../../src/lib/catalogVision';
-import { mergeCatalog, type ImportedProduct } from '../../src/lib/csvImport';
+import { mergeCatalog } from '../../src/lib/csvImport';
+import { supabase } from '../../src/lib/supabase';
 
 interface PhotoCatalogImportProps {
   /** Catálogo actual (para detectar duplicados y fusionar). */
@@ -17,19 +18,23 @@ interface PhotoCatalogImportProps {
   showNotification: (message: string, type: 'success' | 'error') => void;
   /** Solo ULTRA, igual que la importación por archivo. */
   isUltra: boolean;
+  /** Dueño del perfil: define la carpeta de storage de las fotos recortadas. */
+  userId: string;
   accent?: string;
 }
 
 interface PickedImage { id: string; file: File; url: string; }
+interface Crop { url: string; blob: Blob; }
 
 export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
-  products, onImport, showNotification, isUltra, accent = '#00e5a0',
+  products, onImport, showNotification, isUltra, userId, accent = '#00e5a0',
 }) => {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState<PickedImage[]>([]);
   const [analyzing, setAnalyzing] = useState(false);
   const [importing, setImporting] = useState(false);
-  const [rows, setRows] = useState<ImportedProduct[]>([]);
+  const [rows, setRows] = useState<VisionProduct[]>([]);
+  const [crops, setCrops] = useState<Record<string, Crop>>({});
   const [excluded, setExcluded] = useState<Set<string>>(new Set());
   const [analyzed, setAnalyzed] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -39,8 +44,10 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
 
   const reset = () => {
     images.forEach(i => URL.revokeObjectURL(i.url));
+    Object.values(crops).forEach(c => URL.revokeObjectURL(c.url));
     setImages([]);
     setRows([]);
+    setCrops({});
     setExcluded(new Set());
     setAnalyzed(false);
     if (fileRef.current) fileRef.current.value = '';
@@ -77,11 +84,33 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
       const { products: raw, error } = await extractCatalogFromImages(resized);
       if (error) { showNotification(error, 'error'); return; }
       const normalized = normalizeExtracted(raw);
+
+      // Recorta la foto de cada producto que traiga recuadro, desde la imagen
+      // original (mejor calidad). Best-effort: si un recorte falla, el producto
+      // simplemente queda sin foto.
+      const newCrops: Record<string, Crop> = {};
+      for (const row of normalized) {
+        const idx = row.imageIndex ?? 0;
+        const src = images[idx];
+        if (!row.box || !src) continue;
+        try {
+          const blob = await cropRegionToBlob(src.file, row.box);
+          newCrops[row.id] = { blob, url: URL.createObjectURL(blob) };
+        } catch { /* sin foto para este producto */ }
+      }
+      Object.values(crops).forEach(c => URL.revokeObjectURL(c.url));
+      setCrops(newCrops);
       setRows(normalized);
       setExcluded(new Set());
       setAnalyzed(true);
       if (normalized.length === 0) {
         showNotification('No se detectaron productos. Prueba con una foto más nítida y bien iluminada.', 'error');
+      } else {
+        const withPhoto = Object.keys(newCrops).length;
+        showNotification(
+          `${normalized.length} producto(s) detectado(s)${withPhoto > 0 ? ` · ${withPhoto} con foto` : ''}.`,
+          'success',
+        );
       }
     } catch (err: any) {
       showNotification(`No se pudo analizar la imagen: ${err?.message ?? err}`, 'error');
@@ -93,7 +122,23 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
   const updateRow = (id: string, field: 'name' | 'category' | 'price' | 'shortDescription', value: string) => {
     setRows(prev => prev.map(r => r.id === id ? { ...r, [field]: value } : r));
   };
-  const removeRow = (id: string) => setRows(prev => prev.filter(r => r.id !== id));
+  const removeRow = (id: string) => {
+    setRows(prev => prev.filter(r => r.id !== id));
+    setCrops(prev => {
+      if (!prev[id]) return prev;
+      URL.revokeObjectURL(prev[id].url);
+      const { [id]: _drop, ...rest } = prev;
+      return rest;
+    });
+  };
+  const removeCrop = (id: string) => {
+    setCrops(prev => {
+      if (!prev[id]) return prev;
+      URL.revokeObjectURL(prev[id].url);
+      const { [id]: _drop, ...rest } = prev;
+      return rest;
+    });
+  };
   const toggleExclude = (id: string) => {
     setExcluded(prev => {
       const next = new Set(prev);
@@ -131,9 +176,28 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
 
     setImporting(true);
     try {
-      const { next, added } = mergeCatalog(products, toAdd, 'append');
+      // Sube las fotos recortadas y fija la imageURL de cada producto que tenga.
+      let photosUp = 0;
+      const withPhotos = await Promise.all(toAdd.map(async (row) => {
+        const crop = crops[row.id];
+        if (!crop) return row;
+        try {
+          const path = `products/${userId}/${row.id}`;
+          const { error: upErr } = await supabase.storage.from('assets')
+            .upload(path, crop.blob, { upsert: true, contentType: 'image/jpeg' });
+          if (upErr) throw upErr;
+          const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path);
+          photosUp++;
+          return { ...row, imageURL: publicUrl };
+        } catch {
+          return row; // si la subida falla, el producto entra sin foto
+        }
+      }));
+
+      const { next, added } = mergeCatalog(products, withPhotos, 'append');
       await onImport(next);
       let msg = `${added} producto(s) agregado(s) desde la foto`;
+      if (photosUp > 0) msg += ` · ${photosUp} con imagen`;
       if (dupNames.length > 0) {
         const sample = dupNames.slice(0, 3).join(', ');
         msg += ` · ${dupNames.length} duplicado(s) ignorado(s)`;
@@ -257,6 +321,20 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
                               <input type="checkbox" checked={!isExcluded}
                                 onChange={() => toggleExclude(row.id)}
                                 className="w-4 h-4 shrink-0" style={{ accentColor: accent }} />
+                            )}
+                            {crops[row.id] ? (
+                              <div className="relative shrink-0">
+                                <img src={crops[row.id].url} alt="foto"
+                                  className="w-10 h-10 rounded-lg object-cover border border-white/10" />
+                                <button type="button" onClick={() => removeCrop(row.id)} title="Quitar foto"
+                                  className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center">
+                                  <FaTimes size={7} />
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="w-10 h-10 rounded-lg bg-black/30 border border-white/8 flex items-center justify-center text-white/25 shrink-0 text-sm">
+                                🛍️
+                              </div>
                             )}
                             <input value={row.name}
                               onChange={e => updateRow(row.id, 'name', e.target.value)}
