@@ -1,12 +1,16 @@
 // Supabase Edge Function: extractCatalog
 // Lee la foto de una carta física, un menú impreso o un folleto de servicios y
-// extrae los productos de forma estructurada usando Claude (visión).
+// extrae los productos de forma estructurada usando Google Gemini (visión).
+//
+// Se usa Gemini porque tiene una capa gratuita de verdad (sin tarjeta) y visión
+// suficiente para leer menús. El contrato de entrada/salida es IDÉNTICO al que
+// espera el cliente, así que cambiar de motor (p.ej. volver a Claude) no exige
+// tocar el frontend: solo este archivo.
 //
 // Despliegue (una sola vez):
-//   1. supabase login
-//   2. supabase link --project-ref <TU_PROJECT_REF>
-//   3. supabase secrets set ANTHROPIC_API_KEY=sk-ant-...   (si aún no está puesto)
-//   4. supabase functions deploy extractCatalog --no-verify-jwt
+//   1. supabase login   (cuenta dueña del proyecto)
+//   2. supabase secrets set GEMINI_API_KEY=AIza...  --project-ref <REF>
+//   3. supabase functions deploy extractCatalog --no-verify-jwt --project-ref <REF>
 //
 // El cliente lo invoca con:
 //   supabase.functions.invoke('extractCatalog', { body: { images: [{ data, mediaType }] } })
@@ -20,9 +24,9 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-// Sonnet 4.6 tiene visión y devuelve JSON estructurado con fiabilidad. Para
-// abaratar se puede probar "claude-haiku-4-5-20251001" (más rápido y barato).
-const MODEL = "claude-sonnet-4-6";
+// gemini-3.6-flash: rápido, con visión y elegible en la capa gratuita
+// (el modelo que Google recomienda para cuentas nuevas). Sobreescribible con GEMINI_MODEL.
+const DEFAULT_MODEL = "gemini-3.6-flash";
 
 const ALLOWED_MEDIA = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 
@@ -52,8 +56,9 @@ Deno.serve(async (req: Request) => {
       throw new Error("No se recibió ninguna imagen para analizar.");
     }
 
-    const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!apiKey) throw new Error("Falta el secreto ANTHROPIC_API_KEY en el proyecto.");
+    const apiKey = Deno.env.get("GEMINI_API_KEY");
+    if (!apiKey) throw new Error("Falta el secreto GEMINI_API_KEY en el proyecto.");
+    const model = Deno.env.get("GEMINI_MODEL") || DEFAULT_MODEL;
 
     const instruction =
       "Eres un asistente que digitaliza catálogos. Analiza la(s) imagen(es) de una " +
@@ -72,40 +77,45 @@ Deno.serve(async (req: Request) => {
       "- Si un producto tiene varios tamaños/precios, crea una entrada por variante e " +
       'indícalo en el nombre (ej. "Pizza Margarita (Grande)").\n' +
       "- Ignora encabezados, teléfonos, direcciones, horarios y textos que no sean productos.\n\n" +
-      'Responde ÚNICAMENTE con JSON válido, sin texto adicional ni explicaciones, con esta ' +
-      'forma exacta: {"products":[{"name":"","category":"","price":"","description":""}]}';
+      'Responde ÚNICAMENTE con JSON válido con esta forma exacta: ' +
+      '{"products":[{"name":"","category":"","price":"","description":""}]}';
 
-    const content: any[] = valid.map((img) => ({
-      type: "image",
-      source: { type: "base64", media_type: img.mediaType, data: img.data },
+    const parts: any[] = valid.map((img) => ({
+      inline_data: { mime_type: img.mediaType, data: img.data },
     }));
-    content.push({ type: "text", text: instruction });
+    parts.push({ text: instruction });
 
-    const resp = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+        body: JSON.stringify({
+          contents: [{ parts }],
+          generationConfig: {
+            temperature: 0,
+            maxOutputTokens: 8192,
+            responseMimeType: "application/json",
+          },
+        }),
       },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 4096,
-        messages: [{ role: "user", content }],
-      }),
-    });
+    );
 
     const data = await resp.json();
     if (!resp.ok) {
-      throw new Error(data?.error?.message || `Claude API respondió ${resp.status}`);
+      throw new Error(data?.error?.message || `Gemini API respondió ${resp.status}`);
     }
 
-    const text: string = data?.content?.[0]?.text ?? "{}";
+    const text: string =
+      data?.candidates?.[0]?.content?.parts
+        ?.map((p: any) => p?.text ?? "")
+        .join("") ?? "";
+
     let products: any[] = [];
     try {
-      const match = text.match(/\{[\s\S]*\}/);
+      const match = text.match(/\{[\s\S]*\}/) || text.match(/\[[\s\S]*\]/);
       const parsed = JSON.parse(match ? match[0] : text);
-      products = Array.isArray(parsed?.products) ? parsed.products : [];
+      products = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.products) ? parsed.products : []);
     } catch {
       products = [];
     }
