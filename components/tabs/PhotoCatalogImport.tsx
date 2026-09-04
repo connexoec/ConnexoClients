@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   FaCamera, FaChevronDown, FaTimes, FaCheckCircle, FaExclamationTriangle,
-  FaCrown, FaMagic, FaTrash, FaPlus,
+  FaCrown, FaMagic, FaTrash, FaPlus, FaToggleOn, FaToggleOff,
 } from 'react-icons/fa';
 import {
   fileToResizedImage, extractCatalogFromImages, normalizeExtracted, duplicateFlags,
-  cropRegionToBlob, type VisionImage, type VisionProduct,
+  cropRegionToBlob, enhanceImageBlob, type VisionImage, type VisionProduct,
 } from '../../src/lib/catalogVision';
 import { mergeCatalog } from '../../src/lib/csvImport';
 import { supabase } from '../../src/lib/supabase';
@@ -37,6 +37,7 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
   const [crops, setCrops] = useState<Record<string, Crop>>({});
   const [excluded, setExcluded] = useState<Set<string>>(new Set());
   const [analyzed, setAnalyzed] = useState(false);
+  const [enhance, setEnhance] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   // Limpia las URLs de vista previa al desmontar (evita fugas de memoria).
@@ -94,7 +95,10 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
         const src = images[idx];
         if (!row.box || !src) continue;
         try {
-          const blob = await cropRegionToBlob(src.file, row.box);
+          let blob = await cropRegionToBlob(src.file, row.box);
+          if (enhance) {
+            try { blob = await enhanceImageBlob(blob); } catch { /* deja el recorte sin mejorar */ }
+          }
           newCrops[row.id] = { blob, url: URL.createObjectURL(blob) };
         } catch { /* sin foto para este producto */ }
       }
@@ -241,10 +245,8 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
           ) : (
             <>
               <p className="text-xs text-white/50 leading-relaxed">
-                Toma o sube la foto de tu <b className="text-white/75">carta, menú impreso o folleto de servicios</b>.
-                La leemos y creamos los productos automáticamente con su categoría, nombre, precio y descripción.
-                Puedes revisar y corregir todo antes de agregarlo. Si un producto ya existe en tu catálogo,
-                <b className="text-white/75"> se ignora y te avisamos</b>.
+                Foto de tu <b className="text-white/75">carta, menú o folleto</b> → creamos los productos con
+                categoría, nombre, precio, descripción y foto. Revisa antes de agregar; los duplicados se ignoran.
               </p>
 
               {/* Selector de imágenes */}
@@ -274,12 +276,31 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
                 )}
 
                 {images.length > 0 && (
-                  <button type="button" onClick={handleAnalyze} disabled={analyzing}
-                    className="px-5 py-2.5 rounded-xl text-black text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                    style={{ backgroundColor: accent }}>
-                    <FaMagic size={11} />
-                    {analyzing ? 'Leyendo la imagen…' : `Analizar ${images.length} foto(s)`}
-                  </button>
+                  <>
+                    {/* Toggle: mejorar calidad de las fotos recortadas (opcional) */}
+                    <button type="button" onClick={() => setEnhance(v => !v)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left ${
+                        enhance ? 'bg-white/[0.05]' : 'bg-black/20 border-white/8'
+                      }`}
+                      style={enhance ? { borderColor: `${accent}55` } : undefined}>
+                      {enhance
+                        ? <FaToggleOn className="text-2xl shrink-0" style={{ color: accent }} />
+                        : <FaToggleOff className="text-2xl shrink-0 text-white/25" />}
+                      <span className="min-w-0">
+                        <span className="block text-xs font-bold text-white/85">Mejorar calidad de las fotos</span>
+                        <span className="block text-[10px] text-white/40 mt-0.5">
+                          Ajusta luz, color y nitidez del recorte. Aplícalo antes de analizar.
+                        </span>
+                      </span>
+                    </button>
+
+                    <button type="button" onClick={handleAnalyze} disabled={analyzing}
+                      className="px-5 py-2.5 rounded-xl text-black text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                      style={{ backgroundColor: accent }}>
+                      <FaMagic size={11} />
+                      {analyzing ? 'Leyendo la imagen…' : `Analizar ${images.length} foto(s)`}
+                    </button>
+                  </>
                 )}
               </div>
 
@@ -303,6 +324,16 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
                     <p className="text-[10px] text-white/35">
                       Revisa y corrige lo que haga falta antes de agregar. Destilda una fila para no importarla.
                     </p>
+                    {Object.keys(crops).length > 0 && (
+                      <p className="text-[10px] text-amber-300/70 flex items-start gap-1.5 pt-1 border-t border-white/5 mt-1">
+                        <FaExclamationTriangle size={9} className="mt-0.5 shrink-0" />
+                        <span>
+                          Consejo: verifica que cada foto corresponda al producto real. Las imágenes se recortan
+                          {enhance ? ' y se ajustan' : ''} automáticamente; publicar una foto que no coincida con lo
+                          que vendes puede generar reclamos o problemas legales. Si dudas, quita la foto con la ✕.
+                        </span>
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">

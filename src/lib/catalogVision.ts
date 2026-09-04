@@ -208,3 +208,125 @@ export const cropRegionToBlob = (
     };
     reader.readAsDataURL(file);
   });
+
+// ── Mejora de calidad (Fase 1: sin IA, en el navegador) ─────────────────────
+// Ajuste clásico y honesto de fotos de teléfono: reescalado suave si son
+// pequeñas + balance de blancos (gray-world), auto-contraste por percentiles y
+// realce de nitidez (unsharp mask). NO inventa detalle ni altera el producto,
+// a diferencia de un modelo generativo — importante para un catálogo real.
+const loadImageEl = (src: string): Promise<HTMLImageElement> =>
+  new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => res(img);
+    img.onerror = () => rej(new Error('No se pudo leer la imagen.'));
+    img.src = src;
+  });
+
+/** Desenfoque de caja separable O(n) (ventana deslizante), para el unsharp mask. */
+const boxBlur = (src: Uint8ClampedArray, W: number, H: number, r: number): Float32Array => {
+  const tmp = new Float32Array(src.length);
+  const out = new Float32Array(src.length);
+  const win = r * 2 + 1;
+  const clampI = (v: number, max: number) => (v < 0 ? 0 : v > max ? max : v);
+  for (let y = 0; y < H; y++) {
+    for (let c = 0; c < 3; c++) {
+      let sum = 0;
+      for (let x = -r; x <= r; x++) sum += src[(y * W + clampI(x, W - 1)) * 4 + c];
+      for (let x = 0; x < W; x++) {
+        tmp[(y * W + x) * 4 + c] = sum / win;
+        sum += src[(y * W + clampI(x + r + 1, W - 1)) * 4 + c]
+             - src[(y * W + clampI(x - r, W - 1)) * 4 + c];
+      }
+    }
+  }
+  for (let x = 0; x < W; x++) {
+    for (let c = 0; c < 3; c++) {
+      let sum = 0;
+      for (let y = -r; y <= r; y++) sum += tmp[(clampI(y, H - 1) * W + x) * 4 + c];
+      for (let y = 0; y < H; y++) {
+        out[(y * W + x) * 4 + c] = sum / win;
+        sum += tmp[(clampI(y + r + 1, H - 1) * W + x) * 4 + c]
+             - tmp[(clampI(y - r, H - 1) * W + x) * 4 + c];
+      }
+    }
+  }
+  return out;
+};
+
+export const enhanceImageBlob = async (
+  blob: Blob,
+  opts?: { targetLong?: number; maxUpscale?: number; sharpen?: number; quality?: number },
+): Promise<Blob> => {
+  const targetLong = opts?.targetLong ?? 1000;
+  const maxUpscale = opts?.maxUpscale ?? 2;
+  const amount = opts?.sharpen ?? 0.6;
+  const quality = opts?.quality ?? 0.92;
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = await loadImageEl(url);
+    const W0 = img.naturalWidth, H0 = img.naturalHeight;
+    const longSide = Math.max(W0, H0) || 1;
+    const scale = longSide >= targetLong ? 1 : Math.min(maxUpscale, targetLong / longSide);
+    const W = Math.max(1, Math.round(W0 * scale));
+    const H = Math.max(1, Math.round(H0 * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('No se pudo procesar la imagen.');
+    ctx.imageSmoothingEnabled = true;
+    (ctx as any).imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, W, H);
+
+    const image = ctx.getImageData(0, 0, W, H);
+    const d = image.data;
+    const n = W * H;
+
+    // 1) Balance de blancos gray-world, con topes para no exagerar el color.
+    let sr = 0, sg = 0, sb = 0;
+    for (let i = 0; i < d.length; i += 4) { sr += d[i]; sg += d[i + 1]; sb += d[i + 2]; }
+    const ar = sr / n || 1, ag = sg / n || 1, ab = sb / n || 1;
+    const gray = (ar + ag + ab) / 3;
+    const clampGain = (g: number) => Math.max(0.85, Math.min(1.15, g));
+    const gr = clampGain(gray / ar), gg = clampGain(gray / ag), gb = clampGain(gray / ab);
+
+    // 2) Auto-contraste por luminancia (percentiles 0.5% / 99.5%).
+    const hist = new Uint32Array(256);
+    for (let i = 0; i < d.length; i += 4) {
+      hist[(d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114) | 0]++;
+    }
+    let acc = 0, lo = 0, hi = 255;
+    const lowCut = n * 0.005;
+    for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= lowCut) { lo = v; break; } }
+    acc = 0;
+    const highKeep = n * 0.005;
+    for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc >= highKeep) { hi = v; break; } }
+    if (hi - lo < 16) { lo = 0; hi = 255; } // imagen plana: no estirar de más
+    const range = hi - lo || 1;
+    const stretch = (x: number) => ((x - lo) * 255) / range;
+    const clamp8 = (x: number) => (x < 0 ? 0 : x > 255 ? 255 : x);
+
+    for (let i = 0; i < d.length; i += 4) {
+      d[i]     = clamp8(stretch(d[i] * gr));
+      d[i + 1] = clamp8(stretch(d[i + 1] * gg));
+      d[i + 2] = clamp8(stretch(d[i + 2] * gb));
+    }
+
+    // 3) Unsharp mask (realce de nitidez).
+    if (amount > 0) {
+      const blurred = boxBlur(d, W, H, 1);
+      for (let i = 0; i < d.length; i += 4) {
+        for (let c = 0; c < 3; c++) {
+          const o = d[i + c];
+          d[i + c] = clamp8(o + amount * (o - blurred[i + c]));
+        }
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+    return await new Promise<Blob>((res, rej) =>
+      canvas.toBlob((x) => (x ? res(x) : rej(new Error('No se pudo generar la imagen.'))), 'image/jpeg', quality),
+    );
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+};
