@@ -1,16 +1,19 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { BulkProductImport } from './BulkProductImport';
 import { PhotoCatalogImport } from './PhotoCatalogImport';
 import { useDebouncedValue, matchesQuery } from '../../hooks/useCatalogSearch';
+import { enhanceImageBlob, downscaleImageBlob } from '../../src/lib/catalogVision';
 import { supabase } from '../../src/lib/supabase';
 import type { Product, ProductExtra, ProductExtraOption, EcomPriceTier, PaymentGatewaysConfig } from '../../types';
 import {
   FaPlus, FaTrash, FaPen, FaImage, FaTimes, FaSave,
   FaToggleOn, FaToggleOff, FaSearch, FaChevronDown, FaChevronUp,
   FaMotorcycle, FaCreditCard, FaLayerGroup, FaLink,
-  FaUniversity, FaWhatsapp, FaMobileAlt,
+  FaUniversity, FaWhatsapp, FaMobileAlt, FaCamera,
 } from 'react-icons/fa';
+
+const MAX_PRODUCT_IMAGES = 4;
 import { ProductSubscriptionField } from '../ProductSubscriptionField';
 import { cleanSubscription } from '../../src/lib/memberPlans';
 
@@ -22,9 +25,16 @@ const ECOM_CATEGORIES = [
 type EcomProduct = Product & { available?: boolean };
 
 const emptyForm = (): Partial<EcomProduct> => ({
-  name: '', category: '', price: '', shortDescription: '', imageURL: '',
+  name: '', category: '', price: '', shortDescription: '', imageURL: '', imageURLs: [],
   available: true, stock: undefined, extras: [], minQty: undefined, priceTiers: [],
 });
+
+/** Reúne las imágenes de un producto (nuevo esquema `imageURLs`, con respaldo al `imageURL` viejo). */
+const productImages = (p?: Partial<EcomProduct> | null): string[] => {
+  const list = Array.isArray(p?.imageURLs) ? p!.imageURLs!.filter(Boolean) : [];
+  if (list.length) return list.slice(0, MAX_PRODUCT_IMAGES);
+  return p?.imageURL ? [p.imageURL] : [];
+};
 
 interface Props {
   user: any;
@@ -41,8 +51,11 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
   const [form, setForm] = useState<Partial<EcomProduct>>(emptyForm());
   const [isOpen, setIsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [imgEnhance, setImgEnhance] = useState(false);
   const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const imgCamRef = useRef<HTMLInputElement>(null);
+  const imgFileRef = useRef<HTMLInputElement>(null);
 
   // Delivery fee setting
   const [deliveryFeeInput, setDeliveryFeeInput] = useState(String(profileData?.delivery_fee ?? ''));
@@ -58,9 +71,14 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
   );
   const [savingGateways, setSavingGateways] = useState(false);
 
-  const openNew = () => { setEditing(null); setForm(emptyForm()); setIsOpen(true); };
-  const openEdit = (p: EcomProduct) => { setEditing(p); setForm({ ...p, extras: p.extras ? JSON.parse(JSON.stringify(p.extras)) : [] }); setIsOpen(true); };
-  const closeModal = () => { setEditing(null); setForm(emptyForm()); setIsOpen(false); };
+  const openNew = () => { setEditing(null); setForm(emptyForm()); setImgEnhance(false); setIsOpen(true); };
+  const openEdit = (p: EcomProduct) => {
+    setEditing(p);
+    setForm({ ...p, imageURLs: productImages(p), extras: p.extras ? JSON.parse(JSON.stringify(p.extras)) : [] });
+    setImgEnhance(false);
+    setIsOpen(true);
+  };
+  const closeModal = () => { setEditing(null); setForm(emptyForm()); setImgEnhance(false); setIsOpen(false); };
 
   const persistProducts = async (list: EcomProduct[]) => {
     const { error } = await supabase.from('profiles').update({ products: list }).eq('id', user.id);
@@ -83,20 +101,40 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
     }
   };
 
-  const handleImageUpload = async (file: File) => {
-    if (!user?.id) return;
+  // Sube hasta MAX_PRODUCT_IMAGES fotos. Cada una se reescala (o se mejora si el
+  // dueño activó el toggle) antes de subir. La primera imagen es la principal.
+  const handleAddImages = async (files: FileList | null) => {
+    if (!files || files.length === 0 || !user?.id) return;
+    const current = form.imageURLs ?? [];
+    const room = MAX_PRODUCT_IMAGES - current.length;
+    if (room <= 0) { showNotification(`Máximo ${MAX_PRODUCT_IMAGES} imágenes por producto.`, 'error'); return; }
+    const chosen = Array.from(files).slice(0, room);
     const slotId = editing?.id || `tmp_${Date.now()}`;
     setUploading(true);
     try {
-      await supabase.storage.from('assets').upload(`products/${user.id}/${slotId}`, file, { upsert: true });
-      const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`products/${user.id}/${slotId}`);
-      setForm(prev => ({ ...prev, imageURL: publicUrl }));
+      const added: string[] = [];
+      for (const file of chosen) {
+        const blob = imgEnhance ? await enhanceImageBlob(file) : await downscaleImageBlob(file);
+        const key = `products/${user.id}/${slotId}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+        const { error } = await supabase.storage.from('assets')
+          .upload(key, blob, { upsert: true, contentType: 'image/jpeg' });
+        if (error) throw error;
+        const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(key);
+        added.push(publicUrl);
+      }
+      setForm(prev => ({
+        ...prev,
+        imageURLs: [...(prev.imageURLs ?? []), ...added].slice(0, MAX_PRODUCT_IMAGES),
+      }));
     } catch (err: any) {
       showNotification(`Error al subir imagen: ${err?.message}`, 'error');
     } finally {
       setUploading(false);
     }
   };
+
+  const removeImageAt = (i: number) =>
+    setForm(prev => ({ ...prev, imageURLs: (prev.imageURLs ?? []).filter((_, idx) => idx !== i) }));
 
   // ── Extras helpers ───────────────────────────────────────────────────────────
 
@@ -218,13 +256,15 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
       const cleanTiers = (form.priceTiers ?? [])
         .filter(t => t.minQty > 0 && t.price.trim())
         .sort((a, b) => a.minQty - b.minQty);
+      const imgs = (form.imageURLs ?? []).filter(Boolean).slice(0, MAX_PRODUCT_IMAGES);
       const updated: EcomProduct = {
         id,
         name: form.name.trim(),
         category: form.category?.trim() || '',
         price: form.price?.trim() || '',
         shortDescription: form.shortDescription?.trim() || '',
-        imageURL: form.imageURL || '',
+        imageURL: imgs[0] || '',              // principal (compatibilidad con lo que lee imageURL)
+        imageURLs: imgs.length ? imgs : undefined,
         available: form.available !== false,
         stock: form.stock != null && form.stock !== ('' as any) ? Number(form.stock) : undefined,
         extras: cleanExtras.length > 0 ? cleanExtras : undefined,
@@ -294,22 +334,62 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
         </div>
 
         <div className="p-5 space-y-4">
-          {/* Image upload */}
-          <div className="flex items-center gap-4">
-            {form.imageURL ? (
-              <img src={form.imageURL} className="w-20 h-20 rounded-xl object-cover border border-[#00e5a0]/20 shrink-0" alt="preview" />
-            ) : (
-              <div className="w-20 h-20 rounded-xl bg-white/5 border border-dashed border-white/20 flex items-center justify-center text-white/20 shrink-0">
-                <FaImage className="text-2xl" />
-              </div>
-            )}
-            <label className="flex-1 cursor-pointer">
-              <input type="file" accept="image/*" className="hidden"
-                onChange={e => e.target.files?.[0] && handleImageUpload(e.target.files[0])} />
-              <span className="block text-center text-xs py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-[#00e5a0]/40 transition select-none">
-                {uploading ? 'Subiendo...' : form.imageURL ? 'Cambiar foto' : 'Subir foto'}
-              </span>
-            </label>
+          {/* Fotos del producto (hasta 4). La primera es la principal. */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] text-white/50 uppercase tracking-widest font-bold">
+                Fotos del producto ({(form.imageURLs ?? []).length}/{MAX_PRODUCT_IMAGES})
+              </p>
+              <button type="button" onClick={() => setImgEnhance(v => !v)}
+                className="flex items-center gap-1.5 text-[11px] font-bold transition-colors"
+                style={{ color: imgEnhance ? '#00e5a0' : 'rgba(255,255,255,.4)' }}>
+                {imgEnhance ? <FaToggleOn className="text-lg" /> : <FaToggleOff className="text-lg" />}
+                Mejorar calidad
+              </button>
+            </div>
+
+            <div className="grid grid-cols-4 gap-2">
+              {(form.imageURLs ?? []).map((u, i) => (
+                <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-[#00e5a0]/20 bg-black/30">
+                  <img src={u} className="w-full h-full object-contain" alt={`foto ${i + 1}`} />
+                  <button type="button" onClick={() => removeImageAt(i)}
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center">
+                    <FaTimes size={9} />
+                  </button>
+                  {i === 0 && (
+                    <span className="absolute bottom-0 inset-x-0 text-[8px] font-black uppercase tracking-wider text-center bg-black/60 text-white/80 py-0.5">
+                      Principal
+                    </span>
+                  )}
+                </div>
+              ))}
+
+              {(form.imageURLs ?? []).length < MAX_PRODUCT_IMAGES && !uploading && (
+                <>
+                  <label className="aspect-square rounded-xl border border-dashed border-white/15 bg-black/20 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-[#00e5a0]/40 text-white/40 transition">
+                    <FaCamera size={14} className="text-[#00e5a0]" />
+                    <span className="text-[9px] font-bold">Tomar</span>
+                    <input ref={imgCamRef} type="file" accept="image/*" capture="environment" className="hidden"
+                      onChange={e => { const el = e.currentTarget; handleAddImages(el.files).finally(() => { el.value = ''; }); }} />
+                  </label>
+                  <label className="aspect-square rounded-xl border border-dashed border-white/15 bg-black/20 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-[#00e5a0]/40 text-white/40 transition">
+                    <FaImage size={14} className="text-[#00e5a0]" />
+                    <span className="text-[9px] font-bold">Subir</span>
+                    <input ref={imgFileRef} type="file" accept="image/*" multiple className="hidden"
+                      onChange={e => { const el = e.currentTarget; handleAddImages(el.files).finally(() => { el.value = ''; }); }} />
+                  </label>
+                </>
+              )}
+
+              {uploading && (
+                <div className="aspect-square rounded-xl border border-dashed border-white/15 bg-black/20 flex items-center justify-center text-[10px] text-white/40">
+                  Procesando…
+                </div>
+              )}
+            </div>
+            <p className="text-[10px] text-white/25">
+              La primera imagen es la principal. Activa «Mejorar calidad» antes de subir para ajustar luz, color y nitidez.
+            </p>
           </div>
 
           <input value={form.name || ''} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}

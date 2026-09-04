@@ -605,7 +605,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, profile, isUltra, 
         <div className="relative w-full bg-black/40 shrink-0" style={{ height: '200px' }}>
           {images.length > 0 ? (
             <>
-              <img src={images[imgIndex]} alt={product.name} className="w-full h-full object-cover" />
+              <img src={images[imgIndex]} alt={product.name} className="w-full h-full object-contain" />
               {images.length > 1 && (
                 <>
                   <button onClick={() => setImgIndex(i => (i === 0 ? images.length - 1 : i - 1))}
@@ -2633,7 +2633,7 @@ export const ProfileEcomTemplate: React.FC<ProfileEcomTemplateProps> = ({
                     <div className="relative w-full aspect-square overflow-hidden bg-black/30">
                       {product.imageURL ? (
                         <img src={product.imageURL} alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-3xl text-white/10">🛍️</div>
                       )}

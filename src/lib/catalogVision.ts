@@ -255,11 +255,12 @@ const boxBlur = (src: Uint8ClampedArray, W: number, H: number, r: number): Float
 
 export const enhanceImageBlob = async (
   blob: Blob,
-  opts?: { targetLong?: number; maxUpscale?: number; sharpen?: number; quality?: number },
+  opts?: { targetLong?: number; maxUpscale?: number; sharpen?: number; saturation?: number; quality?: number },
 ): Promise<Blob> => {
-  const targetLong = opts?.targetLong ?? 1000;
+  const targetLong = opts?.targetLong ?? 1400;
   const maxUpscale = opts?.maxUpscale ?? 2;
-  const amount = opts?.sharpen ?? 0.6;
+  const amount = opts?.sharpen ?? 1.0;
+  const saturation = opts?.saturation ?? 1.18;
   const quality = opts?.quality ?? 0.92;
   const url = URL.createObjectURL(blob);
   try {
@@ -306,9 +307,17 @@ export const enhanceImageBlob = async (
     const clamp8 = (x: number) => (x < 0 ? 0 : x > 255 ? 255 : x);
 
     for (let i = 0; i < d.length; i += 4) {
-      d[i]     = clamp8(stretch(d[i] * gr));
-      d[i + 1] = clamp8(stretch(d[i + 1] * gg));
-      d[i + 2] = clamp8(stretch(d[i + 2] * gb));
+      let r = stretch(d[i] * gr);
+      let g2 = stretch(d[i + 1] * gg);
+      let b = stretch(d[i + 2] * gb);
+      // Realce de saturación alrededor de la luminancia (color más vivo sin virar el tono).
+      if (saturation !== 1) {
+        const L = 0.299 * r + 0.587 * g2 + 0.114 * b;
+        r = L + saturation * (r - L);
+        g2 = L + saturation * (g2 - L);
+        b = L + saturation * (b - L);
+      }
+      d[i] = clamp8(r); d[i + 1] = clamp8(g2); d[i + 2] = clamp8(b);
     }
 
     // 3) Unsharp mask (realce de nitidez).
@@ -323,6 +332,40 @@ export const enhanceImageBlob = async (
     }
 
     ctx.putImageData(image, 0, 0);
+    return await new Promise<Blob>((res, rej) =>
+      canvas.toBlob((x) => (x ? res(x) : rej(new Error('No se pudo generar la imagen.'))), 'image/jpeg', quality),
+    );
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+};
+
+/**
+ * Redimensiona una imagen a JPEG sin filtros (solo reescala si supera `maxDim`).
+ * Se usa para las fotos de producto cuando el dueño NO activó la mejora: las
+ * fotos de teléfono pesan varios MB y conviene guardarlas más livianas, pero
+ * sin tocar color ni nitidez.
+ */
+export const downscaleImageBlob = async (
+  blob: Blob,
+  maxDim = 1600,
+  quality = 0.9,
+): Promise<Blob> => {
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = await loadImageEl(url);
+    const W0 = img.naturalWidth, H0 = img.naturalHeight;
+    const longSide = Math.max(W0, H0) || 1;
+    const scale = longSide > maxDim ? maxDim / longSide : 1;
+    const W = Math.max(1, Math.round(W0 * scale));
+    const H = Math.max(1, Math.round(H0 * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('No se pudo procesar la imagen.');
+    ctx.imageSmoothingEnabled = true;
+    (ctx as any).imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, W, H);
     return await new Promise<Blob>((res, rej) =>
       canvas.toBlob((x) => (x ? res(x) : rej(new Error('No se pudo generar la imagen.'))), 'image/jpeg', quality),
     );
