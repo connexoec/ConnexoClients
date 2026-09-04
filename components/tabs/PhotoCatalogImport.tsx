@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   FaCamera, FaChevronDown, FaTimes, FaCheckCircle, FaExclamationTriangle,
-  FaCrown, FaMagic, FaTrash, FaPlus, FaToggleOn, FaToggleOff,
+  FaCrown, FaMagic, FaTrash, FaPlus, FaToggleOn, FaToggleOff, FaImage,
 } from 'react-icons/fa';
 import {
   fileToResizedImage, extractCatalogFromImages, normalizeExtracted, duplicateFlags,
@@ -39,6 +39,7 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
   const [analyzed, setAnalyzed] = useState(false);
   const [enhance, setEnhance] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const captureRef = useRef<HTMLInputElement>(null);
 
   // Limpia las URLs de vista previa al desmontar (evita fugas de memoria).
   useEffect(() => () => { images.forEach(i => URL.revokeObjectURL(i.url)); }, [images]);
@@ -52,6 +53,7 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
     setExcluded(new Set());
     setAnalyzed(false);
     if (fileRef.current) fileRef.current.value = '';
+    if (captureRef.current) captureRef.current.value = '';
   };
 
   const addFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +65,8 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
       url: URL.createObjectURL(file),
     }));
     setImages(prev => [...prev, ...next].slice(0, 5)); // tope de 5 páginas
-    if (fileRef.current) fileRef.current.value = '';
+    // Limpia el input usado para poder volver a elegir el mismo archivo.
+    event.target.value = '';
   };
 
   const removeImage = (id: string) => {
@@ -249,16 +252,25 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
                 categoría, nombre, precio, descripción y foto. Revisa antes de agregar; los duplicados se ignoran.
               </p>
 
-              {/* Selector de imágenes */}
+              {/* Selector de imágenes: cámara O archivos/galería (PC, teléfono, tablet) */}
               <div className="grid gap-3">
-                <label className="flex items-center gap-3 px-4 py-3 rounded-xl bg-black/30 border border-dashed border-white/15 cursor-pointer hover:border-white/30 transition-all">
-                  <FaCamera size={14} style={{ color: accent }} />
-                  <span className="text-xs text-white/60">
-                    {images.length > 0 ? 'Añadir otra foto' : 'Tomar o elegir foto(s)'}
-                  </span>
-                  <input ref={fileRef} type="file" accept="image/*" capture="environment"
-                    multiple onChange={addFiles} className="hidden" />
-                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <label className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl bg-black/30 border border-dashed border-white/15 cursor-pointer hover:border-white/30 transition-all">
+                    <FaCamera size={14} style={{ color: accent }} />
+                    <span className="text-xs text-white/60">Tomar foto</span>
+                    <input ref={captureRef} type="file" accept="image/*" capture="environment"
+                      onChange={addFiles} className="hidden" />
+                  </label>
+                  <label className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl bg-black/30 border border-dashed border-white/15 cursor-pointer hover:border-white/30 transition-all">
+                    <FaImage size={14} style={{ color: accent }} />
+                    <span className="text-xs text-white/60">Subir archivo</span>
+                    <input ref={fileRef} type="file" accept="image/*"
+                      multiple onChange={addFiles} className="hidden" />
+                  </label>
+                </div>
+                <p className="text-[10px] text-white/30 -mt-1">
+                  «Subir archivo» sirve para fotos, capturas o imágenes guardadas en tu PC, teléfono o tablet (hasta 5).
+                </p>
 
                 {images.length > 0 && (
                   <div className="flex flex-wrap gap-2">
