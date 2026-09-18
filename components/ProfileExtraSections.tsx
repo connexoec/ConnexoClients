@@ -111,7 +111,7 @@ export const ProfileExtraSections: React.FC<ProfileExtraSectionsProps> = ({ prof
           {albumsMode ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {albums.map((a: any, i: number) => {
-                const cover = a.coverUrl || a.cover || (Array.isArray(a.images) && a.images[0]);
+                const cover = a.coverImage || a.coverUrl || a.cover || (Array.isArray(a.images) && a.images[0]);
                 // Un álbum se abre con TODAS sus fotos. Si no tuviera ninguna,
                 // se usa la portada para que el clic siga mostrando algo en vez
                 // de abrir un visor vacío.

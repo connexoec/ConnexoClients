@@ -2695,7 +2695,7 @@ export const ProfileEcomTemplate: React.FC<ProfileEcomTemplateProps> = ({
               {albumsMode ? (
                 <div className="grid grid-cols-2 gap-3">
                   {albums.map((a: any, i: number) => {
-                    const cover = a.coverUrl || a.cover || (Array.isArray(a.images) && a.images[0]);
+                    const cover = a.coverImage || a.coverUrl || a.cover || (Array.isArray(a.images) && a.images[0]);
                     const count = Array.isArray(a.images) ? a.images.length : 0;
                     return (
                       <button
