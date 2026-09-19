@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { Product, RecipeIngredient, InventoryItem, PaymentGatewaysConfig } from '../../types';
 import {
   FaPlus, FaTrash, FaPen, FaImage, FaTimes, FaSave, FaWarehouse,
@@ -45,7 +45,7 @@ export const GastroMenuTab: React.FC<GastroMenuTabProps> = ({
     setSavingTables(true);
     try {
       const value = Math.max(0, Math.min(500, tables || 0));
-      const { error } = await supabase.from('profiles').update({ tableCount: value }).eq('id', user.id);
+      const { error } = await db.from('profiles').update({ tableCount: value }).eq('id', user.id);
       if (error) throw error;
       setProfileData((prev: any) => ({ ...prev, tableCount: value }));
       showNotification(isClinic ? 'Salas actualizadas' : 'Mesas actualizadas', 'success');
@@ -79,7 +79,7 @@ export const GastroMenuTab: React.FC<GastroMenuTabProps> = ({
     if (!user?.id) return;
     setSavingGateways(true);
     try {
-      const { error } = await supabase.from('profiles').update({ payment_gateways: gwConfig }).eq('id', user.id);
+      const { error } = await db.from('profiles').update({ payment_gateways: gwConfig }).eq('id', user.id);
       if (error) throw error;
       setProfileData((prev: any) => ({ ...prev, payment_gateways: gwConfig }));
       showNotification('Pasarelas de pago guardadas', 'success');
@@ -105,7 +105,7 @@ export const GastroMenuTab: React.FC<GastroMenuTabProps> = ({
         clubTagline: clubTagline.trim() || null,
       };
       if (isClinic) payload.stampsReward = stampsReward.trim() || null;
-      const { error } = await supabase.from('profiles').update(payload).eq('id', user.id);
+      const { error } = await db.from('profiles').update(payload).eq('id', user.id);
       if (error) throw error;
       setProfileData((prev: any) => ({ ...prev, ...payload }));
       showNotification('Club actualizado', 'success');
@@ -138,7 +138,7 @@ export const GastroMenuTab: React.FC<GastroMenuTabProps> = ({
         clinicServices: services.length > 0 ? services : null,
       };
       if (isMedical) payload.allowRecordDownload = allowRecordDownload;
-      const { error } = await supabase.from('profiles').update(payload).eq('id', user.id);
+      const { error } = await db.from('profiles').update(payload).eq('id', user.id);
       if (error) throw error;
       setProfileData((prev: any) => ({ ...prev, ...payload }));
       showNotification('Configuración de clínica guardada', 'success');
@@ -156,7 +156,7 @@ export const GastroMenuTab: React.FC<GastroMenuTabProps> = ({
     if (!isUltra || !user?.id) return;
     let active = true;
     (async () => {
-      const { data } = await supabase.from('gastro_inventory').select('*').eq('restaurant_id', user.id).order('name');
+      const { data } = await db.from('gastro_inventory').select('*').eq('restaurant_id', user.id).order('name');
       if (active) setInventory((data as InventoryItem[]) || []);
     })();
     return () => { active = false; };
@@ -220,7 +220,7 @@ export const GastroMenuTab: React.FC<GastroMenuTabProps> = ({
   }, [products, categoryPresets]);
 
   const persistProducts = async (next: Product[]) => {
-    const { error } = await supabase.from('profiles').update({ products: next }).eq('id', user.id);
+    const { error } = await db.from('profiles').update({ products: next }).eq('id', user.id);
     if (error) throw error;
     setProfileData((prev: any) => ({ ...prev, products: next }));
   };
@@ -236,9 +236,9 @@ export const GastroMenuTab: React.FC<GastroMenuTabProps> = ({
     try {
       const fileName = `${Date.now()}_${file.name}`;
       const path = `products/${user.id}/${fileName}`;
-      const { error } = await supabase.storage.from('assets').upload(path, file);
+      const { error } = await db.storage.from('assets').upload(path, file);
       if (error) throw error;
-      const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path);
+      const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(path);
       setForm(prev => ({ ...prev, imageURL: publicUrl }));
     } catch (err: any) {
       showNotification(`Error al subir imagen: ${err?.message ?? err}`, 'error');

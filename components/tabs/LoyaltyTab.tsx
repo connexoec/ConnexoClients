@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MemberPlanSection } from '../MemberPlanSection';
 import { useSubscriptionOptions } from '../../hooks/useSubscriptionOptions';
 import { createPortal } from 'react-dom';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import {
   FaCrown, FaUserPlus, FaTrash, FaStar, FaPhone, FaEnvelope,
   FaWhatsapp, FaUsers, FaPercent, FaSave, FaPaw, FaBookMedical,
@@ -121,7 +121,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
   const fetchClients = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('gastro_clients')
         .select('*')
         .eq('restaurant_id', user.id)
@@ -164,7 +164,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
   useEffect(() => {
     if (!user?.id) return;
     fetchClients();
-    const channel = supabase
+    const channel = db
       .channel(`gastro_clients_${user.id}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'gastro_clients', filter: `restaurant_id=eq.${user.id}` },
@@ -175,7 +175,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onFocus);
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       clearInterval(poll);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onFocus);
@@ -191,7 +191,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
     if (!client.member_code) return;
     setRecordsLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from(recordsTable)
         .select('*')
         .eq('profile_id', user.id)
@@ -221,7 +221,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
         next_visit_date: newRecord.next_visit_date || null,
         vet_notes: newRecord.vet_notes?.trim() || null,
       };
-      const { data, error } = await supabase.from(recordsTable).insert(payload).select().single();
+      const { data, error } = await db.from(recordsTable).insert(payload).select().single();
       if (error) throw error;
       setRecords(prev => [data as PetcareRecord, ...prev]);
       setNewRecord(emptyRecord());
@@ -234,7 +234,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
   const deleteRecord = async (id: string) => {
     if (!window.confirm('¿Eliminar este registro médico?')) return;
     try {
-      const { error } = await supabase.from(recordsTable).delete().eq('id', id);
+      const { error } = await db.from(recordsTable).delete().eq('id', id);
       if (error) throw error;
       setRecords(prev => prev.filter(r => r.id !== id));
     } catch (e: any) { alert(`Error: ${e?.message ?? e}`); }
@@ -278,7 +278,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
       alert('Indica al menos el nombre o el teléfono.'); return;
     }
     try {
-      const { error } = await supabase.from('gastro_clients').insert({
+      const { error } = await db.from('gastro_clients').insert({
         restaurant_id: user.id,
         name: newClient.name.trim() || null, phone: newClient.phone.trim() || null,
         email: newClient.email.trim() || null, notes: newClient.notes.trim() || null,
@@ -292,7 +292,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
 
   const toggleVip = async (c: GastroClient) => {
     try {
-      const { error } = await supabase.from('gastro_clients').update({ is_vip: !c.is_vip }).eq('id', c.id);
+      const { error } = await db.from('gastro_clients').update({ is_vip: !c.is_vip }).eq('id', c.id);
       if (error) throw error;
       setClients(prev => prev.map(x => x.id === c.id ? { ...x, is_vip: !c.is_vip } : x));
     } catch (err: any) { alert(`Error: ${err?.message ?? err}`); }
@@ -302,7 +302,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
     const draft = drafts[c.id] ?? { discount_percent: c.discount_percent, notes: c.notes ?? '', benefits: c.benefits ?? '' };
     setSavingId(c.id);
     try {
-      const { error } = await supabase.from('gastro_clients').update({
+      const { error } = await db.from('gastro_clients').update({
         discount_percent: Math.max(0, Math.min(100, Number(draft.discount_percent) || 0)),
         notes: draft.notes.trim() || null,
         benefits: draft.benefits.trim() || null,
@@ -318,7 +318,7 @@ export const LoyaltyTab: React.FC<{ user: any; isPetcare?: boolean; isMedical?: 
   const handleDelete = async (id: string) => {
     if (!window.confirm(L.deleteConfirm)) return;
     try {
-      const { error } = await supabase.from('gastro_clients').delete().eq('id', id);
+      const { error } = await db.from('gastro_clients').delete().eq('id', id);
       if (error) throw error;
       setClients(prev => prev.filter(x => x.id !== id));
     } catch (err: any) { alert(`Error al eliminar: ${err?.message ?? err}`); }

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FaBell, FaWhatsapp, FaCheck, FaChevronDown, FaClock } from 'react-icons/fa';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import {
   buildAgenda, formatTime12, reminderMessage, reminderWaLink, remindedKey,
   todayISO, waNumber, type AgendaRow,
@@ -98,7 +98,7 @@ export const DailyAgendaPanel: React.FC<Props> = ({
     // alta sería peor que el propio olvido que estamos evitando.
     if (!table) return;
     try {
-      await supabase.from(table).update({ reminded_at: new Date().toISOString() }).eq('id', row.id);
+      await db.from(table).update({ reminded_at: new Date().toISOString() }).eq('id', row.id);
     } catch { /* columna ausente: se queda la marca local */ }
   }, [businessName, noun, table]);
 

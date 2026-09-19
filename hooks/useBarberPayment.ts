@@ -1,4 +1,4 @@
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import type {
   BarberPaymentGatewaysConfig,
   BarberPaymentMethodType,
@@ -59,7 +59,7 @@ export const useBarberPayment = (gateways: BarberPaymentGatewaysConfig | undefin
         // El token NO viaja desde aquí: la función lo lee del lado servidor a
         // partir de barberId (ver setup_barber_payphone.sql).
         if (!barberId) throw new Error('No pudimos identificar el negocio.');
-        const { data, error } = await supabase.functions.invoke('payphone-process', {
+        const { data, error } = await db.functions.invoke('payphone-process', {
           body: {
             profile_id: barberId,
             amount: payload.amount,

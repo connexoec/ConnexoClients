@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { RealtyAgent } from '../../types';
 import {
   FaPlus, FaTrash, FaPen, FaSave, FaTimes, FaUserTie, FaWhatsapp,
@@ -32,7 +32,7 @@ export const RealtyAgentsTab: React.FC<Props> = ({ user, profileData, showNotifi
   const fetchAgents = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('realty_agents')
         .select('*')
         .eq('agency_profile_id', user.id)
@@ -49,13 +49,13 @@ export const RealtyAgentsTab: React.FC<Props> = ({ user, profileData, showNotifi
   useEffect(() => {
     if (!user?.id) return;
     fetchAgents();
-    const channel = supabase
+    const channel = db
       .channel(`realty_agents_${user.id}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'realty_agents', filter: `agency_profile_id=eq.${user.id}` },
         () => fetchAgents())
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => { db.removeChannel(channel); };
   }, [user?.id, fetchAgents]);
 
   const openNew = () => { setEditing(null); setForm(emptyForm()); setIsOpen(true); };
@@ -79,10 +79,10 @@ export const RealtyAgentsTab: React.FC<Props> = ({ user, profileData, showNotifi
         nfc_tag_id: form.nfc_tag_id.trim() || null,
       };
       if (editing) {
-        const { error } = await supabase.from('realty_agents').update(payload).eq('id', editing.id);
+        const { error } = await db.from('realty_agents').update(payload).eq('id', editing.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('realty_agents').insert({ ...payload, is_active: true });
+        const { error } = await db.from('realty_agents').insert({ ...payload, is_active: true });
         if (error) throw error;
       }
       showNotification('Agente guardado', 'success');
@@ -100,7 +100,7 @@ export const RealtyAgentsTab: React.FC<Props> = ({ user, profileData, showNotifi
     // Optimista: si se desactiva, su NFC/URL cae al perfil general (fuga de leads cero).
     setAgents(prev => prev.map(x => x.id === a.id ? { ...x, is_active: !x.is_active } : x));
     try {
-      const { error } = await supabase.from('realty_agents').update({ is_active: !a.is_active }).eq('id', a.id);
+      const { error } = await db.from('realty_agents').update({ is_active: !a.is_active }).eq('id', a.id);
       if (error) throw error;
     } catch (err: any) {
       setAgents(prev => prev.map(x => x.id === a.id ? { ...x, is_active: a.is_active } : x));
@@ -111,7 +111,7 @@ export const RealtyAgentsTab: React.FC<Props> = ({ user, profileData, showNotifi
   const remove = async (id: string) => {
     if (!window.confirm('¿Eliminar este agente? Sus leads capturados se conservan (sin atribución).')) return;
     try {
-      const { error } = await supabase.from('realty_agents').delete().eq('id', id);
+      const { error } = await db.from('realty_agents').delete().eq('id', id);
       if (error) throw error;
       setAgents(prev => prev.filter(a => a.id !== id));
     } catch (err: any) {

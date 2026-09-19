@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Textarea, Card, Badge, ToggleSwitch } from '../ui';
 import type { UserLink, Product, Testimonial } from '../../types';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 
 
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -132,7 +132,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         setIsSavingSocial(true);
         setSocialSaveStatus('idle');
         try {
-            const { error } = await supabase
+            const { error } = await db
                 .from('profiles')
                 .update({ socialMedia: profileData.socialMedia || {} })
                 .eq('id', user.id);
@@ -161,9 +161,9 @@ export const LinksTab: React.FC<LinksTabProps> = ({
             setUploadingThumbnail(prev => { const n: [boolean, boolean] = [prev[0], prev[1]]; n[index] = true; return n; });
             const ext = file.name.split('.').pop() || 'jpg';
             const filePath = `video_thumbnails/${user.id}/${index}_${Date.now()}.${ext}`;
-            const { error } = await supabase.storage.from('assets').upload(filePath, file, { upsert: true });
+            const { error } = await db.storage.from('assets').upload(filePath, file, { upsert: true });
             if (error) throw error;
-            const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(filePath);
+            const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(filePath);
             updateFeaturedVideo(index, { thumbnailURL: publicUrl });
         } catch (e: any) {
             alert('Error al subir imagen: ' + (e?.message || 'Error desconocido'));
@@ -180,7 +180,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         
         const fetchLinks = async () => {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('links')
                     .select('*')
                     .eq('userId', user.id);
@@ -204,7 +204,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         fetchLinks();
 
         // Realtime subscription
-        const channel = supabase.channel('public:links')
+        const channel = db.channel('public:links')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'links', filter: `userId=eq.${user.id}` }, payload => {
                 console.log('Change received in links table!', payload);
                 fetchLinks();
@@ -212,7 +212,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
             .subscribe();
 
         return () => {
-            supabase.removeChannel(channel);
+            db.removeChannel(channel);
         };
     }, [user, setLinks]);
 
@@ -240,9 +240,9 @@ export const LinksTab: React.FC<LinksTabProps> = ({
             setUploadProgress(0);
 
             const filePath = `video_uploads/${user.id}/${Date.now()}_${file.name}`;
-            const { data, error } = await supabase.storage.from('assets').upload(filePath, file);
+            const { data, error } = await db.storage.from('assets').upload(filePath, file);
             if (error) throw error;
-            const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(filePath);
+            const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(filePath);
             const downloadURL = publicUrl;
 
             setProfileData((prev: any) => ({
@@ -251,7 +251,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
                 featuredVideoURL: ''
             }));
 
-            await supabase.from('profiles').update({ uploadedVideoURL: downloadURL, featuredVideoURL: '' }).eq('id', user.id);
+            await db.from('profiles').update({ uploadedVideoURL: downloadURL, featuredVideoURL: '' }).eq('id', user.id);
 
             alert(t('video_upload_success'));
         } catch (error) {
@@ -274,10 +274,10 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         try {
             const path = profileData.uploadedVideoURL.split('/storage/v1/object/public/assets/')[1];
             if (path) {
-                await supabase.storage.from('assets').remove([path]);
+                await db.storage.from('assets').remove([path]);
             }
 
-            await supabase.from('profiles').update({ uploadedVideoURL: null }).eq('id', user.id);
+            await db.from('profiles').update({ uploadedVideoURL: null }).eq('id', user.id);
 
             setProfileData((prev: any) => ({ ...prev, uploadedVideoURL: null }));
             setVideoInputMode('external');
@@ -318,7 +318,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         };
 
         try {
-            const { data: docData, error: insertError } = await supabase.from('links').insert([linkDataToAdd]).select().single();
+            const { data: docData, error: insertError } = await db.from('links').insert([linkDataToAdd]).select().single();
             if (insertError) throw insertError;
             const docRef = { id: docData.id };
             console.log('handleAddLink: Firestore success. New doc ID:', docRef.id); // <-- LOG 6
@@ -357,7 +357,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         const safeUrl = sanitizeUrl(url);
         setSavingLinkId(linkId);
         try {
-            const { error } = await supabase.from('links').update({ title, url: safeUrl }).eq('id', linkId);
+            const { error } = await db.from('links').update({ title, url: safeUrl }).eq('id', linkId);
             if (error) throw error;
             setLinks(prev => prev.map(link =>
                 link.id === linkId ? { ...link, title, url: safeUrl } : link
@@ -378,7 +378,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         if (!confirmDelete) return;
         
         try {
-            await supabase.from('links').delete().eq('id', linkId);
+            await db.from('links').delete().eq('id', linkId);
             setLinks(prev => prev.filter(link => link.id !== linkId));
         } catch (error) {
             console.error('Error al eliminar enlace:', error?.message || error || 'Ocurrió un error desconocido');
@@ -389,7 +389,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         if (!user) return;
         
         try {
-            await supabase.from('links').update({ isActive: !currentActive }).eq('id', linkId);
+            await db.from('links').update({ isActive: !currentActive }).eq('id', linkId);
             setLinks(prev => prev.map(link => 
                 link.id === linkId ? { ...link, isActive: !currentActive } : link
             ));
@@ -409,7 +409,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         
         // Guardar en Firestore
         try {
-            await supabase.from('links').update({ [field]: safeValue }).eq('id', linkId);
+            await db.from('links').update({ [field]: safeValue }).eq('id', linkId);
         } catch (error) {
             console.error('Error al actualizar enlace:', error?.message || error || 'OcurriÃ³ un error desconocido');
             // Revertir el cambio local en caso de error
@@ -424,7 +424,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
 
         try {
             for (let i = 0; i < newLinks.length; i++) {
-                await supabase.from('links').update({ order: i }).eq('id', newLinks[i].id);
+                await db.from('links').update({ order: i }).eq('id', newLinks[i].id);
             }
         } catch (error) {
             console.error('Error al guardar el orden de los enlaces:', error);
@@ -462,7 +462,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
     // ── Archivos digitales (ULTRA) ──────────────────────────────
     const persistDigitalFiles = async (files: any[]) => {
         if (!user) return;
-        const { error } = await supabase.from('profiles').update({ digitalFiles: files }).eq('id', user.id);
+        const { error } = await db.from('profiles').update({ digitalFiles: files }).eq('id', user.id);
         if (error) {
             console.error('Error al guardar archivos:', error.message);
             alert(`No se pudieron guardar los archivos: ${error.message}.\n\nSi dice que falta la columna, ejecuta add_missing_columns.sql en Supabase.`);
@@ -479,9 +479,9 @@ export const LinksTab: React.FC<LinksTabProps> = ({
             const uploaded: any[] = [];
             for (const file of fileList) {
                 const path = `digital_files/${user.id}/${Date.now()}_${file.name}`;
-                const { error } = await supabase.storage.from('assets').upload(path, file);
+                const { error } = await db.storage.from('assets').upload(path, file);
                 if (error) throw error;
-                const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path);
+                const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(path);
                 uploaded.push({
                     id: `file_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
                     title: file.name,
@@ -558,9 +558,9 @@ export const LinksTab: React.FC<LinksTabProps> = ({
 
         const productId = editingProduct?.id || Date.now().toString();
         try {
-            const { data, error } = await supabase.storage.from('assets').upload(`products/${user.id}/${productId}`, file, { upsert: true });
+            const { data, error } = await db.storage.from('assets').upload(`products/${user.id}/${productId}`, file, { upsert: true });
             if (error) throw error;
-            const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`products/${user.id}/${productId}`);
+            const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`products/${user.id}/${productId}`);
             const downloadURL = publicUrl;
             setNewProduct(prev => ({ ...prev, imageURL: downloadURL }));
         } catch (error) {
@@ -601,7 +601,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         setProfileData(prev => ({ ...prev, products: updatedProducts }));
         setNewProduct({});
         setIsAddingProduct(false);
-        await supabase.from('profiles').update({ products: updatedProducts }).eq('id', user.id);
+        await db.from('profiles').update({ products: updatedProducts }).eq('id', user.id);
     };
 
     const handleUpdateProduct = async () => {
@@ -621,14 +621,14 @@ export const LinksTab: React.FC<LinksTabProps> = ({
         setProfileData(prev => ({ ...prev, products: updatedProducts }));
         setNewProduct({});
         setEditingProduct(null);
-        await supabase.from('profiles').update({ products: updatedProducts }).eq('id', user.id);
+        await db.from('profiles').update({ products: updatedProducts }).eq('id', user.id);
     };
 
     const handleDeleteProduct = async (productId: string) => {
         if (!user) return;
         const updatedProducts = (profileData.products || []).filter(p => p.id !== productId);
         setProfileData(prev => ({ ...prev, products: updatedProducts }));
-        await supabase.from('profiles').update({ products: updatedProducts }).eq('id', user.id);
+        await db.from('profiles').update({ products: updatedProducts }).eq('id', user.id);
     };
 
     const handleEditProduct = (product: Product) => {

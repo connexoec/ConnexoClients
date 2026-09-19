@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import { subscriptionOptions, type PlanOption } from '../src/lib/memberPlans';
 import type { Product } from '../types';
 
@@ -32,7 +32,7 @@ export function useSubscriptionOptions(userId: string | undefined, source: Optio
           // Sublima guarda el catálogo en tabla propia: sus columnas se traducen
           // al mismo objeto `subscription` que usan los catálogos en jsonb, para
           // que el resto del sistema no tenga que distinguir de dónde viene.
-          const { data, error } = await supabase
+          const { data, error } = await db
             .from('sublima_products')
             .select('id, name, subscription_monthly_price, subscription_annual_price, subscription_monthly_installments, subscription_annual_installments')
             .eq('subscription_enabled', true);
@@ -55,7 +55,7 @@ export function useSubscriptionOptions(userId: string | undefined, source: Optio
         }
 
         const cols = source === 'barber' ? 'products, barber_products' : 'products';
-        const { data, error } = await supabase.from('profiles').select(cols).eq('id', userId).single();
+        const { data, error } = await db.from('profiles').select(cols).eq('id', userId).single();
         if (error) throw error;
         if (cancelado) return;
 

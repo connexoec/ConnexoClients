@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MemberPlanSection } from '../MemberPlanSection';
 import { useSubscriptionOptions } from '../../hooks/useSubscriptionOptions';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { SublimaClient } from '../../types';
 import {
   FaCrown, FaUserPlus, FaTrash, FaStar, FaPhone, FaEnvelope,
@@ -55,7 +55,7 @@ export const SublimaLoyaltyTab: React.FC<Props> = ({ user }) => {
   const fetchClients = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('sublima_clients').select('*').eq('factory_profile_id', user.id)
         .order('is_vip', { ascending: false }).order('created_at', { ascending: false });
       if (error) throw error;
@@ -86,20 +86,20 @@ export const SublimaLoyaltyTab: React.FC<Props> = ({ user }) => {
   useEffect(() => {
     if (!user?.id) return;
     fetchClients();
-    const channel = supabase.channel(`sublima_clients_${user.id}`)
+    const channel = db.channel(`sublima_clients_${user.id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'sublima_clients', filter: `factory_profile_id=eq.${user.id}` }, () => fetchClients())
       .subscribe();
     const poll = setInterval(fetchClients, 12000);
     const onFocus = () => { if (document.visibilityState !== 'hidden') fetchClients(); };
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onFocus);
-    return () => { supabase.removeChannel(channel); clearInterval(poll); window.removeEventListener('focus', onFocus); document.removeEventListener('visibilitychange', onFocus); };
+    return () => { db.removeChannel(channel); clearInterval(poll); window.removeEventListener('focus', onFocus); document.removeEventListener('visibilitychange', onFocus); };
   }, [user?.id, fetchClients]);
 
   const handleAdd = async () => {
     if (!newClient.name.trim() && !newClient.company.trim() && !newClient.phone.trim()) { alert('Indica al menos el nombre, la empresa o el teléfono.'); return; }
     try {
-      const { error } = await supabase.from('sublima_clients').insert({
+      const { error } = await db.from('sublima_clients').insert({
         factory_profile_id: user.id,
         name: newClient.name.trim() || null,
         company: newClient.company.trim() || null,
@@ -117,7 +117,7 @@ export const SublimaLoyaltyTab: React.FC<Props> = ({ user }) => {
 
   const toggleVip = async (c: SublimaClient) => {
     try {
-      const { error } = await supabase.from('sublima_clients').update({ is_vip: !c.is_vip }).eq('id', c.id);
+      const { error } = await db.from('sublima_clients').update({ is_vip: !c.is_vip }).eq('id', c.id);
       if (error) throw error;
       setClients(prev => prev.map(x => x.id === c.id ? { ...x, is_vip: !c.is_vip } : x));
     } catch (err: any) { alert(`Error: ${err?.message ?? err}`); }
@@ -131,7 +131,7 @@ export const SublimaLoyaltyTab: React.FC<Props> = ({ user }) => {
     const draft = drafts[c.id] ?? { discount_percent: c.discount_percent, notes: c.notes ?? '', benefits: c.benefits ?? '' };
     setSavingId(c.id);
     try {
-      const { error } = await supabase.from('sublima_clients').update({
+      const { error } = await db.from('sublima_clients').update({
         discount_percent: Math.max(0, Math.min(100, Number(draft.discount_percent) || 0)),
         notes: draft.notes.trim() || null, benefits: draft.benefits.trim() || null,
       }).eq('id', c.id);
@@ -145,7 +145,7 @@ export const SublimaLoyaltyTab: React.FC<Props> = ({ user }) => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('¿Eliminar este miembro del club?')) return;
     try {
-      const { error } = await supabase.from('sublima_clients').delete().eq('id', id);
+      const { error } = await db.from('sublima_clients').delete().eq('id', id);
       if (error) throw error;
       setClients(prev => prev.filter(x => x.id !== id));
     } catch (err: any) { alert(`Error al eliminar: ${err?.message ?? err}`); }

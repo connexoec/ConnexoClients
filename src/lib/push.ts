@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { db } from './backend';
 
 // Llave pública VAPID. Es pública por diseño (va al navegador). Se deja como
 // fallback hardcodeado para que funcione en Vercel aunque no inyecte envs,
@@ -150,7 +150,7 @@ export async function enablePush(userId: string, opts?: { force?: boolean }): Pr
     if (sub && (opts?.force || !subscriptionKeyMatches(sub, appServerKey))) {
       const staleEndpoint = sub.endpoint;
       try { await sub.unsubscribe(); } catch (_) { /* ignore */ }
-      await supabase
+      await db
         .from('push_subscriptions')
         .delete()
         .eq('user_id', userId)
@@ -180,7 +180,7 @@ export async function enablePush(userId: string, opts?: { force?: boolean }): Pr
     // El borrado de la fila ajena TIENE que hacerlo el servidor: RLS impide
     // (con razón) que una cuenta toque las filas de otra, así que desde aquí
     // era imposible limpiar lo que dejó la sesión anterior.
-    const { error } = await supabase.rpc('claim_push_device', {
+    const { error } = await db.rpc('claim_push_device', {
       p_endpoint: sub.endpoint,
       p_p256dh: json.keys?.p256dh,
       p_auth: json.keys?.auth,
@@ -192,7 +192,7 @@ export async function enablePush(userId: string, opts?: { force?: boolean }): Pr
       // como antes para no dejar el dispositivo sin avisos, pero se avisa de
       // que los fantasmas seguirán hasta que se ejecute.
       if (isMissingFunction(error)) {
-        const { error: upsertError } = await supabase.from('push_subscriptions').upsert(
+        const { error: upsertError } = await db.from('push_subscriptions').upsert(
           {
             user_id: userId,
             endpoint: sub.endpoint,
@@ -257,7 +257,7 @@ export async function listDeviceAccounts(): Promise<DeviceAccount[]> {
   try {
     const endpoint = await currentEndpoint();
     if (!endpoint) return [];
-    const { data, error } = await supabase.rpc('list_push_device_accounts', {
+    const { data, error } = await db.rpc('list_push_device_accounts', {
       p_endpoint: endpoint,
     });
     if (error || !Array.isArray(data)) return [];
@@ -283,7 +283,7 @@ export async function listDeviceAccounts(): Promise<DeviceAccount[]> {
  */
 export async function pushMultiAccountEnabled(): Promise<boolean> {
   try {
-    const { error } = await supabase.rpc('list_push_device_accounts', { p_endpoint: '' });
+    const { error } = await db.rpc('list_push_device_accounts', { p_endpoint: '' });
     if (error && isMissingFunction(error)) return false;
     return true;
   } catch (_) {
@@ -296,7 +296,7 @@ export async function releaseDeviceAccount(userId: string): Promise<boolean> {
   try {
     const endpoint = await currentEndpoint();
     if (!endpoint) return false;
-    const { data, error } = await supabase.rpc('release_push_device_account', {
+    const { data, error } = await db.rpc('release_push_device_account', {
       p_endpoint: endpoint,
       p_user_id: userId,
     });
@@ -327,7 +327,7 @@ export async function releasePushDevice(userId: string): Promise<void> {
     const reg = await navigator.serviceWorker.ready;
     const sub = await reg.pushManager.getSubscription();
     if (!sub) return;
-    await supabase
+    await db
       .from('push_subscriptions')
       .delete()
       .eq('user_id', userId)
@@ -345,5 +345,5 @@ export async function disablePush(): Promise<void> {
   if (!sub) return;
   const endpoint = sub.endpoint;
   try { await sub.unsubscribe(); } catch (_) { /* ignore */ }
-  await supabase.from('push_subscriptions').delete().eq('endpoint', endpoint);
+  await db.from('push_subscriptions').delete().eq('endpoint', endpoint);
 }

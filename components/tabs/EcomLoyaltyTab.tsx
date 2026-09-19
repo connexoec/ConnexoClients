@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MemberPlanSection } from '../MemberPlanSection';
 import { useSubscriptionOptions } from '../../hooks/useSubscriptionOptions';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import {
   FaCrown, FaUserPlus, FaTrash, FaStar, FaPhone, FaEnvelope,
   FaWhatsapp, FaUsers, FaPercent, FaSave, FaShoppingBag,
@@ -68,7 +68,7 @@ export const EcomLoyaltyTab: React.FC<{ user: any }> = ({ user }) => {
   const fetchClients = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('ecom_clients')
         .select('*')
         .eq('seller_id', user.id)
@@ -110,7 +110,7 @@ export const EcomLoyaltyTab: React.FC<{ user: any }> = ({ user }) => {
   useEffect(() => {
     if (!user?.id) return;
     fetchClients();
-    const channel = supabase
+    const channel = db
       .channel(`ecom_clients_${user.id}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'ecom_clients', filter: `seller_id=eq.${user.id}` },
@@ -121,7 +121,7 @@ export const EcomLoyaltyTab: React.FC<{ user: any }> = ({ user }) => {
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onFocus);
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       clearInterval(poll);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onFocus);
@@ -134,7 +134,7 @@ export const EcomLoyaltyTab: React.FC<{ user: any }> = ({ user }) => {
       return;
     }
     try {
-      const { error } = await supabase.from('ecom_clients').insert({
+      const { error } = await db.from('ecom_clients').insert({
         seller_id: user.id,
         name: newClient.name.trim() || null,
         phone: newClient.phone.trim() || null,
@@ -153,7 +153,7 @@ export const EcomLoyaltyTab: React.FC<{ user: any }> = ({ user }) => {
 
   const toggleVip = async (c: EcomClient) => {
     try {
-      const { error } = await supabase.from('ecom_clients')
+      const { error } = await db.from('ecom_clients')
         .update({ is_vip: !c.is_vip }).eq('id', c.id);
       if (error) throw error;
       setClients(prev => prev.map(x => x.id === c.id ? { ...x, is_vip: !c.is_vip } : x));
@@ -166,7 +166,7 @@ export const EcomLoyaltyTab: React.FC<{ user: any }> = ({ user }) => {
     const draft = drafts[c.id] ?? { discount_percent: c.discount_percent, notes: c.notes ?? '', benefits: c.benefits ?? '' };
     setSavingId(c.id);
     try {
-      const { error } = await supabase.from('ecom_clients')
+      const { error } = await db.from('ecom_clients')
         .update({
           discount_percent: Math.max(0, Math.min(100, Number(draft.discount_percent) || 0)),
           notes: draft.notes.trim() || null,
@@ -187,7 +187,7 @@ export const EcomLoyaltyTab: React.FC<{ user: any }> = ({ user }) => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('¿Eliminar este cliente de tu lista?')) return;
     try {
-      const { error } = await supabase.from('ecom_clients').delete().eq('id', id);
+      const { error } = await db.from('ecom_clients').delete().eq('id', id);
       if (error) throw error;
       setClients(prev => prev.filter(x => x.id !== id));
     } catch (err: any) {

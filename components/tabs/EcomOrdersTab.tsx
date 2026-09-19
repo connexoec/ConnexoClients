@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import {
   FaShoppingBag, FaClock, FaCheckCircle, FaTimesCircle,
   FaTruck, FaBoxOpen, FaVolumeUp, FaWhatsapp, FaMoneyBillWave,
@@ -152,7 +152,7 @@ export const EcomOrdersTab: React.FC<EcomOrdersTabProps> = ({ user }) => {
   const fetchOrders = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('ecom_orders')
         .select('*')
         .eq('seller_id', user.id)
@@ -199,7 +199,7 @@ export const EcomOrdersTab: React.FC<EcomOrdersTabProps> = ({ user }) => {
     if (!user?.id) return;
     fetchOrders();
 
-    const channel = supabase
+    const channel = db
       .channel(`ecom_orders_${user.id}`)
       .on(
         'postgres_changes',
@@ -221,7 +221,7 @@ export const EcomOrdersTab: React.FC<EcomOrdersTabProps> = ({ user }) => {
     document.addEventListener('visibilitychange', onFocus);
 
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       clearInterval(poll);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onFocus);
@@ -232,7 +232,7 @@ export const EcomOrdersTab: React.FC<EcomOrdersTabProps> = ({ user }) => {
 
   const handleAdvanceStatus = async (orderId: string, nextStatus: EcomOrderStatus) => {
     try {
-      const { error } = await supabase
+      const { error } = await db
         .from('ecom_orders')
         .update({ status: nextStatus })
         .eq('id', orderId);
@@ -250,7 +250,7 @@ export const EcomOrdersTab: React.FC<EcomOrdersTabProps> = ({ user }) => {
 
   const handleSetPaymentStatus = async (orderId: string, status: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await db
         .from('ecom_orders')
         .update({ payment_status: status })
         .eq('id', orderId);
@@ -265,7 +265,7 @@ export const EcomOrdersTab: React.FC<EcomOrdersTabProps> = ({ user }) => {
     const raw = timeDraft[orderId];
     const minutes = raw === '' || raw === undefined ? null : Math.max(0, parseInt(raw, 10) || 0);
     try {
-      const { error } = await supabase.from('ecom_orders').update({ estimated_minutes: minutes }).eq('id', orderId);
+      const { error } = await db.from('ecom_orders').update({ estimated_minutes: minutes }).eq('id', orderId);
       if (error) throw error;
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, estimated_minutes: minutes } : o));
       setTimeDraft(prev => { const n = { ...prev }; delete n[orderId]; return n; });

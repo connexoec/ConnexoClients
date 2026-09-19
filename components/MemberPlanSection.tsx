@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FaRegCreditCard, FaChevronDown, FaPlus, FaTrash, FaBell, FaSave, FaTimes } from 'react-icons/fa';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import type { MemberPlan, MemberPlanSystem, SubscriptionPeriod } from '../types';
 import {
   PERIOD_LABEL, amountDue, sumPlans, money, formatDue, daysUntil,
@@ -40,7 +40,7 @@ export const MemberPlanSection: React.FC<{
     if (!ownerId || !client.id) return;
     setCargando(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('member_plans').select('*')
         .eq('owner_id', ownerId).eq('system', system).eq('client_id', client.id)
         .order('created_at', { ascending: true });
@@ -65,7 +65,7 @@ export const MemberPlanSection: React.FC<{
 
   const addPlan = async (draft: Partial<MemberPlan>) => {
     try {
-      const { data, error } = await supabase.from('member_plans').insert({
+      const { data, error } = await db.from('member_plans').insert({
         owner_id: ownerId, system, client_id: client.id,
         member_code: client.member_code ?? null,
         product_id: draft.product_id ?? null,
@@ -88,7 +88,7 @@ export const MemberPlanSection: React.FC<{
 
   const updatePlan = async (id: string, patch: Partial<MemberPlan>) => {
     try {
-      const { error } = await supabase.from('member_plans')
+      const { error } = await db.from('member_plans')
         .update({ ...patch, updated_at: new Date().toISOString() }).eq('id', id);
       if (error) throw error;
       setPlans(p => p.map(x => x.id === id ? { ...x, ...patch } : x));
@@ -101,7 +101,7 @@ export const MemberPlanSection: React.FC<{
   const removePlan = async (id: string, nombre: string) => {
     if (!window.confirm(`¿Quitar el plan «${nombre}» de este cliente?`)) return;
     try {
-      const { error } = await supabase.from('member_plans').delete().eq('id', id);
+      const { error } = await db.from('member_plans').delete().eq('id', id);
       if (error) throw error;
       setPlans(p => p.filter(x => x.id !== id));
     } catch (e: any) {

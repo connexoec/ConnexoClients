@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { SublimaOrder, SublimaOrderItem } from '../../types';
 import {
   FaClipboardList, FaTrash, FaWhatsapp, FaEnvelope, FaSearch, FaDownload,
@@ -71,7 +71,7 @@ export const SublimaOrdersTab: React.FC<Props> = ({ user }) => {
   const fetchAll = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('sublima_orders').select('*').eq('factory_profile_id', user.id)
         .order('created_at', { ascending: false });
       if (error) throw error;
@@ -109,7 +109,7 @@ export const SublimaOrdersTab: React.FC<Props> = ({ user }) => {
   useEffect(() => {
     if (!user?.id) return;
     fetchAll();
-    const channel = supabase
+    const channel = db
       .channel(`sublima_orders_${user.id}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'sublima_orders', filter: `factory_profile_id=eq.${user.id}` },
@@ -120,7 +120,7 @@ export const SublimaOrdersTab: React.FC<Props> = ({ user }) => {
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onFocus);
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       clearInterval(poll);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onFocus);
@@ -130,7 +130,7 @@ export const SublimaOrdersTab: React.FC<Props> = ({ user }) => {
   const updateStatus = async (id: string, status: string) => {
     setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
     try {
-      const { error } = await supabase.from('sublima_orders').update({ status }).eq('id', id);
+      const { error } = await db.from('sublima_orders').update({ status }).eq('id', id);
       if (error) throw error;
     } catch (err: any) { console.error(err); }
   };
@@ -138,7 +138,7 @@ export const SublimaOrdersTab: React.FC<Props> = ({ user }) => {
   const updatePayment = async (id: string, payment_status: string) => {
     setOrders(prev => prev.map(o => o.id === id ? { ...o, payment_status } : o));
     try {
-      const { error } = await supabase.from('sublima_orders').update({ payment_status }).eq('id', id);
+      const { error } = await db.from('sublima_orders').update({ payment_status }).eq('id', id);
       if (error) throw error;
     } catch (err: any) { console.error(err); }
   };
@@ -152,7 +152,7 @@ export const SublimaOrdersTab: React.FC<Props> = ({ user }) => {
       // Al poner la cotización, si el pedido sigue "recibido" avanza solo a "cotizado".
       const patch: any = { quoted_total: value };
       if (value != null && o.status === 'recibido') patch.status = 'cotizado';
-      const { error } = await supabase.from('sublima_orders').update(patch).eq('id', o.id);
+      const { error } = await db.from('sublima_orders').update(patch).eq('id', o.id);
       if (error) throw error;
       setOrders(prev => prev.map(x => x.id === o.id ? { ...x, quoted_total: value, status: patch.status || x.status } : x));
       setQuoteDrafts(prev => { const n = { ...prev }; delete n[o.id]; return n; });
@@ -164,7 +164,7 @@ export const SublimaOrdersTab: React.FC<Props> = ({ user }) => {
     const note = (noteDrafts[id] ?? '').trim();
     setSavingNote(id);
     try {
-      const { error } = await supabase.from('sublima_orders').update({ admin_note: note || null }).eq('id', id);
+      const { error } = await db.from('sublima_orders').update({ admin_note: note || null }).eq('id', id);
       if (error) throw error;
       setOrders(prev => prev.map(o => o.id === id ? { ...o, admin_note: note || null } : o));
       setNoteDrafts(prev => { const n = { ...prev }; delete n[id]; return n; });
@@ -175,7 +175,7 @@ export const SublimaOrdersTab: React.FC<Props> = ({ user }) => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('¿Eliminar este pedido?')) return;
     try {
-      const { error } = await supabase.from('sublima_orders').delete().eq('id', id);
+      const { error } = await db.from('sublima_orders').delete().eq('id', id);
       if (error) throw error;
       setOrders(prev => prev.filter(o => o.id !== id));
     } catch (err: any) { alert(`Error al eliminar: ${err?.message ?? err}`); }

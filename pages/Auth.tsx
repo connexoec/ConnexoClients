@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, Card } from '../components/ui';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 
 const Auth: React.FC = () => {
   const [mode, setMode] = useState<'login' | 'reset'>('login');
@@ -82,7 +82,7 @@ const Auth: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await db.auth.signInWithPassword({
         email,
         password
       });
@@ -108,7 +108,7 @@ const Auth: React.FC = () => {
     setErrors({});
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await db.auth.resetPasswordForEmail(email);
       if (error) throw error;
       setResetMessage(t('auth_reset_success_message'));
     } catch (error: any) {

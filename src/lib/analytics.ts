@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { db } from './backend';
 
 /**
  * Registro de visitas y clics del perfil público.
@@ -64,7 +64,7 @@ function getReferrer(): string | null {
 export function trackProfileView(ownerId: string): void {
   if (!ownerId) return;
   Promise.resolve(
-    supabase.rpc('track_profile_view', {
+    db.rpc('track_profile_view', {
       p_owner_id: ownerId,
       p_device: getDevice(),
       p_referrer: getReferrer(),
@@ -77,7 +77,7 @@ export function trackProfileView(ownerId: string): void {
 export function trackLinkClick(ownerId: string, linkId: string): void {
   if (!ownerId || !linkId) return;
   Promise.resolve(
-    supabase.rpc('track_link_click', {
+    db.rpc('track_link_click', {
       p_owner_id: ownerId,
       p_link_id: linkId,
       p_device: getDevice(),

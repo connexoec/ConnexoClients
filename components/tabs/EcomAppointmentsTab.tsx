@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type {
   EcomStaff, EcomStaffHours, EcomAppointment,
   EcomBookingField, EcomBookingFieldType,
@@ -191,7 +191,7 @@ export const EcomAppointmentsTab: React.FC<Props> = ({ user, profileData, setPro
 
   const fetchStaff = useCallback(async () => {
     if (!user?.id) return;
-    const { data, error } = await supabase.from('ecom_staff')
+    const { data, error } = await db.from('ecom_staff')
       .select('*').eq('seller_id', user.id)
       .order('sort_order', { ascending: true }).order('created_at', { ascending: true });
     if (!error) setStaff((data as EcomStaff[]) || []);
@@ -227,8 +227,8 @@ export const EcomAppointmentsTab: React.FC<Props> = ({ user, profileData, setPro
     const slotId = editingStaff?.id || `tmp_${Date.now()}`;
     setUploading(true);
     try {
-      await supabase.storage.from('assets').upload(`ecom_staff/${user.id}/${slotId}`, file, { upsert: true });
-      const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`ecom_staff/${user.id}/${slotId}`);
+      await db.storage.from('assets').upload(`ecom_staff/${user.id}/${slotId}`, file, { upsert: true });
+      const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`ecom_staff/${user.id}/${slotId}`);
       setStaffForm(prev => ({ ...prev, photo_url: `${publicUrl}?v=${Date.now()}` }));
     } catch (err: any) {
       showNotification(`Error al subir foto: ${err?.message}`, 'error');
@@ -259,10 +259,10 @@ export const EcomAppointmentsTab: React.FC<Props> = ({ user, profileData, setPro
         sort_order: editingStaff?.sort_order ?? staff.length,
       };
       if (editingStaff) {
-        const { error } = await supabase.from('ecom_staff').update(payload).eq('id', editingStaff.id);
+        const { error } = await db.from('ecom_staff').update(payload).eq('id', editingStaff.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('ecom_staff').insert(payload);
+        const { error } = await db.from('ecom_staff').insert(payload);
         if (error) throw error;
       }
       await fetchStaff();
@@ -278,13 +278,13 @@ export const EcomAppointmentsTab: React.FC<Props> = ({ user, profileData, setPro
   const toggleStaffActive = async (s: EcomStaff) => {
     const next = !(s.is_active !== false);
     setStaff(prev => prev.map(x => x.id === s.id ? { ...x, is_active: next } : x));
-    await supabase.from('ecom_staff').update({ is_active: next }).eq('id', s.id);
+    await db.from('ecom_staff').update({ is_active: next }).eq('id', s.id);
   };
 
   const deleteStaff = async (id: string) => {
     if (!window.confirm('¿Eliminar este vendedor? Sus citas pasadas se conservan.')) return;
     try {
-      const { error } = await supabase.from('ecom_staff').delete().eq('id', id);
+      const { error } = await db.from('ecom_staff').delete().eq('id', id);
       if (error) throw error;
       setStaff(prev => prev.filter(s => s.id !== id));
       showNotification('Vendedor eliminado', 'success');
@@ -306,7 +306,7 @@ export const EcomAppointmentsTab: React.FC<Props> = ({ user, profileData, setPro
   const fetchAppointments = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase.from('ecom_appointments')
+      const { data, error } = await db.from('ecom_appointments')
         .select('*').eq('seller_id', user.id)
         .order('appointment_date', { ascending: true })
         .order('appointment_time', { ascending: true });
@@ -332,16 +332,16 @@ export const EcomAppointmentsTab: React.FC<Props> = ({ user, profileData, setPro
   useEffect(() => {
     if (!user?.id) return;
     fetchAppointments();
-    const channel = supabase.channel(`ecom_appointments_${user.id}`)
+    const channel = db.channel(`ecom_appointments_${user.id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ecom_appointments', filter: `seller_id=eq.${user.id}` }, () => fetchAppointments())
       .subscribe();
     const poll = setInterval(fetchAppointments, 15000);
-    return () => { supabase.removeChannel(channel); clearInterval(poll); };
+    return () => { db.removeChannel(channel); clearInterval(poll); };
   }, [user?.id, fetchAppointments]);
 
   const setStatus = async (id: string, status: string) => {
     try {
-      const { error } = await supabase.from('ecom_appointments').update({ status }).eq('id', id);
+      const { error } = await db.from('ecom_appointments').update({ status }).eq('id', id);
       if (error) throw error;
       setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: status as any } : a));
     } catch (err: any) {
@@ -352,7 +352,7 @@ export const EcomAppointmentsTab: React.FC<Props> = ({ user, profileData, setPro
   const deleteAppointment = async (id: string) => {
     if (!window.confirm('¿Eliminar esta cita?')) return;
     try {
-      const { error } = await supabase.from('ecom_appointments').delete().eq('id', id);
+      const { error } = await db.from('ecom_appointments').delete().eq('id', id);
       if (error) throw error;
       setAppointments(prev => prev.filter(a => a.id !== id));
     } catch (err: any) {
@@ -466,7 +466,7 @@ export const EcomAppointmentsTab: React.FC<Props> = ({ user, profileData, setPro
         placeholder: f.placeholder?.trim() || undefined,
         options: f.type === 'select' ? (f.options || []).map(o => o.trim()).filter(Boolean) : undefined,
       }));
-      const { error } = await supabase.from('profiles')
+      const { error } = await db.from('profiles')
         .update({ ecom_booking_form: clean })
         .eq('id', user.id);
       if (error) throw error;

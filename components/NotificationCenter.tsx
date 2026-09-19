@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Bell, BellRing, Check, Smartphone, X } from 'lucide-react';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import {
   enablePush, ensurePushSubscription, listDeviceAccounts, pushPermission, pushSupported,
   releaseDeviceAccount, repairPushSubscription, sendLocalTest, type DeviceAccount,
@@ -67,7 +67,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, 
     if (!userId) return;
     let active = true;
 
-    supabase
+    db
       .from('notifications')
       .select('*')
       .eq('user_id', userId)
@@ -79,7 +79,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, 
         setUnread((data as NotificationRow[]).filter(n => !n.read).length);
       });
 
-    const channel = supabase
+    const channel = db
       .channel(`notifications:${userId}`)
       .on(
         'postgres_changes',
@@ -97,7 +97,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, 
 
     return () => {
       active = false;
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       if (toastTimer.current) clearTimeout(toastTimer.current);
     };
   }, [userId]);
@@ -137,7 +137,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, 
     if (unread === 0) return;
     setItems(prev => prev.map(n => ({ ...n, read: true })));
     setUnread(0);
-    await supabase.from('notifications').update({ read: true }).eq('user_id', userId).eq('read', false);
+    await db.from('notifications').update({ read: true }).eq('user_id', userId).eq('read', false);
   };
 
   const toggleOpen = () => {

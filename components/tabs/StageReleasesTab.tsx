@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { Release } from '../../types';
 import { FaPlus, FaTrash, FaPen, FaImage, FaSave, FaTimes, FaMusic } from 'react-icons/fa';
 
@@ -28,7 +28,7 @@ export const StageReleasesTab: React.FC<Props> = ({ user, profileData, setProfil
   const close = () => { setEditing(null); setForm(emptyForm()); setIsOpen(false); };
 
   const persist = async (list: Release[]) => {
-    const { error } = await supabase.from('profiles').update({ releases: list }).eq('id', user.id);
+    const { error } = await db.from('profiles').update({ releases: list }).eq('id', user.id);
     if (error) throw error;
     setProfileData((prev: any) => ({ ...prev, releases: list }));
   };
@@ -38,8 +38,8 @@ export const StageReleasesTab: React.FC<Props> = ({ user, profileData, setProfil
     const slot = editing?.id || `tmp_${Date.now()}`;
     setUploading(true);
     try {
-      await supabase.storage.from('assets').upload(`releases/${user.id}/${slot}`, file, { upsert: true });
-      const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`releases/${user.id}/${slot}`);
+      await db.storage.from('assets').upload(`releases/${user.id}/${slot}`, file, { upsert: true });
+      const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`releases/${user.id}/${slot}`);
       setForm(prev => ({ ...prev, coverURL: `${publicUrl}?t=${Date.now()}` }));
     } catch (err: any) {
       showNotification(`Error al subir portada: ${err?.message}`, 'error');

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { ToggleSwitch, Input, Card, Button, Badge, Textarea } from '../ui';
 import { MobilePreview } from '../MobilePreview';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Palette, User as UserIconLucide, Image as ImageIconLucide, Paintbrush, Clock, Sparkles, Upload, RotateCcw } from 'lucide-react';
@@ -109,7 +109,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
 
         // 3. Guardar inmediatamente en BD
         try {
-            await supabase.from('profiles').update({ darkMode: isChecked }).eq('id', user.id);
+            await db.from('profiles').update({ darkMode: isChecked }).eq('id', user.id);
         } catch (error) {
             console.error('Error saving dark mode toggle:', error?.message || error || 'Ocurrió un error desconocido');
         }
@@ -138,7 +138,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
                 ];
                 dataToSave.businessHours = defaultBusinessHours;
             }
-            await supabase.from('profiles').update(dataToSave).eq('id', user.id);
+            await db.from('profiles').update(dataToSave).eq('id', user.id);
         } catch (error: any) {
             console.error('Error saving schedule toggle:', error?.message || error || 'Ocurrió un error desconocido');
         }
@@ -151,13 +151,13 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
 
         const fileName = `${Date.now()}_${file.name}`;
         try {
-            const { error } = await supabase.storage.from('assets').upload(`${field}/${user.id}/${fileName}`, file);
+            const { error } = await db.storage.from('assets').upload(`${field}/${user.id}/${fileName}`, file);
             if (error) throw error;
 
-            const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`${field}/${user.id}/${fileName}`);
+            const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`${field}/${user.id}/${fileName}`);
             const updatedData = { [field]: publicUrl };
 
-            const { error: updateError } = await supabase.from('profiles').update(updatedData).eq('id', user.id);
+            const { error: updateError } = await db.from('profiles').update(updatedData).eq('id', user.id);
             if (updateError) throw updateError;
 
             setProfileData(prev => ({ ...prev, ...updatedData }));

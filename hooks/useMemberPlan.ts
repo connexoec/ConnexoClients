@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import type { MemberPlanStatus, MemberPlanSystem } from '../types';
 
 /**
@@ -25,7 +25,7 @@ export function useMemberPlan(
 
     (async () => {
       try {
-        const { data, error } = await supabase.rpc('get_member_plan', {
+        const { data, error } = await db.rpc('get_member_plan', {
           p_owner_id: ownerId,
           p_identifier: identifier,
           p_system: system,

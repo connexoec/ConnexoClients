@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { RealtyProperty } from '../../types';
 import {
   FaPlus, FaTrash, FaPen, FaImage, FaSave, FaTimes, FaBuilding,
@@ -54,7 +54,7 @@ export const RealtyPropertiesTab: React.FC<Props> = ({ user, showNotification })
   const fetchItems = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('realty_properties')
         .select('*')
         .eq('agency_profile_id', user.id)
@@ -71,13 +71,13 @@ export const RealtyPropertiesTab: React.FC<Props> = ({ user, showNotification })
   useEffect(() => {
     if (!user?.id) return;
     fetchItems();
-    const channel = supabase
+    const channel = db
       .channel(`realty_properties_${user.id}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'realty_properties', filter: `agency_profile_id=eq.${user.id}` },
         () => fetchItems())
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => { db.removeChannel(channel); };
   }, [user?.id, fetchItems]);
 
   const openNew = () => { setEditing(null); setForm(emptyForm()); setIsOpen(true); };
@@ -104,8 +104,8 @@ export const RealtyPropertiesTab: React.FC<Props> = ({ user, showNotification })
       const urls: string[] = [];
       for (const file of Array.from(files)) {
         const path = `realty/${user.id}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-        await supabase.storage.from('assets').upload(path, file, { upsert: true });
-        const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path);
+        await db.storage.from('assets').upload(path, file, { upsert: true });
+        const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(path);
         urls.push(`${publicUrl}?t=${Date.now()}`);
       }
       setForm(prev => ({ ...prev, images: [...prev.images, ...urls] }));
@@ -139,10 +139,10 @@ export const RealtyPropertiesTab: React.FC<Props> = ({ user, showNotification })
         },
       };
       if (editing) {
-        const { error } = await supabase.from('realty_properties').update(payload).eq('id', editing.id);
+        const { error } = await db.from('realty_properties').update(payload).eq('id', editing.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('realty_properties').insert(payload);
+        const { error } = await db.from('realty_properties').insert(payload);
         if (error) throw error;
       }
       showNotification('Propiedad guardada', 'success');
@@ -158,7 +158,7 @@ export const RealtyPropertiesTab: React.FC<Props> = ({ user, showNotification })
   const remove = async (id: string) => {
     if (!window.confirm('¿Eliminar esta propiedad del inventario?')) return;
     try {
-      const { error } = await supabase.from('realty_properties').delete().eq('id', id);
+      const { error } = await db.from('realty_properties').delete().eq('id', id);
       if (error) throw error;
       setItems(prev => prev.filter(p => p.id !== id));
     } catch (err: any) {

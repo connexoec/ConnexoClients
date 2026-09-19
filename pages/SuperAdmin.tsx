@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 
 const COUNTRY_KEY = 'connexo_admin_country';
 const TAB_KEY = 'connexo_admin_tab';
@@ -356,7 +356,7 @@ const SuperAdmin: React.FC = () => {
   const resolveAdminRole = async (u: any): Promise<AdminRole | null> => {
     const emailIsBootstrapAdmin = ALLOWED_ADMINS.includes(u?.email?.toLowerCase() || '');
     try {
-      const { data, error } = await supabase.rpc('get_my_admin_role');
+      const { data, error } = await db.rpc('get_my_admin_role');
       if (error) throw error;
       const r = data as { is_admin: boolean; role: AdminRole | null };
       if (r?.is_admin && r.role) return r.role;
@@ -369,7 +369,7 @@ const SuperAdmin: React.FC = () => {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    db.auth.getSession().then(async ({ data: { session } }) => {
       const u = session?.user;
       if (!u) return;
       const role = await resolveAdminRole(u);
@@ -407,12 +407,12 @@ const SuperAdmin: React.FC = () => {
       // Ya no se filtra por correo antes de entrar: el rol lo decide la base de
       // datos, que es la que también autoriza cada acción. Si el usuario no es
       // administrador se cierra la sesión de inmediato.
-      const { data, error } = await supabase.auth.signInWithPassword({ email: clean, password: loginPwd });
+      const { data, error } = await db.auth.signInWithPassword({ email: clean, password: loginPwd });
       if (error) throw error;
 
       const role = await resolveAdminRole(data.user);
       if (!role) {
-        await supabase.auth.signOut();
+        await db.auth.signOut();
         setLoginError('Acceso denegado. Esta cuenta no tiene permisos de administrador.');
         return;
       }
@@ -426,14 +426,14 @@ const SuperAdmin: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await db.auth.signOut();
     setUnlocked(false); setCurrentAdmin(null); setAdminRole(null);
   };
 
   // ── Data ────────────────────────────────────────────────────────────────────
   const fetchProfiles = async () => {
     setLoadingData(true);
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from('profiles')
       .select('id, email, username, displayName, plan, theme, location, created_at, is_active')
       .order('created_at', { ascending: false });
@@ -455,7 +455,7 @@ const SuperAdmin: React.FC = () => {
     // Fetch subscriptions for these profiles (admin sees all via SQL policy)
     if (filteredByCountry.length > 0) {
       const ids = filteredByCountry.map(p => p.id);
-      const { data: subsData } = await supabase
+      const { data: subsData } = await db
         .from('subscriptions')
         .select('user_id, account_status, plan_type, trial_ends_at, source_campaign, converted_at')
         .in('user_id', ids);
@@ -488,7 +488,7 @@ const SuperAdmin: React.FC = () => {
   ) => {
     try {
       Promise.resolve(
-        supabase.rpc('log_admin_event', { p_event_type: eventType, p_actor_role: adminRole ?? null, ...extra }),
+        db.rpc('log_admin_event', { p_event_type: eventType, p_actor_role: adminRole ?? null, ...extra }),
       )
         .then((res: any) => { if (res?.error) console.warn('log_admin_event:', res.error.message); })
         .catch(() => { /* silencio: la telemetría no rompe la acción */ });
@@ -497,7 +497,7 @@ const SuperAdmin: React.FC = () => {
 
   const saveEdit = async (id: string) => {
     setSavingId(id);
-    const { error } = await supabase.rpc('update_user_plan_theme', {
+    const { error } = await db.rpc('update_user_plan_theme', {
       p_user_id: id,
       p_plan:    editVals.plan,
       p_theme:   editVals.theme,
@@ -524,7 +524,7 @@ const SuperAdmin: React.FC = () => {
 
   const handleToggleActive = async (profileId: string, currentActive: boolean) => {
     const next = !currentActive;
-    const { error } = await supabase.rpc('set_profile_active', {
+    const { error } = await db.rpc('set_profile_active', {
       p_user_id: profileId,
       p_is_active: next,
     });
@@ -547,7 +547,7 @@ const SuperAdmin: React.FC = () => {
   const handleDeleteUser = async (profileId: string) => {
     setIsDeleting(true);
     try {
-      const { error } = await supabase.rpc('delete_user_complete', { p_user_id: profileId });
+      const { error } = await db.rpc('delete_user_complete', { p_user_id: profileId });
       if (error) throw error;
       setProfiles(prev => prev.filter(p => p.id !== profileId));
       setDeletingId(null);
@@ -562,7 +562,7 @@ const SuperAdmin: React.FC = () => {
   const handleSetTrial = async (profileId: string) => {
     setProcessingTrial(true);
     try {
-      const { error } = await supabase.rpc('set_user_trial', {
+      const { error } = await db.rpc('set_user_trial', {
         p_user_id:         profileId,
         p_trial_days:      trialPanelVals.days,
         p_source_campaign: trialPanelVals.campaign,
@@ -593,7 +593,7 @@ const SuperAdmin: React.FC = () => {
   const handleConvert = async (profileId: string) => {
     setProcessingConvert(true);
     try {
-      const { error } = await supabase.rpc('convert_trial_to_paid', {
+      const { error } = await db.rpc('convert_trial_to_paid', {
         p_user_id:   profileId,
         p_plan_type: convertPlanType,
         p_admin_id:  currentAdmin?.id,
@@ -621,20 +621,20 @@ const SuperAdmin: React.FC = () => {
   };
 
   // Crea la cuenta en auth.users SIN perder la sesión del administrador.
-  // supabase.auth.signUp() puede dejar la sesión del recién creado si el proyecto
+  // db.auth.signUp() puede dejar la sesión del recién creado si el proyecto
   // tiene desactivada la confirmación por correo; como ahora las RPC exigen rol
   // de admin, esa suplantación silenciosa rompería la creación de clientes.
   const createAuthUser = async (email: string, password: string) => {
-    const { data: { session: adminSession } } = await supabase.auth.getSession();
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data: { session: adminSession } } = await db.auth.getSession();
+    const { data, error } = await db.auth.signUp({ email, password });
     if (error) throw error;
     if (!data?.user) throw new Error('No se pudo crear el usuario en Auth.');
     if ((data.user.identities?.length ?? 0) === 0) {
       throw new Error('Este correo ya está registrado. Usa otro email o edita el perfil existente.');
     }
-    const { data: { session: after } } = await supabase.auth.getSession();
+    const { data: { session: after } } = await db.auth.getSession();
     if (adminSession && after?.user?.id !== adminSession.user.id) {
-      await supabase.auth.setSession({
+      await db.auth.setSession({
         access_token:  adminSession.access_token,
         refresh_token: adminSession.refresh_token,
       });
@@ -665,7 +665,7 @@ const SuperAdmin: React.FC = () => {
     try {
       const newUser = await createAuthUser(form.email, form.password);
       const data = { user: newUser };
-      const { error: pe } = await supabase.rpc('create_user_profile', {
+      const { error: pe } = await db.rpc('create_user_profile', {
         p_user_id:     data.user.id,
         p_email:       form.email,
         p_username:    usuarioLimpio,
@@ -678,22 +678,22 @@ const SuperAdmin: React.FC = () => {
 
       // Auto-confirmar email para que el cliente pueda iniciar sesión de inmediato
       // El email de Supabase ya sale automáticamente como email de bienvenida
-      await supabase.rpc('auto_confirm_user_email', { p_user_id: data.user.id });
+      await db.rpc('auto_confirm_user_email', { p_user_id: data.user.id });
 
       // Register subscription according to selected type
       if (formSubType === 'trial') {
-        await supabase.rpc('create_trial_subscription', {
+        await db.rpc('create_trial_subscription', {
           p_user_id:         data.user.id,
           p_source_campaign: formCampaign.trim(),
           p_trial_days:      formTrialDays,
         });
       } else if (formSubType === 'mensual' || formSubType === 'anual') {
-        await supabase.rpc('create_trial_subscription', {
+        await db.rpc('create_trial_subscription', {
           p_user_id:         data.user.id,
           p_source_campaign: '',
           p_trial_days:      1,
         });
-        await supabase.rpc('convert_trial_to_paid', {
+        await db.rpc('convert_trial_to_paid', {
           p_user_id:   data.user.id,
           p_plan_type: formSubType === 'mensual' ? 'mensual_pago' : 'anual_pago',
           p_admin_id:  currentAdmin?.id,
@@ -734,7 +734,7 @@ const SuperAdmin: React.FC = () => {
   // ── Operadores (solo Super Admin) ───────────────────────────────────────────
   const fetchAdmins = async () => {
     setLoadingAdmins(true);
-    const { data, error } = await supabase.rpc('admin_list_admins');
+    const { data, error } = await db.rpc('admin_list_admins');
     if (error) {
       console.error('admin_list_admins error:', error);
       showToast('No se pudo cargar la lista de accesos', false);
@@ -754,8 +754,8 @@ const SuperAdmin: React.FC = () => {
     setCreatingOp(true); setOpMsg(null);
     try {
       const newUser = await createAuthUser(email, opForm.password);
-      await supabase.rpc('auto_confirm_user_email', { p_user_id: newUser.id });
-      const { error } = await supabase.rpc('admin_register_operator', {
+      await db.rpc('auto_confirm_user_email', { p_user_id: newUser.id });
+      const { error } = await db.rpc('admin_register_operator', {
         p_user_id: newUser.id,
         p_email:   email,
         p_note:    opForm.note.trim() || null,
@@ -768,7 +768,7 @@ const SuperAdmin: React.FC = () => {
       // lo retiramos: la RPC solo borra la fila de 'profiles' si el usuario es operador,
       // por lo que nunca puede tocar el perfil de un cliente real. Best-effort: si el
       // SQL nuevo aún no se ejecutó, no rompemos la creación del operador.
-      const { error: cleanupErr } = await supabase.rpc('admin_delete_admin_profile', {
+      const { error: cleanupErr } = await db.rpc('admin_delete_admin_profile', {
         p_user_id: newUser.id,
       });
       if (cleanupErr) console.warn('No se pudo limpiar el perfil fantasma del operador:', cleanupErr.message);
@@ -784,7 +784,7 @@ const SuperAdmin: React.FC = () => {
   };
 
   const handleToggleOperator = async (userId: string, current: boolean) => {
-    const { error } = await supabase.rpc('admin_set_operator_active', {
+    const { error } = await db.rpc('admin_set_operator_active', {
       p_user_id: userId, p_is_active: !current,
     });
     if (error) { showToast('Error: ' + error.message, false); return; }
@@ -793,7 +793,7 @@ const SuperAdmin: React.FC = () => {
   };
 
   const handleRemoveOperator = async (userId: string) => {
-    const { error } = await supabase.rpc('admin_remove_operator', { p_user_id: userId });
+    const { error } = await db.rpc('admin_remove_operator', { p_user_id: userId });
     if (error) { showToast('Error: ' + error.message, false); return; }
     setAdmins(prev => prev.filter(a => a.user_id !== userId));
     setRemovingOpId(null);
@@ -821,7 +821,7 @@ const SuperAdmin: React.FC = () => {
     try {
       // Re-autenticación: exigimos la contraseña actual para que nadie pueda
       // cambiarla aprovechando una sesión abierta en un equipo ajeno.
-      const { error: reauthError } = await supabase.auth.signInWithPassword({
+      const { error: reauthError } = await db.auth.signInWithPassword({
         email: currentAdmin?.email || '',
         password: current,
       });
@@ -830,7 +830,7 @@ const SuperAdmin: React.FC = () => {
         return;
       }
 
-      const { error } = await supabase.auth.updateUser({ password: next });
+      const { error } = await db.auth.updateUser({ password: next });
       if (error) throw error;
 
       setPwdForm({ current: '', next: '', confirm: '' });
@@ -1227,7 +1227,7 @@ const SuperAdmin: React.FC = () => {
                   `¿Expirar y DESACTIVAR ${expired.length} perfil(es)?\n\n${names}\n\nEsta acción desactivará sus perfiles públicos.`
                 );
                 if (!ok) return;
-                const { data, error } = await supabase.rpc('expire_trials');
+                const { data, error } = await db.rpc('expire_trials');
                 if (error) showToast('Error: ' + error.message, false);
                 else { showToast(`${data ?? 0} trial(s) expirado(s) y desactivado(s)`, true); fetchProfiles(); }
               }}

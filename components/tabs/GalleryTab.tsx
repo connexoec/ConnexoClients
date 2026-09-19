@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Button, Input } from '../ui';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 /**
@@ -57,16 +57,16 @@ export const GalleryTab: React.FC<GalleryTabProps> = ({
     const handleSaveGalleryTitle = async (title: string) => {
         if (!user) return;
         try {
-            await supabase.from('profiles').update({ galleryTitle: title }).eq('id', user.id);
+            await db.from('profiles').update({ galleryTitle: title }).eq('id', user.id);
         } catch (error) {
             console.error('Error al guardar el tÃ­tulo de la galerÃ­a:', error?.message || error || 'OcurriÃ³ un error desconocido');
         }
     };
 
     const uploadAlbumAsset = async (file: File, storagePath: string) => {
-        const { data, error } = await supabase.storage.from('assets').upload(storagePath, file);
+        const { data, error } = await db.storage.from('assets').upload(storagePath, file);
         if (error) throw error;
-        const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(storagePath);
+        const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(storagePath);
         return publicUrl;
     };
 
@@ -74,7 +74,7 @@ export const GalleryTab: React.FC<GalleryTabProps> = ({
         if (!user) return;
         // Supabase NO lanza excepción: devuelve { error }. Hay que revisarlo o el
         // guardado falla en silencio (ej. si falta la columna 'albums' en la BD).
-        const { error } = await supabase.from('profiles').update({ albums: updatedAlbums }).eq('id', user.id);
+        const { error } = await db.from('profiles').update({ albums: updatedAlbums }).eq('id', user.id);
         if (error) {
             console.error('Error al guardar álbumes:', error.message);
             alert(`No se pudieron guardar los álbumes: ${error.message}.\n\nSi dice que falta la columna, ejecuta add_missing_columns.sql en Supabase.`);
@@ -395,7 +395,7 @@ export const GalleryTab: React.FC<GalleryTabProps> = ({
                                                 if (!user) return;
                                                 setIsSavingGalleryOrder(true);
                                                 try {
-                                                    await supabase.from('profiles').update({ galleryImageURLs: profileData.galleryImageURLs }).eq('id', user.id);
+                                                    await db.from('profiles').update({ galleryImageURLs: profileData.galleryImageURLs }).eq('id', user.id);
                                                 } catch (error) {
                                                     console.error('Error al guardar el orden de la galería:', error);
                                                 } finally {

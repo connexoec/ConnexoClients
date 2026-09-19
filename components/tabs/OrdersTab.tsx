@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import {
   FaUtensils, FaClipboardList, FaUser, FaClock, FaCheckCircle,
   FaTimesCircle, FaBan, FaDollarSign, FaVolumeUp
@@ -84,7 +84,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ user, isPetcare = false, i
   const fetchOrders = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('orders')
         .select('*')
         .eq('restaurant_id', user.id)
@@ -137,7 +137,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ user, isPetcare = false, i
     if (!user?.id) return;
     fetchOrders();
 
-    const channel = supabase.channel(`restaurant_orders_${user.id}`)
+    const channel = db.channel(`restaurant_orders_${user.id}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'orders', filter: `restaurant_id=eq.${user.id}` },
         () => { fetchOrders(); }
@@ -154,7 +154,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ user, isPetcare = false, i
     document.addEventListener('visibilitychange', onFocus);
 
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       clearInterval(poll);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onFocus);
@@ -163,7 +163,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ user, isPetcare = false, i
 
   const handleUpdateStatus = async (orderId: string, nextStatus: GStatus, visitorId?: string | null) => {
     try {
-      const { error } = await supabase
+      const { error } = await db
         .from('orders')
         .update({ status: nextStatus })
         .eq('id', orderId);
@@ -173,7 +173,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ user, isPetcare = false, i
       // Al entregar/completar, si el pedido era de un visitante registrado, dale un sello.
       if ((nextStatus === 'entregado' || nextStatus === 'completado') && visitorId) {
         // Fetch visitor's profile stamps
-        const { data: profileData, error: profileError } = await supabase
+        const { data: profileData, error: profileError } = await db
           .from('profiles')
           .select('stamps')
           .eq('id', visitorId)
@@ -181,7 +181,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ user, isPetcare = false, i
 
         if (!profileError && profileData) {
           const currentStamps = profileData.stamps || 0;
-          await supabase
+          await db
             .from('profiles')
             .update({ stamps: currentStamps + 1 })
             .eq('id', visitorId);
@@ -199,7 +199,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ user, isPetcare = false, i
     const raw = timeDraft[orderId];
     const minutes = raw === '' || raw === undefined ? null : Math.max(0, parseInt(raw, 10) || 0);
     try {
-      const { error } = await supabase.from('orders').update({ estimated_minutes: minutes }).eq('id', orderId);
+      const { error } = await db.from('orders').update({ estimated_minutes: minutes }).eq('id', orderId);
       if (error) throw error;
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, estimated_minutes: minutes } : o));
       setTimeDraft(prev => { const n = { ...prev }; delete n[orderId]; return n; });
@@ -211,7 +211,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ user, isPetcare = false, i
   const handleTogglePayment = async (orderId: string, currentPaymentStatus: string) => {
     const nextPaymentStatus = currentPaymentStatus === 'pagado' ? 'pendiente' : 'pagado';
     try {
-      const { error } = await supabase
+      const { error } = await db
         .from('orders')
         .update({ payment_status: nextPaymentStatus })
         .eq('id', orderId);
