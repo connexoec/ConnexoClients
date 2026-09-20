@@ -8,7 +8,7 @@ import {
   cropRegionToBlob, downscaleImageBlob, type VisionImage, type VisionProduct,
 } from '../../src/lib/catalogVision';
 import { mergeCatalog } from '../../src/lib/csvImport';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 
 interface PhotoCatalogImportProps {
   /** Catálogo actual (para detectar duplicados y fusionar). */
@@ -201,10 +201,10 @@ export const PhotoCatalogImport: React.FC<PhotoCatalogImportProps> = ({
         if (!crop) return row;
         try {
           const path = `products/${userId}/${row.id}`;
-          const { error: upErr } = await supabase.storage.from('assets')
+          const { error: upErr } = await db.storage.from('assets')
             .upload(path, crop.blob, { upsert: true, contentType: 'image/jpeg' });
           if (upErr) throw upErr;
-          const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path);
+          const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(path);
           photosUp++;
           return { ...row, imageURL: publicUrl };
         } catch {

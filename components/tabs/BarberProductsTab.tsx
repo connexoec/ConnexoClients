@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { BarberRetailProduct, BarberPaymentGatewaysConfig } from '../../types';
 import {
   FaPlus, FaTrash, FaPen, FaImage, FaTimes, FaSave,
@@ -52,7 +52,7 @@ export const BarberProductsTab: React.FC<Props> = ({ user, profileData, setProfi
     if (!user?.id) return;
     let cancelled = false;
     (async () => {
-      const { data } = await supabase
+      const { data } = await db
         .from('barber_payment_secrets')
         .select('payphone_token, payphone_client_id')
         .eq('profile_id', user.id)
@@ -69,7 +69,7 @@ export const BarberProductsTab: React.FC<Props> = ({ user, profileData, setProfi
   const closeModal = () => { setEditing(null); setForm(emptyForm()); setIsOpen(false); };
 
   const persistProducts = async (list: BarberRetailProduct[]) => {
-    const { error } = await supabase.from('profiles').update({ barber_products: list }).eq('id', user.id);
+    const { error } = await db.from('profiles').update({ barber_products: list }).eq('id', user.id);
     if (error) throw error;
     setProfileData((prev: any) => ({ ...prev, barber_products: list }));
   };
@@ -79,8 +79,8 @@ export const BarberProductsTab: React.FC<Props> = ({ user, profileData, setProfi
     const slotId = editing?.id || `tmp_${Date.now()}`;
     setUploading(true);
     try {
-      await supabase.storage.from('assets').upload(`barber_products/${user.id}/${slotId}`, file, { upsert: true });
-      const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`barber_products/${user.id}/${slotId}`);
+      await db.storage.from('assets').upload(`barber_products/${user.id}/${slotId}`, file, { upsert: true });
+      const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`barber_products/${user.id}/${slotId}`);
       setForm(prev => ({ ...prev, imageURL: `${publicUrl}?v=${Date.now()}` }));
     } catch (err: any) {
       showNotification(`Error al subir imagen: ${err?.message}`, 'error');
@@ -123,7 +123,7 @@ export const BarberProductsTab: React.FC<Props> = ({ user, profileData, setProfi
   const toggleAvailable = async (p: BarberRetailProduct) => {
     const list = products.map(x => x.id === p.id ? { ...x, available: !(x.available !== false) } : x);
     setProfileData((prev: any) => ({ ...prev, barber_products: list }));
-    await supabase.from('profiles').update({ barber_products: list }).eq('id', user.id);
+    await db.from('profiles').update({ barber_products: list }).eq('id', user.id);
   };
 
   const handleDelete = async (id: string) => {
@@ -154,11 +154,11 @@ export const BarberProductsTab: React.FC<Props> = ({ user, profileData, setProfi
         ...gwConfig,
         payphone: gwConfig.payphone?.enabled ? { enabled: true } : undefined,
       };
-      const { error } = await supabase.from('profiles').update({ barber_gateways: safeConfig }).eq('id', user.id);
+      const { error } = await db.from('profiles').update({ barber_gateways: safeConfig }).eq('id', user.id);
       if (error) throw error;
 
       if (safeConfig.payphone?.enabled) {
-        const { error: secretError } = await supabase
+        const { error: secretError } = await db
           .from('barber_payment_secrets')
           .upsert({
             profile_id: user.id,

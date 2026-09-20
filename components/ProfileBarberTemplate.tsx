@@ -1,7 +1,7 @@
 import { profileStyleLayer } from '../src/lib/profileStyleLayer';
 import React, { useState, useEffect, useMemo } from 'react';
 import { MemberPlanBadge } from './MemberPlanCard';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import { ProfileExtraSections } from './ProfileExtraSections';
 import FullCatalogView from './FullCatalogView';
 import type { Profile, UserLink, BarberPaymentGatewaysConfig, BarberPaymentMethodType } from '../types';
@@ -91,7 +91,7 @@ export const ProfileBarberTemplate: React.FC<ProfileBarberTemplateProps> = ({
   // Detect associated sub-profiles under same master email (ULTRA feature)
   useEffect(() => {
     if (profile.plan === 'ultra' && profile.email) {
-      supabase
+      db
         .from('profiles')
         .select('username, displayName, profilePhotoURL')
         .eq('email', profile.email)
@@ -106,7 +106,7 @@ export const ProfileBarberTemplate: React.FC<ProfileBarberTemplateProps> = ({
   // Cargar el equipo activo (solo ULTRA) para habilitar reservas de cita.
   useEffect(() => {
     if (profile.plan === 'ultra' && profile.id) {
-      supabase
+      db
         .from('barber_staff')
         .select('id, name, role, photo_url, working_hours, is_active')
         .eq('barber_id', profile.id)
@@ -990,7 +990,7 @@ const BarberMembershipLookup: React.FC<BarberMembershipLookupProps> = ({
     if (!query.trim() || isMobilePreview) return;
     setLoading(true);
     setSearched(false);
-    const { data, error } = await supabase.rpc('get_barber_member', {
+    const { data, error } = await db.rpc('get_barber_member', {
       p_barber_id: barberId,
       p_identifier: query.trim(),
     });
@@ -1113,7 +1113,7 @@ const ClubBarberModal: React.FC<ClubBarberModalProps> = ({ barberId, isMobilePre
     if (isMobilePreview) { setError('Desactivado en vista previa.'); return; }
     setLoading(true);
     setError('');
-    const { data, error: rpcError } = await supabase.rpc('join_barber_club', {
+    const { data, error: rpcError } = await db.rpc('join_barber_club', {
       p_barber_id: barberId,
       p_name: name.trim(),
       p_email: email.trim(),
@@ -1268,7 +1268,7 @@ const BarberServiceModal: React.FC<BarberServiceModalProps> = ({ service, barber
   const checkCode = async () => {
     if (!code.trim() || isMobilePreview) return;
     setChecking(true);
-    const { data } = await supabase.rpc('get_barber_member', {
+    const { data } = await db.rpc('get_barber_member', {
       p_barber_id: barberId,
       p_identifier: code.trim(),
     });
@@ -1576,7 +1576,7 @@ const BarberReservationModal: React.FC<BarberReservationModalProps> = ({ profile
     if (!selStaff || !date) { setTaken([]); return; }
     let cancelled = false;
     setLoadingSlots(true);
-    supabase.rpc('get_barber_staff_availability', { p_barber_id: profile.id, p_staff_id: selStaff.id, p_date: date })
+    db.rpc('get_barber_staff_availability', { p_barber_id: profile.id, p_staff_id: selStaff.id, p_date: date })
       .then(({ data }) => {
         if (cancelled) return;
         const t = data?.taken;
@@ -1594,7 +1594,7 @@ const BarberReservationModal: React.FC<BarberReservationModalProps> = ({ profile
     setSubmitting(true);
     setError('');
     try {
-      const { data, error: rpcError } = await supabase.rpc('place_barber_reservation', {
+      const { data, error: rpcError } = await db.rpc('place_barber_reservation', {
         p_barber_id: profile.id,
         p_staff_id: selStaff.id,
         p_service: serviceName || null,
@@ -1784,7 +1784,7 @@ const BarberReservationLookup: React.FC<{ barberId: string; isMobilePreview?: bo
     if (!code.trim() || isMobilePreview) return;
     setLoading(true);
     setSearched(false);
-    const { data, error } = await supabase.rpc('get_barber_reservation_status', {
+    const { data, error } = await db.rpc('get_barber_reservation_status', {
       p_barber_id: barberId,
       p_code: code.trim(),
     });

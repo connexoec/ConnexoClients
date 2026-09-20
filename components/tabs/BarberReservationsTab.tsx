@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { BarberStaff, BarberStaffHours, BarberReservation } from '../../types';
 import {
   FaCalendarCheck, FaUsers, FaClock, FaWhatsapp, FaCheck, FaTimes,
@@ -92,7 +92,7 @@ export const BarberReservationsTab: React.FC<Props> = ({ user, profileData, setP
 
   const fetchStaff = useCallback(async () => {
     if (!user?.id) return;
-    const { data, error } = await supabase.from('barber_staff')
+    const { data, error } = await db.from('barber_staff')
       .select('*').eq('barber_id', user.id)
       .order('sort_order', { ascending: true }).order('created_at', { ascending: true });
     if (!error) setStaff((data as BarberStaff[]) || []);
@@ -124,8 +124,8 @@ export const BarberReservationsTab: React.FC<Props> = ({ user, profileData, setP
     const slotId = editingStaff?.id || `tmp_${Date.now()}`;
     setUploading(true);
     try {
-      await supabase.storage.from('assets').upload(`barber_staff/${user.id}/${slotId}`, file, { upsert: true });
-      const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`barber_staff/${user.id}/${slotId}`);
+      await db.storage.from('assets').upload(`barber_staff/${user.id}/${slotId}`, file, { upsert: true });
+      const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`barber_staff/${user.id}/${slotId}`);
       setStaffForm(prev => ({ ...prev, photo_url: `${publicUrl}?v=${Date.now()}` }));
     } catch (err: any) {
       showNotification(`Error al subir foto: ${err?.message}`, 'error');
@@ -155,10 +155,10 @@ export const BarberReservationsTab: React.FC<Props> = ({ user, profileData, setP
         sort_order: editingStaff?.sort_order ?? staff.length,
       };
       if (editingStaff) {
-        const { error } = await supabase.from('barber_staff').update(payload).eq('id', editingStaff.id);
+        const { error } = await db.from('barber_staff').update(payload).eq('id', editingStaff.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('barber_staff').insert(payload);
+        const { error } = await db.from('barber_staff').insert(payload);
         if (error) throw error;
       }
       await fetchStaff();
@@ -174,13 +174,13 @@ export const BarberReservationsTab: React.FC<Props> = ({ user, profileData, setP
   const toggleStaffActive = async (s: BarberStaff) => {
     const next = !(s.is_active !== false);
     setStaff(prev => prev.map(x => x.id === s.id ? { ...x, is_active: next } : x));
-    await supabase.from('barber_staff').update({ is_active: next }).eq('id', s.id);
+    await db.from('barber_staff').update({ is_active: next }).eq('id', s.id);
   };
 
   const deleteStaff = async (id: string) => {
     if (!window.confirm('¿Eliminar este barbero del equipo? Sus citas pasadas se conservan.')) return;
     try {
-      const { error } = await supabase.from('barber_staff').delete().eq('id', id);
+      const { error } = await db.from('barber_staff').delete().eq('id', id);
       if (error) throw error;
       setStaff(prev => prev.filter(s => s.id !== id));
       showNotification('Barbero eliminado', 'success');
@@ -199,7 +199,7 @@ export const BarberReservationsTab: React.FC<Props> = ({ user, profileData, setP
   const fetchReservations = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase.from('barber_reservations')
+      const { data, error } = await db.from('barber_reservations')
         .select('*').eq('barber_id', user.id)
         .order('reservation_date', { ascending: true })
         .order('reservation_time', { ascending: true });
@@ -225,16 +225,16 @@ export const BarberReservationsTab: React.FC<Props> = ({ user, profileData, setP
   useEffect(() => {
     if (!user?.id) return;
     fetchReservations();
-    const channel = supabase.channel(`barber_reservations_${user.id}`)
+    const channel = db.channel(`barber_reservations_${user.id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'barber_reservations', filter: `barber_id=eq.${user.id}` }, () => fetchReservations())
       .subscribe();
     const poll = setInterval(fetchReservations, 15000);
-    return () => { supabase.removeChannel(channel); clearInterval(poll); };
+    return () => { db.removeChannel(channel); clearInterval(poll); };
   }, [user?.id, fetchReservations]);
 
   const setStatus = async (id: string, status: string) => {
     try {
-      const { error } = await supabase.from('barber_reservations').update({ status }).eq('id', id);
+      const { error } = await db.from('barber_reservations').update({ status }).eq('id', id);
       if (error) throw error;
       setReservations(prev => prev.map(r => r.id === id ? { ...r, status: status as any } : r));
     } catch (err: any) {
@@ -245,7 +245,7 @@ export const BarberReservationsTab: React.FC<Props> = ({ user, profileData, setP
   const deleteReservation = async (id: string) => {
     if (!window.confirm('¿Eliminar esta cita?')) return;
     try {
-      const { error } = await supabase.from('barber_reservations').delete().eq('id', id);
+      const { error } = await db.from('barber_reservations').delete().eq('id', id);
       if (error) throw error;
       setReservations(prev => prev.filter(r => r.id !== id));
     } catch (err: any) {

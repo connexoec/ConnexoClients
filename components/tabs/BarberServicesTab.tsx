@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { Product } from '../../types';
 import {
   FaPlus, FaTrash, FaPen, FaImage, FaTimes, FaSave,
@@ -38,7 +38,7 @@ export const BarberServicesTab: React.FC<Props> = ({ user, profileData, setProfi
   const closeModal = () => { setEditing(null); setForm(emptyForm()); setIsOpen(false); };
 
   const persistProducts = async (list: BarberProduct[]) => {
-    const { error } = await supabase.from('profiles').update({ products: list }).eq('id', user.id);
+    const { error } = await db.from('profiles').update({ products: list }).eq('id', user.id);
     if (error) throw error;
     setProfileData((prev: any) => ({ ...prev, products: list }));
   };
@@ -48,8 +48,8 @@ export const BarberServicesTab: React.FC<Props> = ({ user, profileData, setProfi
     const slotId = editing?.id || `tmp_${Date.now()}`;
     setUploading(true);
     try {
-      await supabase.storage.from('assets').upload(`products/${user.id}/${slotId}`, file, { upsert: true });
-      const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`products/${user.id}/${slotId}`);
+      await db.storage.from('assets').upload(`products/${user.id}/${slotId}`, file, { upsert: true });
+      const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`products/${user.id}/${slotId}`);
       setForm(prev => ({ ...prev, imageURL: publicUrl }));
     } catch (err: any) {
       showNotification(`Error al subir imagen: ${err?.message}`, 'error');
@@ -92,7 +92,7 @@ export const BarberServicesTab: React.FC<Props> = ({ user, profileData, setProfi
   const toggleAvailable = async (s: BarberProduct) => {
     const list = services.map(x => x.id === s.id ? { ...x, available: !(x.available !== false) } : x);
     setProfileData((prev: any) => ({ ...prev, products: list }));
-    await supabase.from('profiles').update({ products: list }).eq('id', user.id);
+    await db.from('profiles').update({ products: list }).eq('id', user.id);
   };
 
   const handleDelete = async (id: string) => {

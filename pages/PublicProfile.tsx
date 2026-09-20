@@ -10,7 +10,7 @@ import FullCatalogView from '../components/FullCatalogView';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { FaWhatsapp, FaEnvelope, FaShareAlt, FaPhoneAlt, FaMapMarkerAlt, FaTimes, FaChevronLeft, FaChevronRight, FaQrcode } from 'react-icons/fa';
 import { QRCodeCanvas } from 'qrcode.react';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import { trackProfileView as recordProfileView, trackLinkClick as recordLinkClick } from '../src/lib/analytics';
 // Plantillas cargadas bajo demanda: cada perfil solo descarga el chunk de su theme
 const ProfileBarberTemplate = React.lazy(() => import('../components/ProfileBarberTemplate').then(m => ({ default: m.ProfileBarberTemplate })));
@@ -286,13 +286,13 @@ const PublicProfile: React.FC = () => {
   const [isAuthenticated] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = db.auth.onAuthStateChange((event, session) => {
       const user = session?.user;
       console.log('PublicProfile Auth - Visitante detectado:', user?.id || 'No logueado');
       setCurrentUser(user as any);
 
       if (user) {
-        Promise.resolve(supabase.from('profiles').select('*').eq('id', user.id).single())
+        Promise.resolve(db.from('profiles').select('*').eq('id', user.id).single())
           .then(({ data }) => {
             if (data) {
               console.log('Visitante es plan:', data?.plan);
@@ -335,7 +335,7 @@ const PublicProfile: React.FC = () => {
       try {
         // 1. Buscar el perfil por username
         console.log("Fetching profile for username:", perfilKey);
-        const { data: profileSnap, error: profileError } = await supabase.from('profiles').select('*').eq('username', perfilKey).limit(1);
+        const { data: profileSnap, error: profileError } = await db.from('profiles').select('*').eq('username', perfilKey).limit(1);
 
         if (profileSnap && profileSnap.length > 0) {
           userProfile = {
@@ -354,7 +354,7 @@ const PublicProfile: React.FC = () => {
           }
 
           // ── Verificar si el trial expiró ──────────────────────────────────
-          const { data: subSnap } = await supabase
+          const { data: subSnap } = await db
             .from('subscriptions')
             .select('account_status, trial_ends_at')
             .eq('user_id', foundUserId)
@@ -397,7 +397,7 @@ const PublicProfile: React.FC = () => {
         // 3. Si encontramos el perfil, buscar sus enlaces usando el userId
         console.log("Fetching links for User ID:", foundUserId);
         // 1. QUERY LIMPIO SIN orderBy
-        const { data: linksSnapshot, error: linksError } = await supabase.from('links').select('*').eq('userId', foundUserId);
+        const { data: linksSnapshot, error: linksError } = await db.from('links').select('*').eq('userId', foundUserId);
         
         const fetchedLinks = (linksSnapshot || []).map(doc => {
           const data = doc;
@@ -557,7 +557,7 @@ const PublicProfile: React.FC = () => {
 
     setIsStartingChat(true);
     try {
-      const { data, error } = await supabase.functions.invoke('startChat', {
+      const { data, error } = await db.functions.invoke('startChat', {
         body: { receiverId: userId }
       });
       if (error) throw error;
@@ -665,7 +665,7 @@ const PublicProfile: React.FC = () => {
       // Enviar y la llamada fallaba, así que no llegaba a ninguna parte.
       // Ahora va por RPC, igual que el resto de escrituras anónimas de la app
       // (join_gastro_club, place_ecom_order, join_stage_fanbase…).
-      const { data, error } = await supabase.rpc('submit_testimonial', {
+      const { data, error } = await db.rpc('submit_testimonial', {
         p_owner_id: foundUserId,
         p_quote: newTestimonial.quote,
         p_author: newTestimonial.author,
@@ -790,7 +790,7 @@ const PublicProfile: React.FC = () => {
       // Antes llamaba a la Edge Function `submitLead`, que devuelve 404: nunca
       // se desplegó, así que el visitante SIEMPRE veía un error y el lead no
       // llegaba a ninguna parte. Ahora es una RPC — ver setup_leads.sql.
-      const { data, error } = await supabase.rpc('submit_lead', {
+      const { data, error } = await db.rpc('submit_lead', {
         p_owner_id: foundUserId,
         p_name: leadData.name,
         p_email: leadData.email,

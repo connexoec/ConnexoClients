@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { FaFileExcel, FaChevronDown, FaDownload, FaSpinner } from 'react-icons/fa';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import {
   RANGE_PRESETS, checkRange, defaultRange, filterByRange, prettyRange,
   rangeFileStamp, rangeToTimestamps, safeFileName, spanOf,
@@ -206,7 +206,7 @@ export const fetchOwnerRange = async <T,>(opts: {
   let offset = 0;
 
   for (;;) {
-    let query = supabase.from(table).select('*').eq(ownerColumn, ownerId);
+    let query = db.from(table).select('*').eq(ownerColumn, ownerId);
     if (isTimestamp) {
       const { start, end } = rangeToTimestamps(range);
       query = query.gte(dateColumn, start).lte(dateColumn, end);

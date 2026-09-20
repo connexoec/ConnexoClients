@@ -2,7 +2,8 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { LanguageProvider } from './contexts/LanguageContext';
-import { supabase } from './src/lib/supabase';
+import { db } from './src/lib/backend';
+import { hasStoredSession } from './src/lib/api';
 
 // Code-splitting por ruta: cada página se descarga solo cuando se visita
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
@@ -22,19 +23,10 @@ const SUPER_ADMIN_EMAILS = ['connexoec@gmail.com', 'connexotech@gmail.com'];
  * ¿Hay una sesión guardada en el navegador?
  *
  * Sirve para distinguir «todavía no sé si hay sesión» de «no hay sesión», que es
- * justo lo que la app confundía al expulsar al usuario. Supabase guarda el token
- * bajo `sb-<ref>-auth-token`; se busca por prefijo para no depender del nombre
- * exacto si cambiara la librería.
+ * justo lo que la app confundía al expulsar al usuario. Lo responde la propia
+ * capa de sesión, que es quién sabe dónde guarda el token.
  */
-const haySesionGuardada = (): boolean => {
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith('sb-') && k.endsWith('-auth-token') && localStorage.getItem(k)) return true;
-    }
-  } catch { /* modo privado o storage bloqueado */ }
-  return false;
-};
+const haySesionGuardada = hasStoredSession;
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +57,7 @@ function App() {
       setIsLoading(false);
     }, 5000);
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    db.auth.getSession().then(({ data: { session } }) => {
       if (!vivo) return;
       clearTimeout(timeout);
       setSession(session);
@@ -79,7 +71,7 @@ function App() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, next) => {
+    } = db.auth.onAuthStateChange((event, next) => {
       if (!vivo) return;
 
       // Un fallo puntual renovando el token puede emitir eventos sin sesión.

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Button, Input } from '../ui';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 interface AccountTabProps {
@@ -36,7 +36,7 @@ export const AccountTab: React.FC<AccountTabProps> = ({
 
         setIsSavingDetails(true);
         try {
-            const { error: dbError } = await supabase.from('profiles').update({
+            const { error: dbError } = await db.from('profiles').update({
                 username: newUsername
             }).eq('id', user.id);
             if (dbError) throw dbError;
@@ -61,7 +61,7 @@ export const AccountTab: React.FC<AccountTabProps> = ({
 
         setIsSavingContact(true);
         try {
-            const { error } = await supabase.from('profiles').update({
+            const { error } = await db.from('profiles').update({
                 phone: profileData.phone || null,
                 contactEmail: profileData.contactEmail || null,
                 whatsapp: profileData.whatsapp || null,
@@ -137,7 +137,7 @@ export const AccountTab: React.FC<AccountTabProps> = ({
         setIsUpdatingPassword(true);
 
         try {
-            const { error } = await supabase.auth.updateUser({ password: newPassword });
+            const { error } = await db.auth.updateUser({ password: newPassword });
             if (error) throw error;
             
             setPasswords({ current: '', new: '', confirm: '' });

@@ -2,7 +2,7 @@ import { profileStyleLayer } from '../src/lib/profileStyleLayer';
 import React, { useState, useMemo } from 'react';
 import { MemberPlanCard } from './MemberPlanCard';
 import { useMemberPlan } from '../hooks/useMemberPlan';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import { ProfileExtraSections } from './ProfileExtraSections';
 import FullCatalogView from './FullCatalogView';
 import type { Profile, UserLink, Product, Release, TourDate } from '../types';
@@ -450,7 +450,7 @@ const FanBaseModule: React.FC<{ accent: string; userId?: string | null; artistNa
     setError(null);
     setSubmitting(true);
     try {
-      const { error: rpcError } = await supabase.rpc('join_stage_fanbase', {
+      const { error: rpcError } = await db.rpc('join_stage_fanbase', {
         p_profile_id: userId,
         p_name: name.trim(),
         p_email: email.trim() || null,

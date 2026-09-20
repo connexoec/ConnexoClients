@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 
@@ -25,7 +25,7 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, user }) => {
 
     const fetchChats = async () => {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await db
                 .from('chats')
                 .select('*')
                 .contains('participants', [user.id]);
@@ -44,14 +44,14 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, user }) => {
 
     fetchChats();
 
-    const channel = supabase.channel('public:chats')
+    const channel = db.channel('public:chats')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'chats' }, payload => {
             fetchChats();
         })
         .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       console.log("ChatList: Unsubscribed from listeners.");
     };
   }, [user]); // Re-ejecutar si cambia el usuario

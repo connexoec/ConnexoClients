@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { RealtyLead, RealtyAgent, RealtyProperty } from '../../types';
 import {
   FaUsers, FaTrash, FaWhatsapp, FaEnvelope, FaSearch, FaDownload,
@@ -70,9 +70,9 @@ export const RealtyLeadsTab: React.FC<Props> = ({ user }) => {
     if (!user?.id) return;
     try {
       const [leadsRes, agentsRes, propsRes] = await Promise.all([
-        supabase.from('realty_leads').select('*').eq('agency_profile_id', user.id).order('created_at', { ascending: false }),
-        supabase.from('realty_agents').select('*').eq('agency_profile_id', user.id),
-        supabase.from('realty_properties').select('*').eq('agency_profile_id', user.id),
+        db.from('realty_leads').select('*').eq('agency_profile_id', user.id).order('created_at', { ascending: false }),
+        db.from('realty_agents').select('*').eq('agency_profile_id', user.id),
+        db.from('realty_properties').select('*').eq('agency_profile_id', user.id),
       ]);
       if (leadsRes.error) throw leadsRes.error;
       const list = (leadsRes.data ?? []) as RealtyLead[];
@@ -117,7 +117,7 @@ export const RealtyLeadsTab: React.FC<Props> = ({ user }) => {
   useEffect(() => {
     if (!user?.id) return;
     fetchAll();
-    const channel = supabase
+    const channel = db
       .channel(`realty_leads_${user.id}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'realty_leads', filter: `agency_profile_id=eq.${user.id}` },
@@ -128,7 +128,7 @@ export const RealtyLeadsTab: React.FC<Props> = ({ user }) => {
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onFocus);
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       clearInterval(poll);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onFocus);
@@ -138,7 +138,7 @@ export const RealtyLeadsTab: React.FC<Props> = ({ user }) => {
   const updateStatus = async (id: string, status: string) => {
     setLeads(prev => prev.map(l => l.id === id ? { ...l, status } : l));
     try {
-      const { error } = await supabase.from('realty_leads').update({ status }).eq('id', id);
+      const { error } = await db.from('realty_leads').update({ status }).eq('id', id);
       if (error) throw error;
     } catch (err: any) { console.error(err); }
   };
@@ -147,7 +147,7 @@ export const RealtyLeadsTab: React.FC<Props> = ({ user }) => {
     const note = (noteDrafts[id] ?? '').trim();
     setSavingNote(id);
     try {
-      const { error } = await supabase.from('realty_leads').update({ admin_note: note || null }).eq('id', id);
+      const { error } = await db.from('realty_leads').update({ admin_note: note || null }).eq('id', id);
       if (error) throw error;
       setLeads(prev => prev.map(l => l.id === id ? { ...l, admin_note: note || null } : l));
       setNoteDrafts(prev => { const n = { ...prev }; delete n[id]; return n; });
@@ -158,7 +158,7 @@ export const RealtyLeadsTab: React.FC<Props> = ({ user }) => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('¿Eliminar este lead?')) return;
     try {
-      const { error } = await supabase.from('realty_leads').delete().eq('id', id);
+      const { error } = await db.from('realty_leads').delete().eq('id', id);
       if (error) throw error;
       setLeads(prev => prev.filter(l => l.id !== id));
     } catch (err: any) { alert(`Error al eliminar: ${err?.message ?? err}`); }

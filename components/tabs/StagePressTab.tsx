@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import { FaFolderOpen, FaTrash, FaUpload, FaFilePdf, FaFileAlt } from 'react-icons/fa';
 
 interface Props {
@@ -18,7 +18,7 @@ export const StagePressTab: React.FC<Props> = ({ user, profileData, setProfileDa
   const [uploading, setUploading] = useState(false);
 
   const persist = async (list: any[]) => {
-    const { error } = await supabase.from('profiles').update({ digitalFiles: list }).eq('id', user.id);
+    const { error } = await db.from('profiles').update({ digitalFiles: list }).eq('id', user.id);
     if (error) throw error;
     setProfileData((prev: any) => ({ ...prev, digitalFiles: list }));
   };
@@ -32,9 +32,9 @@ export const StagePressTab: React.FC<Props> = ({ user, profileData, setProfileDa
       const uploaded: any[] = [];
       for (const file of fileList) {
         const path = `digital_files/${user.id}/${Date.now()}_${file.name}`;
-        const { error } = await supabase.storage.from('assets').upload(path, file);
+        const { error } = await db.storage.from('assets').upload(path, file);
         if (error) throw error;
-        const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path);
+        const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(path);
         uploaded.push({
           id: `file_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
           title: file.name,

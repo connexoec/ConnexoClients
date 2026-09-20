@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { InventoryItem, InventoryPurchase } from '../../types';
 import {
   FaBoxes, FaPlus, FaTrash, FaPen, FaTimes, FaSave, FaTruck,
@@ -46,8 +46,8 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
     if (!user?.id) return;
     try {
       const [{ data: inv }, { data: pur }] = await Promise.all([
-        supabase.from('gastro_inventory').select('*').eq('restaurant_id', user.id).order('name'),
-        supabase.from('gastro_purchases').select('*').eq('restaurant_id', user.id).order('created_at', { ascending: false }),
+        db.from('gastro_inventory').select('*').eq('restaurant_id', user.id).order('name'),
+        db.from('gastro_purchases').select('*').eq('restaurant_id', user.id).order('created_at', { ascending: false }),
       ]);
       setItems((inv as InventoryItem[]) || []);
       setPurchases((pur as InventoryPurchase[]) || []);
@@ -61,12 +61,12 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
   useEffect(() => {
     if (!user?.id) return;
     fetchAll();
-    const channel = supabase.channel(`gastro_inventory_${user.id}`)
+    const channel = db.channel(`gastro_inventory_${user.id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'gastro_inventory', filter: `restaurant_id=eq.${user.id}` }, () => fetchAll())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'gastro_purchases', filter: `restaurant_id=eq.${user.id}` }, () => fetchAll())
       .subscribe();
     const poll = setInterval(fetchAll, 15000);
-    return () => { supabase.removeChannel(channel); clearInterval(poll); };
+    return () => { db.removeChannel(channel); clearInterval(poll); };
   }, [user?.id, fetchAll]);
 
   // ── Item modal ──────────────────────────────────────────────
@@ -98,10 +98,10 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
         updated_at: new Date().toISOString(),
       };
       if (editingId) {
-        const { error } = await supabase.from('gastro_inventory').update(payload).eq('id', editingId);
+        const { error } = await db.from('gastro_inventory').update(payload).eq('id', editingId);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('gastro_inventory').insert(payload);
+        const { error } = await db.from('gastro_inventory').insert(payload);
         if (error) throw error;
       }
       showNotification(editingId ? 'Insumo actualizado' : 'Insumo agregado', 'success');
@@ -117,7 +117,7 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
   const deleteItem = async (id: string) => {
     if (!window.confirm('¿Eliminar este insumo del inventario? Los platos que lo usen quedarán sin ese ingrediente.')) return;
     try {
-      const { error } = await supabase.from('gastro_inventory').delete().eq('id', id);
+      const { error } = await db.from('gastro_inventory').delete().eq('id', id);
       if (error) throw error;
       showNotification('Insumo eliminado', 'success');
       fetchAll();
@@ -130,7 +130,7 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
   const adjustStock = async (it: InventoryItem, delta: number) => {
     const next = Math.max(0, Number(it.stock_qty) + delta);
     try {
-      const { error } = await supabase.from('gastro_inventory')
+      const { error } = await db.from('gastro_inventory')
         .update({ stock_qty: next, updated_at: new Date().toISOString() }).eq('id', it.id);
       if (error) throw error;
       setItems(prev => prev.map(x => x.id === it.id ? { ...x, stock_qty: next } : x));
@@ -168,11 +168,11 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
         status: purForm.status || 'contactado',
         notes: purForm.notes?.trim() || null,
       };
-      const { error } = await supabase.from('gastro_purchases').insert(payload);
+      const { error } = await db.from('gastro_purchases').insert(payload);
       if (error) throw error;
       // Refleja el estado de contacto en el insumo.
       if (item && payload.status !== 'cancelado') {
-        await supabase.from('gastro_inventory')
+        await db.from('gastro_inventory')
           .update({ supplier_status: payload.status, updated_at: new Date().toISOString() })
           .eq('id', item.id);
       }
@@ -188,10 +188,10 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
 
   const advancePurchase = async (p: InventoryPurchase, status: string) => {
     try {
-      const { error } = await supabase.from('gastro_purchases').update({ status }).eq('id', p.id);
+      const { error } = await db.from('gastro_purchases').update({ status }).eq('id', p.id);
       if (error) throw error;
       if (p.item_id && status !== 'cancelado') {
-        await supabase.from('gastro_inventory')
+        await db.from('gastro_inventory')
           .update({ supplier_status: status, updated_at: new Date().toISOString() }).eq('id', p.item_id);
       }
       fetchAll();
@@ -203,7 +203,7 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
   const receivePurchase = async (p: InventoryPurchase) => {
     if (!window.confirm(`¿Marcar como recibido? Se sumarán ${p.qty} ${p.unit || ''} de "${p.item_name}" al stock.`)) return;
     try {
-      const { data, error } = await supabase.rpc('receive_gastro_purchase', { p_purchase_id: p.id });
+      const { data, error } = await db.rpc('receive_gastro_purchase', { p_purchase_id: p.id });
       if (error) throw error;
       if (!data?.ok) { showNotification('No se pudo recibir la compra', 'error'); return; }
       showNotification('Compra recibida · stock actualizado', 'success');
@@ -216,7 +216,7 @@ export const GastroInventoryTab: React.FC<GastroInventoryTabProps> = ({ user, sh
   const deletePurchase = async (id: string) => {
     if (!window.confirm('¿Eliminar este registro de compra?')) return;
     try {
-      const { error } = await supabase.from('gastro_purchases').delete().eq('id', id);
+      const { error } = await db.from('gastro_purchases').delete().eq('id', id);
       if (error) throw error;
       fetchAll();
     } catch (err: any) {

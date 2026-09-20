@@ -1,7 +1,7 @@
 import { profileStyleLayer } from '../src/lib/profileStyleLayer';
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { MemberPlanBadge } from './MemberPlanCard';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import { QRCodeCanvas } from 'qrcode.react';
 import { ProfileExtraSections } from './ProfileExtraSections';
 import FullCatalogView from './FullCatalogView';
@@ -164,7 +164,7 @@ export const ProfilePetcareTemplate: React.FC<ProfilePetcareTemplateProps> = ({
     let active = true;
     const fetchAvailability = async () => {
       try {
-        const { data, error } = await supabase.rpc('get_gastro_menu_availability', { p_restaurant_id: sellerId });
+        const { data, error } = await db.rpc('get_gastro_menu_availability', { p_restaurant_id: sellerId });
         if (error) throw error;
         if (active && data?.unavailable) setUnavailableIds(new Set(data.unavailable as string[]));
       } catch (e) { /* fail-open */ }
@@ -223,7 +223,7 @@ export const ProfilePetcareTemplate: React.FC<ProfilePetcareTemplateProps> = ({
       setCheckingMember(false); setMemberChecked(true); return;
     }
     try {
-      const { data, error } = await supabase.rpc('get_gastro_member', {
+      const { data, error } = await db.rpc('get_gastro_member', {
         p_restaurant_id: sellerId, p_identifier: memberCode.trim(),
       });
       if (error) throw error;
@@ -256,7 +256,7 @@ export const ProfilePetcareTemplate: React.FC<ProfilePetcareTemplateProps> = ({
     const vipNote = memberInfo?.found && memberDiscount > 0 ? `Miembro Pet VIP ${memberInfo.member_code} (-${memberDiscount}%)` : null;
     const combinedNote = [petNote, vipNote].filter(Boolean).join(' · ') || null;
     try {
-      const { data, error } = await supabase.rpc('place_gastro_order', {
+      const { data, error } = await db.rpc('place_gastro_order', {
         p_restaurant_id: sellerId,
         p_items: items,
         p_total_price: total,
@@ -721,7 +721,7 @@ export const ProfilePetcareTemplate: React.FC<ProfilePetcareTemplateProps> = ({
               const code = successOrder.verification_code;
               const waPhone = profile?.whatsapp ?? profile?.phone ?? '';
               window.open(ecWaLink(waPhone, `¡Hola ${profile?.displayName || ''}! Adjunto el comprobante de pago de mi pedido #${code} por $${Number(successOrder.total_price ?? 0).toFixed(2)} USD.`), '_blank');
-              if (!isMobilePreview && sellerId) { try { await supabase.rpc('notify_gastro_payment', { p_restaurant_id: sellerId, p_code: code }); } catch (e) { console.error(e); } }
+              if (!isMobilePreview && sellerId) { try { await db.rpc('notify_gastro_payment', { p_restaurant_id: sellerId, p_code: code }); } catch (e) { console.error(e); } }
             }} className="mt-2 w-full py-3.5 bg-[#25D366] hover:bg-[#1ebe5d] text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"><FaWhatsapp size={14} /> {profile?.paymentLink ? 'O envía tu comprobante' : 'Pagar · Enviar comprobante'}</button>
             <button type="button" onClick={() => setInvoiceCode(successOrder.verification_code)} className="mt-2 w-full py-3 bg-white/5 hover:bg-white/10 border border-[#0ea5a4]/20 text-[#e6fffb] rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2">🧾 ¿Necesitas factura?</button>
             <button type="button" onClick={() => { const c = successOrder.verification_code; setSuccessOrder(null); setTrackCode(c); setShowTracker(true); }} style={{ backgroundColor: accent }} className="mt-2 w-full py-3.5 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:brightness-110 flex items-center justify-center gap-2"><FaClock size={12} /> Ver estado en vivo</button>
@@ -786,9 +786,9 @@ const OrderTracker: React.FC<{
     if (isMobilePreview) { setData({ kind: 'order', found: true, status: 'preparando', order_type: 'mesa', estimated_minutes: 15, code: c }); return; }
     if (!restaurantId || !c) return;
     try {
-      const { data: d } = await supabase.rpc('get_order_status', { p_restaurant_id: restaurantId, p_code: c.trim() });
+      const { data: d } = await db.rpc('get_order_status', { p_restaurant_id: restaurantId, p_code: c.trim() });
       if (d && d.found) { setData({ ...d, kind: 'order' }); setNotFound(false); return; }
-      const { data: r } = await supabase.rpc('get_gastro_reservation_status', { p_restaurant_id: restaurantId, p_code: c.trim() });
+      const { data: r } = await db.rpc('get_gastro_reservation_status', { p_restaurant_id: restaurantId, p_code: c.trim() });
       if (r && r.found) { setData({ ...r, kind: 'reservation' }); setNotFound(false); return; }
       setNotFound(true); setData(null);
     } catch (e) { console.error('tracker error:', e); setNotFound(true); }
@@ -861,7 +861,7 @@ const OrderTracker: React.FC<{
                 <p className="text-[11px] text-amber-200/90 font-bold text-center">💵 Pago pendiente. Envía tu comprobante para que tu pedido avance.</p>
                 <p className="text-center text-white font-black text-sm">${Number(data.total_price ?? 0).toFixed(2)} USD</p>
                 {payLink && <a href={payLink} target="_blank" rel="noopener noreferrer" style={{ backgroundColor: accent }} className="w-full py-2.5 rounded-lg text-white text-xs font-black uppercase tracking-wider transition flex items-center justify-center gap-2 hover:brightness-110">💳 Pagar en línea</a>}
-                <button onClick={async () => { window.open(ecWaLink(waPhone, `¡Hola ${restaurantName || ''}! Adjunto el comprobante de pago de mi pedido #${data.code} por $${Number(data.total_price ?? 0).toFixed(2)} USD.`), '_blank'); if (!isMobilePreview && restaurantId) { try { await supabase.rpc('notify_gastro_payment', { p_restaurant_id: restaurantId, p_code: data.code }); fetchStatus(data.code); } catch (e) { console.error(e); } } }} className="w-full py-2.5 rounded-lg bg-[#25D366] hover:bg-[#1ebe5d] text-white text-xs font-black uppercase tracking-wider transition flex items-center justify-center gap-2"><FaWhatsapp size={13} /> {payLink ? 'O envía tu comprobante' : 'Pagar · Enviar comprobante'}</button>
+                <button onClick={async () => { window.open(ecWaLink(waPhone, `¡Hola ${restaurantName || ''}! Adjunto el comprobante de pago de mi pedido #${data.code} por $${Number(data.total_price ?? 0).toFixed(2)} USD.`), '_blank'); if (!isMobilePreview && restaurantId) { try { await db.rpc('notify_gastro_payment', { p_restaurant_id: restaurantId, p_code: data.code }); fetchStatus(data.code); } catch (e) { console.error(e); } } }} className="w-full py-2.5 rounded-lg bg-[#25D366] hover:bg-[#1ebe5d] text-white text-xs font-black uppercase tracking-wider transition flex items-center justify-center gap-2"><FaWhatsapp size={13} /> {payLink ? 'O envía tu comprobante' : 'Pagar · Enviar comprobante'}</button>
               </div>
             )}
             <div className="flex items-center justify-between gap-1">
@@ -900,7 +900,7 @@ const InvoiceModal: React.FC<{ restaurantId: string | null; code: string; isMobi
     if (!memberCode.trim() || loadingMember) return;
     setLoadingMember(true);
     try {
-      const { data } = await supabase.rpc('get_gastro_member', { p_restaurant_id: restaurantId, p_identifier: memberCode.trim() });
+      const { data } = await db.rpc('get_gastro_member', { p_restaurant_id: restaurantId, p_identifier: memberCode.trim() });
       if (data && data.found) {
         if (data.billing_full_name) setFullName(data.billing_full_name); else if (data.name) setFullName(data.name);
         if (data.billing_name) setName(data.billing_name); if (data.billing_tax_id) setTaxId(data.billing_tax_id);
@@ -917,7 +917,7 @@ const InvoiceModal: React.FC<{ restaurantId: string | null; code: string; isMobi
     if (isMobilePreview) { setDone(true); return; }
     setSubmitting(true); setErrorMsg(null);
     try {
-      const { data, error } = await supabase.rpc('submit_gastro_invoice', { p_restaurant_id: restaurantId, p_code: code, p_name: name.trim(), p_tax_id: taxId.trim(), p_email: email.trim() || null, p_address: address.trim() || null, p_full_name: fullName.trim(), p_phone: phone.trim() });
+      const { data, error } = await db.rpc('submit_gastro_invoice', { p_restaurant_id: restaurantId, p_code: code, p_name: name.trim(), p_tax_id: taxId.trim(), p_email: email.trim() || null, p_address: address.trim() || null, p_full_name: fullName.trim(), p_phone: phone.trim() });
       if (error) throw error;
       if (!data?.ok) { setErrorMsg('No encontramos tu pedido. Verifica el código.'); setSubmitting(false); return; }
       setDone(true);
@@ -970,13 +970,13 @@ const MembershipLookup: React.FC<{ restaurantId: string | null; isMobilePreview:
     if (!restaurantId) { setNotFound(true); return; }
     setLoading(true);
     try {
-      const { data, error } = await supabase.rpc('get_gastro_member', { p_restaurant_id: restaurantId, p_identifier: identifier.trim() });
+      const { data, error } = await db.rpc('get_gastro_member', { p_restaurant_id: restaurantId, p_identifier: identifier.trim() });
       if (error) throw error;
       if (data && data.found) {
         setResult(data);
         // Intentar cargar historial médico (falla graciosamente si la tabla no existe aún)
         try {
-          const { data: recs } = await supabase.rpc('get_petcare_records', { p_restaurant_id: restaurantId, p_member_code: data.member_code });
+          const { data: recs } = await db.rpc('get_petcare_records', { p_restaurant_id: restaurantId, p_member_code: data.member_code });
           if (Array.isArray(recs) && recs.length > 0) setMedRecords(recs);
         } catch { /* tabla aún no creada — ignorar */ }
       } else { setNotFound(true); }
@@ -1085,7 +1085,7 @@ const ClubPetModal: React.FC<{ restaurantId: string | null; isMobilePreview: boo
     if (!restaurantId) { setErrorMsg('No se pudo identificar la clínica. Recarga la página.'); return; }
     setSubmitting(true); setErrorMsg(null);
     try {
-      const { data, error } = await supabase.rpc('join_gastro_club', { p_restaurant_id: restaurantId, p_name: petName.trim() ? `${name.trim()} (${petName.trim()})` : name.trim(), p_email: email.trim(), p_phone: phone.trim() || null });
+      const { data, error } = await db.rpc('join_gastro_club', { p_restaurant_id: restaurantId, p_name: petName.trim() ? `${name.trim()} (${petName.trim()})` : name.trim(), p_email: email.trim(), p_phone: phone.trim() || null });
       if (error) throw error;
       setMember(data || null); setDone(true);
     } catch (err: any) { console.error('join_gastro_club error:', err); setErrorMsg(err?.message ? `No se pudo registrar: ${err.message}` : 'No se pudo registrar. Intenta de nuevo.'); } finally { setSubmitting(false); }
@@ -1163,7 +1163,7 @@ const ReserveModal: React.FC<{
     if (!memberCode.trim() || memberLookupLoading || isMobilePreview) return;
     setMemberLookupLoading(true);
     try {
-      const { data } = await supabase.rpc('get_gastro_member', { p_restaurant_id: restaurantId, p_identifier: memberCode.trim() });
+      const { data } = await db.rpc('get_gastro_member', { p_restaurant_id: restaurantId, p_identifier: memberCode.trim() });
       if (data?.found) {
         setMemberLookupInfo(data);
         const ownerName = data.name?.includes('(') ? data.name.split('(')[0].trim() : (data.name || '');
@@ -1182,7 +1182,7 @@ const ReserveModal: React.FC<{
     if (!restaurantId) { setErrorMsg('No se pudo identificar la clínica. Recarga la página.'); return; }
     setSubmitting(true); setErrorMsg(null);
     try {
-      const { data, error } = await supabase.rpc('place_gastro_reservation', {
+      const { data, error } = await db.rpc('place_gastro_reservation', {
         p_restaurant_id: restaurantId, p_name: name.trim(), p_phone: phone.trim(), p_email: email.trim() || null,
         p_party_size: party, p_date: date, p_time: time, p_notes: patientNote, p_member_code: memberCode.trim() || null,
         p_items: null,

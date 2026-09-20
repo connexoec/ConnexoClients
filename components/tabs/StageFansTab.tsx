@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { MemberPlanSection } from '../MemberPlanSection';
 import { useSubscriptionOptions } from '../../hooks/useSubscriptionOptions';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import {
   FaHeart, FaTrash, FaPhone, FaEnvelope, FaWhatsapp, FaUsers,
   FaBullhorn, FaDownload, FaSearch,
@@ -55,7 +55,7 @@ export const StageFansTab: React.FC<{ user: any }> = ({ user }) => {
   const fetchFans = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('stage_fans')
         .select('*')
         .eq('profile_id', user.id)
@@ -95,7 +95,7 @@ export const StageFansTab: React.FC<{ user: any }> = ({ user }) => {
   useEffect(() => {
     if (!user?.id) return;
     fetchFans();
-    const channel = supabase
+    const channel = db
       .channel(`stage_fans_${user.id}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'stage_fans', filter: `profile_id=eq.${user.id}` },
@@ -106,7 +106,7 @@ export const StageFansTab: React.FC<{ user: any }> = ({ user }) => {
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onFocus);
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
       clearInterval(poll);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onFocus);
@@ -116,7 +116,7 @@ export const StageFansTab: React.FC<{ user: any }> = ({ user }) => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('¿Eliminar este fan de tu base?')) return;
     try {
-      const { error } = await supabase.from('stage_fans').delete().eq('id', id);
+      const { error } = await db.from('stage_fans').delete().eq('id', id);
       if (error) throw error;
       setFans(prev => prev.filter(f => f.id !== id));
     } catch (err: any) {

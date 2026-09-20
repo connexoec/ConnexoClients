@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { GastroReservation } from '../../types';
 import {
   FaCalendarCheck, FaUsers, FaClock, FaWhatsapp, FaCheck, FaChair,
@@ -79,7 +79,7 @@ export const GastroReservationsTab: React.FC<GastroReservationsTabProps> = ({
   const fetchReservations = useCallback(async () => {
     if (!user?.id) return;
     try {
-      const { data, error } = await supabase.from('gastro_reservations')
+      const { data, error } = await db.from('gastro_reservations')
         .select('*').eq('restaurant_id', user.id)
         .order('reservation_date', { ascending: true })
         .order('reservation_time', { ascending: true });
@@ -105,16 +105,16 @@ export const GastroReservationsTab: React.FC<GastroReservationsTabProps> = ({
   useEffect(() => {
     if (!user?.id) return;
     fetchReservations();
-    const channel = supabase.channel(`gastro_reservations_${user.id}`)
+    const channel = db.channel(`gastro_reservations_${user.id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'gastro_reservations', filter: `restaurant_id=eq.${user.id}` }, () => fetchReservations())
       .subscribe();
     const poll = setInterval(fetchReservations, 15000);
-    return () => { supabase.removeChannel(channel); clearInterval(poll); };
+    return () => { db.removeChannel(channel); clearInterval(poll); };
   }, [user?.id, fetchReservations]);
 
   const setStatus = async (id: string, status: string) => {
     try {
-      const { error } = await supabase.from('gastro_reservations').update({ status }).eq('id', id);
+      const { error } = await db.from('gastro_reservations').update({ status }).eq('id', id);
       if (error) throw error;
       setReservations(prev => prev.map(r => r.id === id ? { ...r, status } : r));
     } catch (err: any) {
@@ -125,7 +125,7 @@ export const GastroReservationsTab: React.FC<GastroReservationsTabProps> = ({
   const togglePaid = async (id: string, current?: string) => {
     const next = current === 'pagado' ? 'pendiente' : 'pagado';
     try {
-      const { error } = await supabase.from('gastro_reservations').update({ payment_status: next }).eq('id', id);
+      const { error } = await db.from('gastro_reservations').update({ payment_status: next }).eq('id', id);
       if (error) throw error;
       setReservations(prev => prev.map(r => r.id === id ? { ...r, payment_status: next } : r));
     } catch (err: any) {
@@ -136,7 +136,7 @@ export const GastroReservationsTab: React.FC<GastroReservationsTabProps> = ({
   const saveBox = async (id: string) => {
     const t = tableDraft[id]?.trim() || null;
     try {
-      const { error } = await supabase.from('gastro_reservations').update({ table_number: t }).eq('id', id);
+      const { error } = await db.from('gastro_reservations').update({ table_number: t }).eq('id', id);
       if (error) throw error;
       setReservations(prev => prev.map(r => r.id === id ? { ...r, table_number: t } : r));
       setTableDraft(prev => { const n = { ...prev }; delete n[id]; return n; });
@@ -149,7 +149,7 @@ export const GastroReservationsTab: React.FC<GastroReservationsTabProps> = ({
   const deleteReservation = async (id: string) => {
     if (!window.confirm(isClinic ? '¿Eliminar esta cita?' : '¿Eliminar esta reserva?')) return;
     try {
-      const { error } = await supabase.from('gastro_reservations').delete().eq('id', id);
+      const { error } = await db.from('gastro_reservations').delete().eq('id', id);
       if (error) throw error;
       setReservations(prev => prev.filter(r => r.id !== id));
     } catch (err: any) {
@@ -162,14 +162,14 @@ export const GastroReservationsTab: React.FC<GastroReservationsTabProps> = ({
     if (!r.member_code) { showNotification('Esta cita no tiene un paciente con carnet (código de miembro).', 'error'); return; }
     if (r.points_awarded) return;
     try {
-      const { data: cli, error: e1 } = await supabase
+      const { data: cli, error: e1 } = await db
         .from('gastro_clients').select('id, visits')
         .eq('restaurant_id', user.id).eq('member_code', r.member_code).maybeSingle();
       if (e1) throw e1;
       if (!cli) { showNotification('No se encontró el carnet de este paciente.', 'error'); return; }
-      const { error: e2 } = await supabase.from('gastro_clients').update({ visits: (cli.visits || 0) + 1 }).eq('id', cli.id);
+      const { error: e2 } = await db.from('gastro_clients').update({ visits: (cli.visits || 0) + 1 }).eq('id', cli.id);
       if (e2) throw e2;
-      const { error: e3 } = await supabase.from('gastro_reservations').update({ points_awarded: true }).eq('id', r.id);
+      const { error: e3 } = await db.from('gastro_reservations').update({ points_awarded: true }).eq('id', r.id);
       if (e3) throw e3;
       setReservations(prev => prev.map(x => x.id === r.id ? { ...x, points_awarded: true } : x));
       showNotification('✅ Punto asignado al carnet del paciente', 'success');
@@ -236,7 +236,7 @@ export const GastroReservationsTab: React.FC<GastroReservationsTabProps> = ({
     setSavingSettings(true);
     try {
       const newSettings = { maxPartySize: maxParty, openTime, closeTime, daysAhead, autoConfirm };
-      const { error } = await supabase.from('profiles')
+      const { error } = await db.from('profiles')
         .update({ reservationsEnabled: enabled, reservationSettings: newSettings }).eq('id', user.id);
       if (error) throw error;
       setProfileData((prev: any) => ({ ...prev, reservationsEnabled: enabled, reservationSettings: newSettings }));

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 interface ChatWindowProps {
@@ -26,7 +26,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chatId, user, onClose }) => {
     }
     const fetchPlan = async () => {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await db
           .from('profiles')
           .select('plan')
           .eq('id', user.id)
@@ -51,7 +51,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chatId, user, onClose }) => {
     setLoading(true);
 
     // Carga inicial de mensajes
-    supabase
+    db
       .from('messages')
       .select('*')
       .eq('chatId', chatId)
@@ -63,7 +63,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chatId, user, onClose }) => {
       });
 
     // Suscripción realtime
-    const channel = supabase
+    const channel = db
       .channel(`chat-${chatId}`)
       .on(
         'postgres_changes',
@@ -75,7 +75,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chatId, user, onClose }) => {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      db.removeChannel(channel);
     };
   }, [chatId]);
 
@@ -97,12 +97,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chatId, user, onClose }) => {
     setNewMessage('');
 
     try {
-      await supabase.from('messages').insert([{
+      await db.from('messages').insert([{
         chatId,
         text: textToSend,
         senderId: user.id,
       }]);
-      await supabase
+      await db
         .from('chats')
         .update({ lastMessage: { text: textToSend, timestamp: new Date().toISOString() } })
         .eq('id', chatId);

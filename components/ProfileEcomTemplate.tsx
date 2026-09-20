@@ -3,7 +3,7 @@ import React, { useReducer, useState, useEffect, useRef, useCallback } from 'rea
 import { SubscriptionPricePicker } from './SubscriptionPricePicker';
 import { isSubscription, defaultPeriod, tierUnitPrice as subTierUnitPrice } from '../src/lib/memberPlans';
 import { MemberPlanBadge } from './MemberPlanCard';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import { ProfileExtraSections } from './ProfileExtraSections';
 import { ImageLightbox } from './ImageLightbox';
 import FullCatalogView from './FullCatalogView';
@@ -151,7 +151,7 @@ const EcomClubModal: React.FC<EcomClubModalProps> = ({ profile, sellerId, onClos
     setError(null);
     setSubmitting(true);
     try {
-      const { data, error: rpcError } = await supabase.rpc('join_ecom_club', {
+      const { data, error: rpcError } = await db.rpc('join_ecom_club', {
         p_seller_id: sellerId,
         p_name: name.trim(),
         p_email: email.trim() || null,
@@ -249,7 +249,7 @@ const EcomMemberLookup: React.FC<EcomMemberLookupProps> = ({ profile, sellerId, 
     setMember(null);
     setNotFound(false);
     try {
-      const { data, error } = await supabase.rpc('get_ecom_member', {
+      const { data, error } = await db.rpc('get_ecom_member', {
         p_seller_id: sellerId,
         p_query: query.trim(),
       });
@@ -376,7 +376,7 @@ const EcomOrderTracker: React.FC<EcomOrderTrackerProps> = ({ sellerId, initialCo
     }
     if (!sellerId || !c) return;
     try {
-      const { data: d, error } = await supabase.rpc('get_ecom_order_status', {
+      const { data: d, error } = await db.rpc('get_ecom_order_status', {
         p_seller_id: sellerId,
         p_code: c.trim(),
       });
@@ -919,7 +919,7 @@ const EcomInvoiceModal: React.FC<EcomInvoiceModalProps> = ({
     setLookingUp(true);
     setMsg(null);
     try {
-      const { data, error } = await supabase.rpc('get_ecom_member', { p_seller_id: sellerId, p_query: lookupCode.trim() });
+      const { data, error } = await db.rpc('get_ecom_member', { p_seller_id: sellerId, p_query: lookupCode.trim() });
       if (error) throw error;
       const r = Array.isArray(data) ? data[0] : data;
       if (r) {
@@ -942,7 +942,7 @@ const EcomInvoiceModal: React.FC<EcomInvoiceModalProps> = ({
     if (!fullName.trim() || !ruc.trim() || !phone.trim() || !sellerId) return;
     setSubmitting(true);
     try {
-      const { error } = await supabase.rpc('submit_ecom_invoice', {
+      const { error } = await db.rpc('submit_ecom_invoice', {
         p_seller_id: sellerId,
         p_code: orderCode,
         p_full_name: fullName.trim(),
@@ -1105,7 +1105,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ items, profile, sellerId,
     setMemberDiscount(0);
     setMemberName('');
     try {
-      const { data, error } = await supabase.rpc('get_ecom_member', {
+      const { data, error } = await db.rpc('get_ecom_member', {
         p_seller_id: sellerId,
         p_query: memberCode.trim(),
       });
@@ -1162,7 +1162,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ items, profile, sellerId,
     setSubmitting(true);
     let ref: string | null = null;
     try {
-      const { data, error } = await supabase.rpc('place_ecom_order', {
+      const { data, error } = await db.rpc('place_ecom_order', {
         p_seller_id: sellerId,
         p_customer_name: name.trim(),
         p_customer_phone: phone.trim(),
@@ -1208,7 +1208,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ items, profile, sellerId,
     setPayphoneBusy(true);
     setPayphoneMsg(null);
     try {
-      const { data, error } = await supabase.functions.invoke('payphone_charge', {
+      const { data, error } = await db.functions.invoke('payphone_charge', {
         body: {
           token: gwCfg.payphone?.token ?? null,
           storeId: gwCfg.payphone?.storeId ?? null,
@@ -1605,7 +1605,7 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
     if (!selStaff || !date || !sellerId) { setTaken([]); return; }
     let cancelled = false;
     setLoadingSlots(true);
-    supabase.rpc('get_ecom_staff_availability', {
+    db.rpc('get_ecom_staff_availability', {
       p_seller_id: sellerId, p_staff_id: selStaff.id, p_date: date,
     })
       .then(({ data }) => {
@@ -1692,7 +1692,7 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
     setSubmitting(true);
     setError('');
     try {
-      const { data, error: rpcError } = await supabase.rpc('place_ecom_appointment', {
+      const { data, error: rpcError } = await db.rpc('place_ecom_appointment', {
         p_seller_id: sellerId,
         p_staff_id: selStaff!.id,
         p_name: effName,
@@ -1723,7 +1723,7 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
         if (code === 'slot_taken') {
           setTime('');
           // Refrescamos la disponibilidad para que no vuelva a elegir esa hora
-          supabase.rpc('get_ecom_staff_availability', {
+          db.rpc('get_ecom_staff_availability', {
             p_seller_id: sellerId, p_staff_id: selStaff!.id, p_date: date,
           }).then(({ data: d }) => {
             const t = (d as any)?.taken;
@@ -2067,7 +2067,7 @@ const EcomAppointmentLookup: React.FC<EcomAppointmentLookupProps> = ({ sellerId,
     if (!code.trim() || !sellerId) return;
     setLoading(true); setNotFound(false); setData(null);
     try {
-      const { data: res } = await supabase.rpc('get_ecom_appointment_status', {
+      const { data: res } = await db.rpc('get_ecom_appointment_status', {
         p_seller_id: sellerId, p_code: code.trim().toUpperCase(),
       });
       if ((res as any)?.found) setData(res); else setNotFound(true);
@@ -2198,7 +2198,7 @@ export const ProfileEcomTemplate: React.FC<ProfileEcomTemplateProps> = ({
   useEffect(() => {
     if (!foundUserId || !isProOrUltra) { setApptStaff([]); return; }
     let cancelled = false;
-    supabase.from('ecom_staff')
+    db.from('ecom_staff')
       .select('id, name, role, photo_url, working_hours, slot_minutes, is_active, sort_order')
       .eq('seller_id', foundUserId)
       .eq('is_active', true)

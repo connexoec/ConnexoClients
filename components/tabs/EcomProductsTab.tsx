@@ -4,7 +4,7 @@ import { BulkProductImport } from './BulkProductImport';
 import { PhotoCatalogImport } from './PhotoCatalogImport';
 import { useDebouncedValue, matchesQuery } from '../../hooks/useCatalogSearch';
 import { downscaleImageBlob } from '../../src/lib/catalogVision';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { Product, ProductExtra, ProductExtraOption, EcomPriceTier, PaymentGatewaysConfig } from '../../types';
 import {
   FaPlus, FaTrash, FaPen, FaImage, FaTimes, FaSave,
@@ -79,7 +79,7 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
   const closeModal = () => { setEditing(null); setForm(emptyForm()); setIsOpen(false); };
 
   const persistProducts = async (list: EcomProduct[]) => {
-    const { error } = await supabase.from('profiles').update({ products: list }).eq('id', user.id);
+    const { error } = await db.from('profiles').update({ products: list }).eq('id', user.id);
     if (error) throw error;
     setProfileData((prev: any) => ({ ...prev, products: list }));
   };
@@ -88,7 +88,7 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
     const fee = parseFloat(deliveryFeeInput) || 0;
     setSavingFee(true);
     try {
-      const { error } = await supabase.from('profiles').update({ delivery_fee: fee }).eq('id', user.id);
+      const { error } = await db.from('profiles').update({ delivery_fee: fee }).eq('id', user.id);
       if (error) throw error;
       setProfileData((prev: any) => ({ ...prev, delivery_fee: fee }));
       showNotification('Costo de domicilio guardado', 'success');
@@ -114,10 +114,10 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
       for (const file of chosen) {
         const blob = await downscaleImageBlob(file);
         const key = `products/${user.id}/${slotId}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-        const { error } = await supabase.storage.from('assets')
+        const { error } = await db.storage.from('assets')
           .upload(key, blob, { upsert: true, contentType: 'image/jpeg' });
         if (error) throw error;
-        const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(key);
+        const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(key);
         added.push(publicUrl);
       }
       setForm(prev => ({
@@ -226,7 +226,7 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
   const handleSaveGateways = async () => {
     setSavingGateways(true);
     try {
-      const { error } = await supabase.from('profiles').update({ payment_gateways: gwConfig }).eq('id', user.id);
+      const { error } = await db.from('profiles').update({ payment_gateways: gwConfig }).eq('id', user.id);
       if (error) throw error;
       setProfileData((prev: any) => ({ ...prev, payment_gateways: gwConfig }));
       showNotification('Pasarelas de pago guardadas', 'success');
@@ -288,7 +288,7 @@ export const EcomProductsTab: React.FC<Props> = ({ user, profileData, setProfile
   const toggleAvailable = async (p: EcomProduct) => {
     const list = products.map(x => x.id === p.id ? { ...x, available: !(x.available !== false) } : x);
     setProfileData((prev: any) => ({ ...prev, products: list }));
-    await supabase.from('profiles').update({ products: list }).eq('id', user.id);
+    await db.from('profiles').update({ products: list }).eq('id', user.id);
   };
 
   const handleDelete = async (id: string) => {

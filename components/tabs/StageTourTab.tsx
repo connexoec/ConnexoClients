@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 import type { TourDate } from '../../types';
 import { FaPlus, FaTrash, FaPen, FaSave, FaTimes, FaTicketAlt, FaMapMarkerAlt, FaLink } from 'react-icons/fa';
 
@@ -30,7 +30,7 @@ export const StageTourTab: React.FC<Props> = ({ user, profileData, setProfileDat
   const close = () => { setEditing(null); setForm(emptyForm()); setIsOpen(false); };
 
   const persist = async (list: TourDate[]) => {
-    const { error } = await supabase.from('profiles').update({ tourDates: list }).eq('id', user.id);
+    const { error } = await db.from('profiles').update({ tourDates: list }).eq('id', user.id);
     if (error) throw error;
     setProfileData((prev: any) => ({ ...prev, tourDates: list }));
   };
@@ -38,7 +38,7 @@ export const StageTourTab: React.FC<Props> = ({ user, profileData, setProfileDat
   const saveBooking = async () => {
     setSavingBooking(true);
     try {
-      const { error } = await supabase.from('profiles').update({ bookingLink: bookingDraft.trim() || null }).eq('id', user.id);
+      const { error } = await db.from('profiles').update({ bookingLink: bookingDraft.trim() || null }).eq('id', user.id);
       if (error) throw error;
       setProfileData((prev: any) => ({ ...prev, bookingLink: bookingDraft.trim() }));
       showNotification('Enlace de contrataciones guardado', 'success');

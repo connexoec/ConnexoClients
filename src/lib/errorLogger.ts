@@ -10,7 +10,7 @@
 //    · window.onerror           → errores globales no controlados
 //    · unhandledrejection       → promesas rechazadas sin catch
 // ─────────────────────────────────────────────────────────────────────────────
-import { supabase } from './supabase';
+import { db } from './backend';
 
 export type ErrorType = 'render' | 'window' | 'promise' | 'manual';
 export type Severity = 'info' | 'warning' | 'error' | 'critical';
@@ -79,7 +79,7 @@ export async function reportError(input: ReportInput): Promise<void> {
       for (const [k, t] of recent) if (now - t > DEDUP_MS) recent.delete(k);
     }
 
-    await supabase.rpc('log_client_error', {
+    await db.rpc('log_client_error', {
       p_message: message,
       p_stack: input.stack ? String(input.stack).slice(0, 8000) : null,
       p_url: (() => { try { return window.location.pathname + window.location.search; } catch { return null; } })(),

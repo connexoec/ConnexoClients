@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { supabase } from '../../src/lib/supabase';
+import { db } from '../../src/lib/backend';
 
 const EyeIcon = () => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -502,7 +502,7 @@ const GastroSalesPanel: React.FC<{ user: any; accent: string; restaurantName?: s
     const fetchOrders = useCallback(async () => {
         if (!user?.id) return;
         try {
-            const { data, error } = await supabase
+            const { data, error } = await db
                 .from('orders')
                 .select('created_at, total_price, status, items')
                 .eq('restaurant_id', user.id)

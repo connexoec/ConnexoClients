@@ -11,7 +11,7 @@
  *      `mergeCatalog` y la deduplicación ya probada, sin inventar otro camino.
  */
 
-import { supabase } from './supabase';
+import { db } from './backend';
 import { normalizePrice, type ImportedProduct } from './csvImport';
 
 export interface VisionImage {
@@ -95,7 +95,7 @@ export const extractCatalogFromImages = async (
   images: VisionImage[],
 ): Promise<{ products: ExtractedRow[]; error?: string }> => {
   try {
-    const { data, error } = await supabase.functions.invoke('extractCatalog', {
+    const { data, error } = await db.functions.invoke('extractCatalog', {
       body: { images },
     });
     if (error) {

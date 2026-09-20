@@ -40,7 +40,7 @@ import { OnboardingTour, type TourStep } from '../components/OnboardingTour';
 import { useOnboarding } from '../hooks/useOnboarding';
 import type { UserLink, Testimonial } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import { getOwnerTimeZone } from '../src/lib/analytics';
 import { pushMultiAccountEnabled, releasePushDevice } from '../src/lib/push';
 import { Link, Palette, BarChart3, UserIcon, Users, MessageCircle, QrCode, ExternalLink, LogOut, Save, Eye, Utensils, ShoppingBag, Package, Music, Ticket, Heart, FolderOpen, CalendarCheck, Boxes, ClipboardList, Building2, UserCog, Shirt, Scissors, Images, HelpCircle } from 'lucide-react';
@@ -155,7 +155,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
     // Suscripción en tiempo real del usuario
     useEffect(() => {
         if (!user?.id) return;
-        supabase
+        db
             .from('subscriptions')
             .select('account_status, plan_type, trial_ends_at, source_campaign, converted_at')
             .eq('user_id', user.id)
@@ -201,7 +201,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         setIsProfileLoading(true);
         console.log("Dashboard: Fetching core profile for", user.id);
         
-        Promise.resolve(supabase.from('profiles').select('*').eq('id', user.id).single())
+        Promise.resolve(db.from('profiles').select('*').eq('id', user.id).single())
             .then(({ data, error }) => {
                 if (data && !error) {
                     setProfileData(prev => ({
@@ -221,13 +221,13 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
 
         console.log("Dashboard: Fetching ancillary data for", user.id);
 
-        Promise.resolve(supabase.from('pending_testimonials').select('*').eq('userId', user.id))
+        Promise.resolve(db.from('pending_testimonials').select('*').eq('userId', user.id))
             .then(({ data, error }) => {
                 if (data && !error) setPendingTestimonials(data);
             })
             .catch(err => console.error("Dashboard: Error fetching testimonials", err));
 
-        Promise.resolve(supabase.from('leads').select('*').eq('userId', user.id))
+        Promise.resolve(db.from('leads').select('*').eq('userId', user.id))
             .then(({ data, error }) => {
                 if (data && !error) {
                     setLeads(data.map((l: any) => ({
@@ -257,7 +257,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         let cancelled = false;
 
         (async () => {
-            const { data, error } = await supabase.rpc('get_profile_analytics', {
+            const { data, error } = await db.rpc('get_profile_analytics', {
                 p_owner_id: user.id,
                 p_days: 90,
                 p_tz: getOwnerTimeZone(),
@@ -322,7 +322,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         setSuggestionTargetField(targetField);
 
         try {
-            const { data, error } = await supabase.functions.invoke('generateCopySuggestions', {
+            const { data, error } = await db.functions.invoke('generateCopySuggestions', {
                 body: { type: type, keywords: keywords }
             });
             
@@ -366,7 +366,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
             let payload: Record<string, any> = { id: user.id, ...sanitizedProfileData };
             const skipped: string[] = [];
             for (let attempt = 0; attempt < 25; attempt++) {
-                const { error: saveError } = await supabase.from('profiles').upsert(payload);
+                const { error: saveError } = await db.from('profiles').upsert(payload);
                 if (!saveError) {
                     if (skipped.length > 0) {
                         console.warn('Columnas omitidas al guardar (faltan en la BD):', skipped);
@@ -429,10 +429,10 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         const fileName = `${Date.now()}_${file.name}`;
         try {
             console.log('[Debug] Uploading to Supabase Storage...');
-            const { data, error } = await supabase.storage.from('assets').upload(`gallery_images/${user.id}/${fileName}`, file);
+            const { data, error } = await db.storage.from('assets').upload(`gallery_images/${user.id}/${fileName}`, file);
             if (error) throw error;
             
-            const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`gallery_images/${user.id}/${fileName}`);
+            const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`gallery_images/${user.id}/${fileName}`);
             const downloadURL = publicUrl;
 
             console.log(`[Debug] File uploaded. Download URL: ${downloadURL}`);
@@ -443,7 +443,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
             
             console.log('[Debug] Updating DB with new gallery...');
             // Guardar automáticamente
-            await supabase.from('profiles').update({ galleryImageURLs: updatedGallery }).eq('id', user.id);
+            await db.from('profiles').update({ galleryImageURLs: updatedGallery }).eq('id', user.id);
             console.log('[Debug] DB updated.');
             showNotification('Imagen añadida a la galería', 'success');
         } catch (error) {
@@ -460,7 +460,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         setProfileData(prev => ({ ...prev, galleryImageURLs: updatedGallery }));
         
         try {
-            await supabase.from('profiles').update({ galleryImageURLs: updatedGallery }).eq('id', user.id);
+            await db.from('profiles').update({ galleryImageURLs: updatedGallery }).eq('id', user.id);
             showNotification('Imagen eliminada de la galería', 'success');
         } catch (error) {
             console.error('Error al eliminar imagen de galería:', error?.message || error || 'Ocurrió un error desconocido');
@@ -518,10 +518,10 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         const fileName = `${Date.now()}_${file.name}`;
         try {
             console.log('[Debug] Uploading testimonial image to Supabase Storage...');
-            const { data, error } = await supabase.storage.from('assets').upload(`testimonial_images/${user.id}/${fileName}`, file);
+            const { data, error } = await db.storage.from('assets').upload(`testimonial_images/${user.id}/${fileName}`, file);
             if (error) throw error;
             
-            const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(`testimonial_images/${user.id}/${fileName}`);
+            const { data: { publicUrl } } = db.storage.from('assets').getPublicUrl(`testimonial_images/${user.id}/${fileName}`);
             const downloadURL = publicUrl;
 
             console.log(`[Debug] Testimonial image uploaded. Download URL: ${downloadURL}`);
@@ -553,7 +553,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         setProfileData(prev => ({ ...prev, testimonials: updatedTestimonials }));
 
         try {
-            await supabase.from('profiles').update({ testimonials: updatedTestimonials }).eq('id', user.id);
+            await db.from('profiles').update({ testimonials: updatedTestimonials }).eq('id', user.id);
             showNotification('Testimonio añadido correctamente', 'success');
             closeTestimonialForm();
         } catch (error) {
@@ -582,7 +582,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         setProfileData(prev => ({ ...prev, testimonials: updatedTestimonials }));
 
         try {
-            await supabase.from('profiles').update({ testimonials: updatedTestimonials }).eq('id', user.id);
+            await db.from('profiles').update({ testimonials: updatedTestimonials }).eq('id', user.id);
             showNotification('Testimonio actualizado correctamente', 'success');
             closeTestimonialForm();
         } catch (error) {
@@ -598,7 +598,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         setProfileData(prev => ({ ...prev, testimonials: updatedTestimonials }));
 
         try {
-            await supabase.from('profiles').update({ testimonials: updatedTestimonials }).eq('id', user.id);
+            await db.from('profiles').update({ testimonials: updatedTestimonials }).eq('id', user.id);
             showNotification('Testimonio eliminado correctamente', 'success');
         } catch (error) {
             console.error('Error al eliminar testimonio:', error?.message || error || 'Ocurrió un error desconocido');
@@ -625,13 +625,13 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
             const updatedProfile = { ...profileData, testimonials: updatedTestimonials };
 
             // 2. Guardar el profileData actualizado en BD
-            await supabase.from('profiles').update({ testimonials: updatedTestimonials }).eq('id', user.id);
+            await db.from('profiles').update({ testimonials: updatedTestimonials }).eq('id', user.id);
 
             // 3. (Opcional pero recomendado) Actualizar el estado local profileData
             setProfileData(updatedProfile);
 
             // 4. Eliminar de 'pendingTestimonials'
-            await supabase.from('pending_testimonials').delete().eq('id', testimonialToApprove.id);
+            await db.from('pending_testimonials').delete().eq('id', testimonialToApprove.id);
 
             // 5. Actualizar estado local de pendientes
             setPendingTestimonials(prev => prev.filter(t => t.id !== testimonialToApprove.id));
@@ -648,7 +648,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
     const handleRejectTestimonial = async (pendingId: string) => {
         if (!window.confirm(t('confirm_reject_testimonial'))) return;
         try {
-            await supabase.from('pending_testimonials').delete().eq('id', pendingId);
+            await db.from('pending_testimonials').delete().eq('id', pendingId);
             // Actualizar estado local para quitarlo de la lista
             setPendingTestimonials(prev => prev.filter(t => t.id !== pendingId));
             console.log("Testimonio pendiente rechazado:", pendingId);
@@ -661,7 +661,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
     const handleDeleteLead = async (leadId: string) => {
         if (!window.confirm(t('confirm_delete_lead'))) return;
         try {
-            await supabase.from('leads').delete().eq('id', leadId);
+            await db.from('leads').delete().eq('id', leadId);
             // Actualizar estado local para quitarlo de la lista
             setLeads(prev => prev.filter(lead => lead.id !== leadId));
             showNotification(t('success_lead_deleted'), 'success');
@@ -693,7 +693,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         }
 
         try {
-            const { data, error } = await supabase
+            const { data, error } = await db
                 .from('leads')
                 .update({ name: `${displayName}|${newStamps}|${clientCode}` })
                 .eq('id', leadId)
@@ -722,7 +722,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
                 updatedSectionOrder.push({ type: 'barber_fidelity_config', validationCode: code });
             }
 
-            const { error } = await supabase
+            const { error } = await db
                 .from('profiles')
                 .update({ sectionOrder: updatedSectionOrder })
                 .eq('id', user.id);
@@ -804,7 +804,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
             if (user?.id && !(await pushMultiAccountEnabled())) {
                 await releasePushDevice(user.id);
             }
-            await supabase.auth.signOut();
+            await db.auth.signOut();
         } catch (error) {
             console.error('Error al cerrar sesión:', error?.message || error || 'Ocurrió un error desconocido');
         }

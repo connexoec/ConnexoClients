@@ -1,7 +1,7 @@
 import { profileStyleLayer } from '../src/lib/profileStyleLayer';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { MemberPlanBadge } from './MemberPlanCard';
-import { supabase } from '../src/lib/supabase';
+import { db } from '../src/lib/backend';
 import { ProfileExtraSections } from './ProfileExtraSections';
 import FullCatalogView from './FullCatalogView';
 import type { Profile, UserLink, RealtyProperty, RealtyPaymentMethod, RealtyRequestType } from '../types';
@@ -128,7 +128,7 @@ export const ProfileRealtyTemplate: React.FC<ProfileRealtyTemplateProps> = ({
     if (!userId || !agentUsername) { setAgent(null); return; }
     (async () => {
       try {
-        const { data, error } = await supabase.rpc('get_realty_agent', { p_agency_id: userId, p_agent_username: agentUsername });
+        const { data, error } = await db.rpc('get_realty_agent', { p_agency_id: userId, p_agent_username: agentUsername });
         if (!alive) return;
         if (error) throw error;
         const row = Array.isArray(data) ? data[0] : data;
@@ -149,7 +149,7 @@ export const ProfileRealtyTemplate: React.FC<ProfileRealtyTemplateProps> = ({
   const fetchProperties = useCallback(async () => {
     if (!userId) { setLoadingProps(false); return; }
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('realty_properties').select('*').eq('agency_profile_id', userId)
         .order('created_at', { ascending: false });
       if (error) throw error;
@@ -837,7 +837,7 @@ const RequestModal: React.FC<{
     if (!userId || !memberCode.trim()) return;
     setLookingUp(true);
     try {
-      const { data } = await supabase.rpc('get_realty_member', { p_agency_id: userId, p_identifier: memberCode.trim() });
+      const { data } = await db.rpc('get_realty_member', { p_agency_id: userId, p_identifier: memberCode.trim() });
       if (data?.found) {
         if (!name && data.name) setName(data.name);
         if (!phone && data.phone) setPhone(data.phone);
@@ -867,7 +867,7 @@ const RequestModal: React.FC<{
     setError(null);
     setSubmitting(true);
     try {
-      const { data, error: rpcError } = await supabase.rpc('place_realty_request', {
+      const { data, error: rpcError } = await db.rpc('place_realty_request', {
         p_agency_id: userId,
         p_request_type: mode,
         p_client_name: name.trim(),
@@ -1020,7 +1020,7 @@ const ClubModal: React.FC<{ userId?: string | null; clubName: string; clubTaglin
     if (!userId) { setError('No se pudo identificar la agencia.'); return; }
     setError(null); setSubmitting(true);
     try {
-      const { data, error: rpcError } = await supabase.rpc('join_realty_club', {
+      const { data, error: rpcError } = await db.rpc('join_realty_club', {
         p_agency_id: userId, p_name: name.trim(), p_email: email.trim() || null, p_phone: phone.trim() || null,
       });
       if (rpcError) throw rpcError;
@@ -1069,7 +1069,7 @@ const MembershipModal: React.FC<{ userId?: string | null; clubName: string; init
     if (!userId || !value.trim()) return;
     setError(null); setLoading(true); setMember(null);
     try {
-      const { data } = await supabase.rpc('get_realty_member', { p_agency_id: userId, p_identifier: value.trim() });
+      const { data } = await db.rpc('get_realty_member', { p_agency_id: userId, p_identifier: value.trim() });
       if (data?.found) setMember(data);
       else setError('No encontramos tu membresía. Verifica el código, email o teléfono.');
     } catch (err: any) { setError(err?.message || 'Error al consultar.'); }
@@ -1133,7 +1133,7 @@ const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; onC
     if (!userId || !code.trim()) return;
     if (!silent) { setError(null); setLoading(true); }
     try {
-      const { data } = await supabase.rpc('get_realty_request_status', { p_agency_id: userId, p_code: code.trim() });
+      const { data } = await db.rpc('get_realty_request_status', { p_agency_id: userId, p_code: code.trim() });
       if (data?.found) setStatus(data);
       else { setStatus(null); if (!silent) setError('No encontramos ese código.'); }
     } catch (err: any) { if (!silent) setError(err?.message || 'Error al consultar.'); }
