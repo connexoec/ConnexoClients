@@ -1534,7 +1534,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
                 <RealtyLeadsTab user={user} />
             )}
             {activeTab === 'gym_plans' && (
-                <GymPlansTab user={user} showNotification={showNotification} />
+                <GymPlansTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} />
             )}
             {activeTab === 'gym_classes' && (
                 <GymClassesTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />

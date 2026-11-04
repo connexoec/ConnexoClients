@@ -3,6 +3,7 @@ import { profileStyleLayer } from '../src/lib/profileStyleLayer';
 import { supabase } from '../src/lib/supabase';
 import { ProfileExtraSections } from './ProfileExtraSections';
 import FullCatalogView from './FullCatalogView';
+import { PaymentOptions } from './PaymentOptions';
 import type { Profile, UserLink, HotelRoom, HotelService, HotelSettings, HotelServiceMode } from '../types';
 import {
   KitProvider, useKit, useInputStyle, inputCls, isOn, fmtMoney, localISO, addDaysISO, prettyDate, shade, readableOn,
@@ -383,12 +384,12 @@ export const ProfileHotelTemplate: React.FC<Props> = ({
         )}
         {detail && <RoomDetailModal room={detail} onClose={() => setDetail(null)} onReserve={() => reserveRoom(detail)} canBook={bookingOn} />}
         {booking && (
-          <BookingModal userId={userId} offer={booking} checkIn={checkIn} checkOut={checkOut} adults={adults} children={children}
+          <BookingModal profile={profile} userId={userId} offer={booking} checkIn={checkIn} checkOut={checkOut} adults={adults} children={children}
             services={services} settings={settings} isPro={isPro} campaign={campaign} isMobilePreview={isMobilePreview}
             onTrack={code => { setBooking(null); setTrackerCode(code); setTrackerOpen(true); }}
             onClose={() => setBooking(null)} onBooked={search} />
         )}
-        {trackerOpen && <TrackerModal userId={userId} initialCode={trackerCode} isMobilePreview={isMobilePreview} onClose={() => setTrackerOpen(false)} />}
+        {trackerOpen && <TrackerModal profile={profile} userId={userId} initialCode={trackerCode} isMobilePreview={isMobilePreview} onClose={() => setTrackerOpen(false)} />}
         {clubOpen && <ClubModal userId={userId} clubName={clubName} clubTagline={clubTagline} isMobilePreview={isMobilePreview} onClose={() => setClubOpen(false)} />}
         {passOpen !== null && <MemberModal userId={userId} initialId={passOpen} onClose={() => setPassOpen(null)} />}
       </div>
@@ -558,10 +559,10 @@ const RoomDetailModal: React.FC<{ room: HotelRoom; onClose: () => void; onReserv
 
 /* ── Reserva ──────────────────────────────────────────────────────────────── */
 const BookingModal: React.FC<{
-  userId?: string | null; offer: Offer; checkIn: string; checkOut: string; adults: number; children: number;
+  profile: any; userId?: string | null; offer: Offer; checkIn: string; checkOut: string; adults: number; children: number;
   services: HotelService[]; settings: HotelSettings; isPro: boolean; campaign: string | null; isMobilePreview?: boolean;
   onTrack: (code: string) => void; onClose: () => void; onBooked: () => void;
-}> = ({ userId, offer, checkIn, checkOut, adults, children, services, settings, isPro, campaign, isMobilePreview, onTrack, onClose, onBooked }) => {
+}> = ({ profile, userId, offer, checkIn, checkOut, adults, children, services, settings, isPro, campaign, isMobilePreview, onTrack, onClose, onBooked }) => {
   const k = useKit(); const inp = useInputStyle();
   const { room, nights, needed } = offer;
   const guests = adults + children;
@@ -636,6 +637,13 @@ const BookingModal: React.FC<{
             {done.deposit_required > 0 && row('Depósito para garantizar', fmtMoney(done.deposit_required))}
           </div>
           <p className="text-[12px] mb-3" style={{ color: `${k.text}88` }}>El hotel confirmará tu reserva en breve{done.deposit_required > 0 ? ' y te indicará cómo enviar el depósito' : ''}. Guarda tu código para consultar el estado.</p>
+          <div className="mb-3">
+            <PaymentOptions profile={profile} ownerId={userId} reference={done.confirmation_code}
+              amount={Number(done.deposit_required) > 0 ? Number(done.deposit_required) : Number(done.total)}
+              title={Number(done.deposit_required) > 0 ? 'Paga tu depósito' : 'Paga tu reserva'}
+              concept={Number(done.deposit_required) > 0 ? `el depósito de tu reserva en ${done.room_name}` : `tu reserva en ${done.room_name}`}
+              customer={{ name: name.trim(), phone: phone.trim(), email: email.trim() }} isMobilePreview={isMobilePreview} />
+          </div>
           {done.member_code && <p className="text-[12px] mb-3" style={{ color: `${k.text}99` }}>Tu código de huésped: <span className="font-mono font-bold" style={{ color: k.accentLight }}>{done.member_code}</span></p>}
           <PrimaryButton type="button" onClick={() => onTrack(done.confirmation_code)}>Ver mi reserva</PrimaryButton>
         </div>
@@ -720,7 +728,7 @@ const BookingModal: React.FC<{
 };
 
 /* ── Rastreador de reserva ────────────────────────────────────────────────── */
-const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; isMobilePreview?: boolean; onClose: () => void }> = ({ userId, initialCode = '', isMobilePreview, onClose }) => {
+const TrackerModal: React.FC<{ profile: any; userId?: string | null; initialCode?: string; isMobilePreview?: boolean; onClose: () => void }> = ({ profile, userId, initialCode = '', isMobilePreview, onClose }) => {
   const k = useKit(); const inp = useInputStyle();
   const [code, setCode] = useState(initialCode);
   const [res, setRes] = useState<any | null>(null);
@@ -781,6 +789,13 @@ const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; isM
               {res.deposit_required > 0 && res.payment_status === 'pendiente' && <span>Depósito: {fmtMoney(res.deposit_required)}</span>}
             </div>
           </div>
+          {res.payment_status === 'pendiente' && (res.status === 'pendiente' || res.status === 'confirmada') && (
+            <PaymentOptions profile={profile} ownerId={userId} reference={res.code}
+              amount={Number(res.deposit_required) > 0 ? Number(res.deposit_required) : Number(res.total)}
+              title={Number(res.deposit_required) > 0 ? 'Paga tu depósito' : 'Paga tu reserva'}
+              concept={Number(res.deposit_required) > 0 ? `el depósito de tu reserva en ${res.room_name}` : `tu reserva en ${res.room_name}`}
+              customer={{ name: res.guest_name }} isMobilePreview={isMobilePreview} />
+          )}
           {res.admin_note && (
             <div className="rounded-xl p-3 border text-sm" style={{ background: `${k.accent}0f`, borderColor: `${k.accent}33`, color: `${k.text}dd` }}>
               <span className="font-bold" style={{ color: k.accentLight }}>Mensaje del hotel:</span>
