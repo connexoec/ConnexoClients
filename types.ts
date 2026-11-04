@@ -644,6 +644,265 @@ export interface SublimaClient {
   created_at?: string;
 }
 
+// ── Plantilla Gym (gimnasios, boxes, estudios) — motor aislado gym_* ──────────
+export type GymBillingPeriod = 'dia' | 'semana' | 'mes' | 'trimestre' | 'semestre' | 'anio';
+
+export interface GymPlan {
+  id: string;
+  gym_profile_id: string;
+  name: string;
+  description?: string | null;
+  price: number;
+  compare_price?: number | null;      // precio tachado
+  billing_period: GymBillingPeriod;
+  duration_days: number;
+  enrollment_fee: number;             // matrícula
+  sessions_limit?: number | null;     // clases por ciclo; null = ilimitado
+  features: string[];
+  is_popular: boolean;
+  is_available: boolean;
+  sort_order: number;
+  created_at?: string;
+}
+
+export interface GymCoach {
+  id: string;
+  gym_profile_id: string;
+  name: string;
+  specialty?: string | null;
+  bio?: string | null;
+  photo_url?: string | null;
+  is_active: boolean;
+  sort_order: number;
+}
+
+export type GymClassLevel = 'todos' | 'principiante' | 'intermedio' | 'avanzado';
+
+// Una clase que se repite cada semana. day_of_week: 0 = Domingo … 6 = Sábado.
+export interface GymClass {
+  id: string;
+  gym_profile_id: string;
+  name: string;
+  description?: string | null;
+  day_of_week: number;
+  start_time: string;                 // "HH:MM"
+  end_time?: string | null;
+  coach_id?: string | null;
+  coach_name?: string | null;
+  capacity?: number | null;           // null = sin aforo
+  level: GymClassLevel;
+  room?: string | null;
+  is_active: boolean;
+}
+
+export type GymMemberState = 'activo' | 'por_vencer' | 'vencido' | 'congelado' | 'baja' | 'sin_plan';
+
+export interface GymMember {
+  id: string;
+  gym_profile_id: string;
+  name: string;
+  phone?: string | null;
+  email?: string | null;
+  member_code: string;
+  plan_id?: string | null;
+  plan_name?: string | null;
+  start_date?: string | null;
+  end_date?: string | null;           // último día válido (inclusive)
+  status: 'activo' | 'congelado' | 'baja';
+  frozen_since?: string | null;
+  is_vip: boolean;
+  discount_percent: number;
+  benefits?: string | null;
+  notes?: string | null;
+  goal?: string | null;
+  source: string;
+  visits: number;
+  last_visit_at?: string | null;
+  created_at?: string;
+}
+
+export type GymRequestType = 'prueba' | 'inscripcion' | 'consulta';
+
+export interface GymLead {
+  id: string;
+  gym_profile_id: string;
+  tracking_code: string;
+  request_type: GymRequestType;
+  name: string;
+  phone?: string | null;
+  email?: string | null;
+  plan_id?: string | null;
+  plan_name?: string | null;
+  preferred_date?: string | null;
+  goal?: string | null;
+  notes?: string | null;
+  status: 'recibido' | 'contactado' | 'agendado' | 'inscrito' | 'cancelado';
+  admin_note?: string | null;
+  member_code?: string | null;
+  source_campaign?: string | null;
+  created_at?: string;
+}
+
+export interface GymBooking {
+  id: string;
+  gym_profile_id: string;
+  class_id?: string | null;
+  class_name: string;
+  class_date: string;                 // YYYY-MM-DD
+  start_time?: string | null;
+  coach_name?: string | null;
+  customer_name: string;
+  customer_phone?: string | null;
+  customer_email?: string | null;
+  member_code?: string | null;
+  status: 'reservada' | 'asistio' | 'no_asistio' | 'cancelada';
+  confirmation_code: string;
+  notes?: string | null;
+  created_at?: string;
+}
+
+// Ajustes del gimnasio (columna profiles.gym_settings jsonb, lectura pública).
+export interface GymSettings {
+  trialEnabled?: boolean;             // mostrar "Clase de prueba gratis" (default sí)
+  trialLabel?: string;
+  bookingEnabled?: boolean;           // reservas de cupo (ULTRA; default sí)
+  bookingDaysAhead?: number;          // cuántos días hacia adelante se reserva (default 14)
+  cancelHours?: number;               // horas de anticipación para cancelar (default 2)
+  membersOnly?: boolean;              // solo socios con carnet vigente pueden reservar
+  timezone?: string;
+}
+
+// ── Plantilla Hotel — motor aislado hotel_* ───────────────────────────────────
+export interface HotelRoom {
+  id: string;
+  hotel_profile_id: string;
+  name: string;
+  description?: string | null;
+  category?: string | null;
+  base_price: number;                 // por noche
+  max_adults: number;
+  max_children: number;
+  beds?: string | null;
+  size_m2?: number | null;
+  amenities: string[];
+  images: string[];
+  units: number;                      // habitaciones físicas de este tipo
+  min_nights: number;
+  is_available: boolean;
+  sort_order: number;
+}
+
+export type HotelServiceMode = 'por_reserva' | 'por_noche' | 'por_persona' | 'por_persona_noche';
+
+export interface HotelService {
+  id: string;
+  hotel_profile_id: string;
+  name: string;
+  description?: string | null;
+  category?: string | null;
+  image_url?: string | null;
+  price: number;
+  price_mode: HotelServiceMode;
+  is_available: boolean;
+  sort_order: number;
+}
+
+export interface HotelGuest {
+  id: string;
+  hotel_profile_id: string;
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  country?: string | null;
+  member_code: string;
+  is_vip: boolean;
+  discount_percent: number;
+  benefits?: string | null;
+  notes?: string | null;
+  source: string;
+  stays_count: number;
+  nights_total: number;
+  total_spent: number;
+  created_at?: string;
+}
+
+export type HotelBookingStatus = 'pendiente' | 'confirmada' | 'en_casa' | 'completada' | 'cancelada' | 'no_show';
+export type HotelPaymentStatus = 'pendiente' | 'deposito' | 'pagado';
+
+export interface HotelBookingServiceLine {
+  id: string; name: string; qty: number; mode: HotelServiceMode; unit_price: number; total: number;
+}
+
+export interface HotelBooking {
+  id: string;
+  hotel_profile_id: string;
+  room_id?: string | null;
+  room_name?: string | null;
+  confirmation_code: string;
+  guest_name: string;
+  guest_phone?: string | null;
+  guest_email?: string | null;
+  adults: number;
+  children: number;
+  check_in: string;                   // YYYY-MM-DD
+  check_out: string;
+  nights: number;
+  rooms_count: number;
+  nightly_avg: number;
+  rooms_subtotal: number;
+  discount_percent: number;
+  discount_amount: number;
+  services: HotelBookingServiceLine[];
+  services_total: number;
+  tax_percent: number;
+  tax_amount: number;
+  total: number;
+  deposit_required: number;
+  payment_status: HotelPaymentStatus;
+  status: HotelBookingStatus;
+  special_requests?: string | null;
+  arrival_time?: string | null;
+  member_code?: string | null;
+  admin_note?: string | null;
+  created_at?: string;
+}
+
+export interface HotelBlock {
+  id: string;
+  hotel_profile_id: string;
+  room_id?: string | null;            // null = todos los tipos
+  date_from: string;
+  date_to: string;                    // última noche bloqueada (inclusive)
+  units_blocked?: number | null;      // null = todas las unidades
+  reason?: string | null;
+}
+
+export interface HotelRate {
+  id: string;
+  hotel_profile_id: string;
+  room_id?: string | null;            // null = todos los tipos
+  name: string;
+  date_from: string;
+  date_to: string;                    // última noche afectada (inclusive)
+  price_mode: 'fijo' | 'porcentaje';
+  value: number;
+  is_active: boolean;
+}
+
+// Ajustes del hotel (columna profiles.hotel_settings jsonb, lectura pública).
+export interface HotelSettings {
+  stars?: number;                     // 1–5
+  checkInTime?: string;               // "15:00"
+  checkOutTime?: string;              // "12:00"
+  taxPercent?: number;                // se suma sobre el total
+  depositPercent?: number;            // depósito para garantizar la reserva
+  cancelDaysBefore?: number;          // días de anticipación para cancelar sin costo
+  cancellationPolicy?: string;
+  petsAllowed?: boolean;
+  bookingEnabled?: boolean;
+  timezone?: string;
+}
+
 // Ítem del carrito e-commerce
 export interface EcomCartItem {
   product: Product;
@@ -702,6 +961,10 @@ export interface Profile {
   // --- Barbería (motor propio, independiente de ecom/gastro) ---
   barber_products?: BarberRetailProduct[];        // catálogo de productos de venta
   barber_gateways?: BarberPaymentGatewaysConfig;  // pasarelas de pago de la barbería
+
+  // --- Gimnasio y Hotel (motores propios gym_* / hotel_*) ---
+  gym_settings?: GymSettings;       // columna profiles.gym_settings jsonb
+  hotel_settings?: HotelSettings;   // columna profiles.hotel_settings jsonb
 
   clubName?: string;    // Nombre del club de fidelidad (gastro); default "Club Secreto"
   clubTagline?: string; // Eslogan del club de fidelidad (gastro)
