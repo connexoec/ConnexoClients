@@ -37,13 +37,13 @@ export const ALL_STYLE_FIELDS: StyleField[] = [
 ];
 
 type Theme = 'default' | 'barber' | 'gastro' | 'ecom' | 'stage'
-    | 'petcare' | 'medical' | 'realty' | 'sublima';
+    | 'petcare' | 'medical' | 'realty' | 'sublima' | 'gym' | 'hotel';
 
 const normalize = (theme?: string): Theme => {
     const t = (theme || 'default') as Theme;
     return ([
         'default', 'barber', 'gastro', 'ecom', 'stage',
-        'petcare', 'medical', 'realty', 'sublima',
+        'petcare', 'medical', 'realty', 'sublima', 'gym', 'hotel',
     ] as Theme[]).includes(t) ? t : 'default';
 };
 
@@ -81,6 +81,10 @@ const CAPABILITIES: Record<Theme, StyleField[]> = {
     // realty y sublima no dibujan sección de testimonios.
     realty: [...COMUNES],
     sublima: [...COMUNES],
+    // gym y hotel sí dibujan reseñas y el horario de atención, y su acento se
+    // elige con `buttonColor` (derivan de él las variantes clara y oscura).
+    gym: [...COMUNES, ...CON_TESTIMONIOS, 'showSchedule'],
+    hotel: [...COMUNES, ...CON_TESTIMONIOS, 'showSchedule'],
 };
 
 /** ¿Esta plantilla aplica este control? */
@@ -145,6 +149,16 @@ export const THEME_DEFAULT_COLORS: Record<Theme, Partial<Record<StyleField, stri
     sublima: {
         backgroundColor: '#141210', buttonColor: '#c9a86a', textColor: '#f2ece1',
         buttonTextColor: '#141210',
+        fontFamily: "'Space Grotesk', sans-serif",
+    },
+    gym: {
+        backgroundColor: '#0a0c09', buttonColor: '#c6f432', textColor: '#f1f5e9',
+        buttonTextColor: '#0a0c09',
+        fontFamily: "'Space Grotesk', sans-serif",
+    },
+    hotel: {
+        backgroundColor: '#130b0e', buttonColor: '#d9958b', textColor: '#f6ece6',
+        buttonTextColor: '#1a0d10',
         fontFamily: "'Space Grotesk', sans-serif",
     },
 };

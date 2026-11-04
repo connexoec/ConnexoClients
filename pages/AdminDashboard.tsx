@@ -33,6 +33,14 @@ const RealtyLoyaltyTab = React.lazy(() => import('../components/tabs/RealtyLoyal
 const SublimaProductsTab = React.lazy(() => import('../components/tabs/SublimaProductsTab').then(m => ({ default: m.SublimaProductsTab })));
 const SublimaOrdersTab = React.lazy(() => import('../components/tabs/SublimaOrdersTab').then(m => ({ default: m.SublimaOrdersTab })));
 const SublimaLoyaltyTab = React.lazy(() => import('../components/tabs/SublimaLoyaltyTab').then(m => ({ default: m.SublimaLoyaltyTab })));
+const GymPlansTab = React.lazy(() => import('../components/tabs/GymPlansTab').then(m => ({ default: m.GymPlansTab })));
+const GymClassesTab = React.lazy(() => import('../components/tabs/GymClassesTab').then(m => ({ default: m.GymClassesTab })));
+const GymMembersTab = React.lazy(() => import('../components/tabs/GymMembersTab').then(m => ({ default: m.GymMembersTab })));
+const GymLeadsTab = React.lazy(() => import('../components/tabs/GymLeadsTab').then(m => ({ default: m.GymLeadsTab })));
+const HotelRoomsTab = React.lazy(() => import('../components/tabs/HotelRoomsTab').then(m => ({ default: m.HotelRoomsTab })));
+const HotelBookingsTab = React.lazy(() => import('../components/tabs/HotelBookingsTab').then(m => ({ default: m.HotelBookingsTab })));
+const HotelGuestsTab = React.lazy(() => import('../components/tabs/HotelGuestsTab').then(m => ({ default: m.HotelGuestsTab })));
+const HotelCalendarTab = React.lazy(() => import('../components/tabs/HotelCalendarTab').then(m => ({ default: m.HotelCalendarTab })));
 const GalleryTab = React.lazy(() => import('../components/tabs/GalleryTab').then(m => ({ default: m.GalleryTab })));
 const ContactsTab = React.lazy(() => import('../components/ContactsTab').then(m => ({ default: m.ContactsTab })));
 import { TestimonialFormModal } from '../components/TestimonialFormModal';
@@ -43,7 +51,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../src/lib/supabase';
 import { getOwnerTimeZone } from '../src/lib/analytics';
 import { pushMultiAccountEnabled, releasePushDevice } from '../src/lib/push';
-import { Link, Palette, BarChart3, UserIcon, Users, MessageCircle, QrCode, ExternalLink, LogOut, Save, Eye, Utensils, ShoppingBag, Package, Music, Ticket, Heart, FolderOpen, CalendarCheck, Boxes, ClipboardList, Building2, UserCog, Shirt, Scissors, Images, HelpCircle } from 'lucide-react';
+import { Link, Palette, BarChart3, UserIcon, Users, MessageCircle, QrCode, ExternalLink, LogOut, Save, Eye, Utensils, ShoppingBag, Package, Music, Ticket, Heart, FolderOpen, CalendarCheck, Boxes, ClipboardList, Building2, UserCog, Shirt, Scissors, Images, HelpCircle, Dumbbell, CalendarDays, BedDouble, ConciergeBell, Crown } from 'lucide-react';
 const ChatList = React.lazy(() => import('../components/chat/ChatList'));
 const ChatWindow = React.lazy(() => import('../components/chat/ChatWindow'));
 
@@ -53,14 +61,14 @@ const TabSpinner = () => (
   </div>
 );
 
-type Tab = 'links' | 'gallery' | 'appearance' | 'analytics' | 'account' | 'contacts' | 'chat' | 'orders' | 'ecom_orders' | 'ecom_loyalty' | 'ecom_products' | 'ecom_appointments' | 'loyalty' | 'menu' | 'reservations' | 'inventory' | 'services' | 'barber_products' | 'barber_reservations' | 'stage_fans' | 'stage_releases' | 'stage_tour' | 'stage_press' | 'realty_properties' | 'realty_agents' | 'realty_leads' | 'realty_loyalty' | 'sublima_products' | 'sublima_orders' | 'sublima_loyalty';
+type Tab = 'links' | 'gallery' | 'appearance' | 'analytics' | 'account' | 'contacts' | 'chat' | 'orders' | 'ecom_orders' | 'ecom_loyalty' | 'ecom_products' | 'ecom_appointments' | 'loyalty' | 'menu' | 'reservations' | 'inventory' | 'services' | 'barber_products' | 'barber_reservations' | 'stage_fans' | 'stage_releases' | 'stage_tour' | 'stage_press' | 'realty_properties' | 'realty_agents' | 'realty_leads' | 'realty_loyalty' | 'sublima_products' | 'sublima_orders' | 'sublima_loyalty' | 'gym_plans' | 'gym_classes' | 'gym_members' | 'gym_leads' | 'hotel_rooms' | 'hotel_bookings' | 'hotel_guests' | 'hotel_calendar';
 
 const LAST_TAB_KEY = 'cnx_dashboard_tab';
 
 const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
     const [activeTab, setActiveTab] = useState<Tab>(() => {
         const saved = localStorage.getItem(LAST_TAB_KEY) as Tab | null;
-        const valid: Tab[] = ['links', 'gallery', 'appearance', 'analytics', 'account', 'contacts', 'chat', 'orders', 'ecom_orders', 'ecom_loyalty', 'ecom_products', 'ecom_appointments', 'loyalty', 'menu', 'reservations', 'inventory', 'services', 'barber_products', 'barber_reservations', 'stage_fans', 'stage_releases', 'stage_tour', 'stage_press', 'realty_properties', 'realty_agents', 'realty_leads', 'realty_loyalty', 'sublima_products', 'sublima_orders', 'sublima_loyalty'];
+        const valid: Tab[] = ['links', 'gallery', 'appearance', 'analytics', 'account', 'contacts', 'chat', 'orders', 'ecom_orders', 'ecom_loyalty', 'ecom_products', 'ecom_appointments', 'loyalty', 'menu', 'reservations', 'inventory', 'services', 'barber_products', 'barber_reservations', 'stage_fans', 'stage_releases', 'stage_tour', 'stage_press', 'realty_properties', 'realty_agents', 'realty_leads', 'realty_loyalty', 'sublima_products', 'sublima_orders', 'sublima_loyalty', 'gym_plans', 'gym_classes', 'gym_members', 'gym_leads', 'hotel_rooms', 'hotel_bookings', 'hotel_guests', 'hotel_calendar'];
         // Las notificaciones push traen la pestaña destino en la URL
         // (ej. '?tab=ecom_appointments'): al tocar la alerta se abre justo ahí.
         try {
@@ -868,7 +876,31 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         tabs.splice(1, 0, { id: 'gallery', nameKey: 'tab_gallery', icon: <Images className="w-5 h-5" /> });
     }
 
-    if (isSublima) {
+    // Gimnasio y Hotel: motores propios (gym_* / hotel_*), cada uno con sus pestañas.
+    const isGym = profileData?.theme === 'gym';
+    const isHotel = profileData?.theme === 'hotel';
+
+    if (isGym) {
+        // Planes y Solicitudes para todos; Clases y Socios (carnet, vencimientos, check-in) PRO+.
+        // Dentro de Clases, el aforo/reservas de cupo y los entrenadores se desbloquean en ULTRA.
+        tabs.push({ id: 'gym_plans', nameKey: 'tab_gym_plans', icon: <Dumbbell className="w-5 h-5" /> });
+        if (isProOrUltra) {
+            tabs.push({ id: 'gym_classes', nameKey: 'tab_gym_classes', icon: <CalendarDays className="w-5 h-5" /> });
+            tabs.push({ id: 'gym_members', nameKey: 'tab_gym_members', icon: <Users className="w-5 h-5" /> });
+        }
+        tabs.push({ id: 'gym_leads', nameKey: 'tab_gym_leads', icon: <ClipboardList className="w-5 h-5" /> });
+    } else if (isHotel) {
+        // Alojamiento y Reservas para todos; Club de huéspedes (y servicios dentro de Alojamiento) PRO+;
+        // Disponibilidad (ocupación, bloqueos y tarifas de temporada) ULTRA.
+        tabs.push({ id: 'hotel_rooms', nameKey: 'tab_hotel_rooms', icon: <BedDouble className="w-5 h-5" /> });
+        tabs.push({ id: 'hotel_bookings', nameKey: 'tab_hotel_bookings', icon: <ConciergeBell className="w-5 h-5" /> });
+        if (isProOrUltra) {
+            tabs.push({ id: 'hotel_guests', nameKey: 'tab_hotel_guests', icon: <Crown className="w-5 h-5" /> });
+        }
+        if (effectivePlan === 'ultra') {
+            tabs.push({ id: 'hotel_calendar', nameKey: 'tab_hotel_calendar', icon: <CalendarDays className="w-5 h-5" /> });
+        }
+    } else if (isSublima) {
         // Globales (Enlaces, Apariencia, Analíticas, Cuenta) ya están añadidas.
         // Catálogo y Pedidos para todos los planes; Club Mayorista para PRO+.
         tabs.push({ id: 'sublima_products', nameKey: 'tab_sublima_products', icon: <Shirt className="w-5 h-5" /> });
@@ -1158,6 +1190,14 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
                   {activeTab === 'sublima_products' && (t('tab_sublima_products') || 'Catálogo')}
                   {activeTab === 'sublima_loyalty' && (t('tab_sublima_loyalty') || 'Club Mayorista')}
                   {activeTab === 'sublima_orders' && (t('tab_sublima_orders') || 'Pedidos Mayoristas')}
+                  {activeTab === 'gym_plans' && (t('tab_gym_plans') || 'Planes')}
+                  {activeTab === 'gym_classes' && (t('tab_gym_classes') || 'Clases')}
+                  {activeTab === 'gym_members' && (t('tab_gym_members') || 'Socios')}
+                  {activeTab === 'gym_leads' && (t('tab_gym_leads') || 'Solicitudes')}
+                  {activeTab === 'hotel_rooms' && (t('tab_hotel_rooms') || 'Alojamiento')}
+                  {activeTab === 'hotel_bookings' && (t('tab_hotel_bookings') || 'Reservas')}
+                  {activeTab === 'hotel_guests' && (t('tab_hotel_guests') || 'Club de huéspedes')}
+                  {activeTab === 'hotel_calendar' && (t('tab_hotel_calendar') || 'Disponibilidad')}
                 </h1>
               </div>
 
@@ -1492,6 +1532,30 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
             )}
             {activeTab === 'realty_leads' && (
                 <RealtyLeadsTab user={user} />
+            )}
+            {activeTab === 'gym_plans' && (
+                <GymPlansTab user={user} showNotification={showNotification} />
+            )}
+            {activeTab === 'gym_classes' && (
+                <GymClassesTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
+            )}
+            {activeTab === 'gym_members' && (
+                <GymMembersTab user={user} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
+            )}
+            {activeTab === 'gym_leads' && (
+                <GymLeadsTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
+            )}
+            {activeTab === 'hotel_rooms' && (
+                <HotelRoomsTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
+            )}
+            {activeTab === 'hotel_bookings' && (
+                <HotelBookingsTab user={user} profileData={profileData} showNotification={showNotification} />
+            )}
+            {activeTab === 'hotel_guests' && (
+                <HotelGuestsTab user={user} showNotification={showNotification} />
+            )}
+            {activeTab === 'hotel_calendar' && (
+                <HotelCalendarTab user={user} showNotification={showNotification} />
             )}
             </React.Suspense>
           </div>

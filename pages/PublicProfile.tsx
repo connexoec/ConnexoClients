@@ -21,6 +21,8 @@ const ProfileEcomTemplate = React.lazy(() => import('../components/ProfileEcomTe
 const ProfileStageTemplate = React.lazy(() => import('../components/ProfileStageTemplate').then(m => ({ default: m.ProfileStageTemplate })));
 const ProfileRealtyTemplate = React.lazy(() => import('../components/ProfileRealtyTemplate').then(m => ({ default: m.ProfileRealtyTemplate })));
 const ProfileSublimaTemplate = React.lazy(() => import('../components/ProfileSublimaTemplate').then(m => ({ default: m.ProfileSublimaTemplate })));
+const ProfileGymTemplate = React.lazy(() => import('../components/ProfileGymTemplate').then(m => ({ default: m.ProfileGymTemplate })));
+const ProfileHotelTemplate = React.lazy(() => import('../components/ProfileHotelTemplate').then(m => ({ default: m.ProfileHotelTemplate })));
 
 const TemplateFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -1801,6 +1803,68 @@ const PublicProfile: React.FC = () => {
             </div>
           </div>
         )}
+      </div>
+    );
+  }
+
+  // Gimnasio y Hotel comparten estructura de rama: botón del dueño, plantilla,
+  // QR y el formulario de reseñas (que ambas ofrecen en su sección de opiniones).
+  if (profile?.theme === 'gym' || profile?.theme === 'hotel') {
+    const TemplateComp = profile.theme === 'gym' ? ProfileGymTemplate : ProfileHotelTemplate;
+    return (
+      <div className="public-profile-container">
+        {currentUser && (
+          <div className="fixed top-4 left-4 z-[999]">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white/80 hover:text-white font-medium px-3 py-1.5 rounded-full text-xs flex items-center space-x-1.5 shadow-xl transition border border-white/10"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              <span>Dashboard</span>
+            </button>
+          </div>
+        )}
+        <React.Suspense fallback={<TemplateFallback />}>
+        <TemplateComp
+          profile={profile}
+          links={links}
+          onLinkClick={handleLinkClick}
+          onLeaveTestimonial={() => setShowTestimonialForm(true)}
+          currentUser={currentUser}
+          visitorProfile={visitorProfile}
+          userId={userId}
+          downloadVCard={downloadVCard}
+          handleShare={handleShare}
+          setShowQRModal={setShowQRModal}
+          isVCardLoading={isVCardLoading}
+          handleStartChat={handleStartChat}
+          isStartingChat={isStartingChat}
+        />
+        </React.Suspense>
+
+        {/* QR Modal */}
+        {showQRModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={() => setShowQRModal(false)}>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Código QR</h3>
+                <button onClick={() => setShowQRModal(false)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400">
+                  <FaTimes size={20} />
+                </button>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="bg-white p-4 rounded-lg" ref={qrWrapperRef}>
+                  <QRCodeCanvas value={window.location.href} size={256} level="H" includeMargin bgColor="#ffffff" />
+                </div>
+                <button type="button" onClick={handleDownloadQR} className="mt-4 px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-400">
+                  Descargar QR (PNG)
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {testimonialModal}
       </div>
     );
   }

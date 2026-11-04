@@ -71,6 +71,8 @@ const TEMPLATES = [
   { val: 'stage',   label: 'Artista / Música', desc: 'Embudo para músicos, artistas y productores' },
   { val: 'realty',  label: 'Inmobiliaria', desc: 'Agencia: propiedades, agentes NFC y CRM con atribución' },
   { val: 'sublima', label: 'Sublimados / Textil', desc: 'Fábrica-tienda: catálogo por volumen, pedidos mayoristas y club' },
+  { val: 'gym',     label: 'Gimnasio', desc: 'Planes, horario de clases, carnet de socio, vencimientos y reserva de cupos' },
+  { val: 'hotel',   label: 'Hotel', desc: 'Habitaciones, motor de reservas con disponibilidad, servicios y club de huéspedes' },
 ];
 
 // Color distintivo por plantilla (para los chips de filtro de CLIENTES)
@@ -85,6 +87,8 @@ const THEME_COLORS: Record<string, string> = {
   stage:   '#ec4899',
   realty:  '#ff6600',
   sublima: '#a3e635',
+  gym:     '#c6f432',
+  hotel:   '#d9958b',
 };
 
 const COUNTRIES = [
@@ -1582,6 +1586,24 @@ const SuperAdmin: React.FC = () => {
                             fontSize: '9px', fontWeight: 800, letterSpacing: '1px',
                           }}>
                             SUBLIMA
+                          </span>
+                        )}
+                        {profile.theme === 'gym' && (
+                          <span style={{
+                            padding: '3px 9px', borderRadius: '20px',
+                            background: 'rgba(198,244,50,0.14)', color: '#e0fb7c',
+                            fontSize: '9px', fontWeight: 800, letterSpacing: '1px',
+                          }}>
+                            GIMNASIO
+                          </span>
+                        )}
+                        {profile.theme === 'hotel' && (
+                          <span style={{
+                            padding: '3px 9px', borderRadius: '20px',
+                            background: 'rgba(217,149,139,0.16)', color: '#f0c4bb',
+                            fontSize: '9px', fontWeight: 800, letterSpacing: '1px',
+                          }}>
+                            HOTEL
                           </span>
                         )}
                       </div>
