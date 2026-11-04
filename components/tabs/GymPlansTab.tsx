@@ -3,9 +3,12 @@ import { supabase } from '../../src/lib/supabase';
 import type { GymPlan, GymBillingPeriod } from '../../types';
 import { FaPlus, FaPen, FaTrash, FaStar, FaToggleOn, FaToggleOff, FaDumbbell } from 'react-icons/fa';
 import { useOwnerTable, AdminModal, Field, adminInput, Spinner, MissingSqlNotice, money, isMissingSql } from '../AdminKit';
+import { PaymentGatewaysPanel } from '../PaymentGatewaysPanel';
 
 interface Props {
   user: any;
+  profileData?: any;
+  setProfileData?: React.Dispatch<React.SetStateAction<any>>;
   showNotification: (message: string, type: 'success' | 'error') => void;
 }
 
@@ -32,7 +35,7 @@ const emptyForm = (): Form => ({
   enrollment_fee: '', sessions_limit: '', features: '', is_popular: false, is_available: true, sort_order: '0',
 });
 
-export const GymPlansTab: React.FC<Props> = ({ user, showNotification }) => {
+export const GymPlansTab: React.FC<Props> = ({ user, profileData, setProfileData, showNotification }) => {
   const { rows: plans, loading, reload, missingSql } = useOwnerTable<GymPlan>({
     table: 'gym_plans', ownerColumn: 'gym_profile_id', ownerId: user?.id, realtime: false,
     order: [{ column: 'sort_order' }, { column: 'price' }],
@@ -145,6 +148,11 @@ export const GymPlansTab: React.FC<Props> = ({ user, showNotification }) => {
             </div>
           ))}
         </div>
+      )}
+
+      {!missingSql && (
+        <PaymentGatewaysPanel userId={user.id} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification}
+          accent={ACCENT} onAccent={ON_ACCENT} titleFont={TITLE_FONT} />
       )}
 
       {open && (

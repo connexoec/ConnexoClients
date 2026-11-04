@@ -5,6 +5,7 @@ import { FaPlus, FaPen, FaTrash, FaBed, FaConciergeBell, FaImage, FaUsers, FaTog
 import {
   useOwnerTable, useJsonSettings, AdminModal, Field, adminInput, Spinner, MissingSqlNotice, PlanLock, Pill, uploadAsset, money, isMissingSql,
 } from '../AdminKit';
+import { PaymentGatewaysPanel } from '../PaymentGatewaysPanel';
 
 interface Props {
   user: any;
@@ -31,7 +32,7 @@ const TIMEZONES = [
 
 export const HotelRoomsTab: React.FC<Props> = ({ user, profileData, setProfileData, showNotification, plan }) => {
   const isPro = plan !== 'conecta';
-  const [view, setView] = useState<'habitaciones' | 'servicios' | 'politicas'>('habitaciones');
+  const [view, setView] = useState<'habitaciones' | 'servicios' | 'politicas' | 'cobros'>('habitaciones');
   const roomsT = useOwnerTable<HotelRoom>({ table: 'hotel_rooms', ownerColumn: 'hotel_profile_id', ownerId: user?.id, realtime: false, order: [{ column: 'sort_order' }, { column: 'base_price' }] });
   const servicesT = useOwnerTable<HotelService>({ table: 'hotel_services', ownerColumn: 'hotel_profile_id', ownerId: user?.id, realtime: false, order: [{ column: 'sort_order' }, { column: 'created_at' }] });
   const rooms = roomsT.rows; const services = servicesT.rows;
@@ -68,6 +69,7 @@ export const HotelRoomsTab: React.FC<Props> = ({ user, profileData, setProfileDa
         <Pill active={view === 'habitaciones'} onClick={() => setView('habitaciones')} accent={ACCENT} onAccent={ON_ACCENT}>Habitaciones</Pill>
         <Pill active={view === 'servicios'} onClick={() => setView('servicios')} accent={ACCENT} onAccent={ON_ACCENT}>Servicios {!isPro && '🔒'}</Pill>
         <Pill active={view === 'politicas'} onClick={() => setView('politicas')} accent={ACCENT} onAccent={ON_ACCENT}>Políticas y tarifas</Pill>
+        <Pill active={view === 'cobros'} onClick={() => setView('cobros')} accent={ACCENT} onAccent={ON_ACCENT}>Cobros</Pill>
       </div>
 
       {roomsT.missingSql && <MissingSqlNotice file="setup_hotel.sql" accent={ACCENT} />}
@@ -120,6 +122,7 @@ export const HotelRoomsTab: React.FC<Props> = ({ user, profileData, setProfileDa
       ) : <PlanLock plan="PRO" what="Servicios adicionales que el huésped suma a su reserva" accent={ACCENT} />)}
 
       {view === 'politicas' && <PoliciesForm userId={user?.id} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} />}
+      {view === 'cobros' && <PaymentGatewaysPanel userId={user.id} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} accent={ACCENT} onAccent={ON_ACCENT} titleFont={TITLE_FONT} />}
 
       {roomModal.open && <RoomModal userId={user.id} editing={roomModal.editing} count={rooms.length} showNotification={showNotification} onClose={() => setRoomModal({ open: false, editing: null })} onSaved={() => { setRoomModal({ open: false, editing: null }); roomsT.reload(); }} />}
       {svcModal.open && <ServiceModal userId={user.id} editing={svcModal.editing} count={services.length} showNotification={showNotification} onClose={() => setSvcModal({ open: false, editing: null })} onSaved={() => { setSvcModal({ open: false, editing: null }); servicesT.reload(); }} />}

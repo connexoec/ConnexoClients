@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { profileStyleLayer } from '../src/lib/profileStyleLayer';
 import { supabase } from '../src/lib/supabase';
 import { ProfileExtraSections } from './ProfileExtraSections';
+import { PaymentOptions } from './PaymentOptions';
 import type { Profile, UserLink, GymPlan, GymClass, GymCoach, GymRequestType, GymSettings } from '../types';
 import {
   KitProvider, useKit, useInputStyle, inputCls, isOn, fmtMoney, localISO, addDaysISO, prettyDate, shade, readableOn,
@@ -343,7 +344,7 @@ export const ProfileGymTemplate: React.FC<Props> = ({
         </div>
 
         {request && (
-          <RequestModal userId={userId} type={request.type} initialPlanId={request.planId} plans={plans} campaign={campaign}
+          <RequestModal profile={profile} userId={userId} type={request.type} initialPlanId={request.planId} plans={plans} campaign={campaign}
             isMobilePreview={isMobilePreview} onTrack={code => { setRequest(null); setTrackerCode(code); setTrackerOpen(true); }}
             onClose={() => setRequest(null)} />
         )}
@@ -353,8 +354,8 @@ export const ProfileGymTemplate: React.FC<Props> = ({
             onTrack={code => { setBooking(null); setTrackerCode(code); setTrackerOpen(true); }}
             onClose={() => setBooking(null)} />
         )}
-        {trackerOpen && <TrackerModal userId={userId} initialCode={trackerCode} isMobilePreview={isMobilePreview} onChanged={refreshBooked} onClose={() => setTrackerOpen(false)} />}
-        {passOpen !== null && <MemberModal userId={userId} initialId={passOpen} waNumber={wa} gymName={profile?.displayName || ''} onClose={() => setPassOpen(null)} />}
+        {trackerOpen && <TrackerModal profile={profile} userId={userId} initialCode={trackerCode} isMobilePreview={isMobilePreview} onChanged={refreshBooked} onClose={() => setTrackerOpen(false)} />}
+        {passOpen !== null && <MemberModal profile={profile} userId={userId} initialId={passOpen} waNumber={wa} gymName={profile?.displayName || ''} isMobilePreview={isMobilePreview} onClose={() => setPassOpen(null)} />}
       </div>
     </KitProvider>
   );
@@ -406,9 +407,9 @@ const PlanCard: React.FC<{ plan: GymPlan; onChoose: () => void }> = ({ plan: p, 
 
 /* ── Solicitud: clase de prueba / inscripción ─────────────────────────────── */
 const RequestModal: React.FC<{
-  userId?: string | null; type: GymRequestType; initialPlanId?: string; plans: GymPlan[]; campaign: string | null;
+  profile: any; userId?: string | null; type: GymRequestType; initialPlanId?: string; plans: GymPlan[]; campaign: string | null;
   isMobilePreview?: boolean; onTrack: (code: string) => void; onClose: () => void;
-}> = ({ userId, type, initialPlanId, plans, campaign, isMobilePreview, onTrack, onClose }) => {
+}> = ({ profile, userId, type, initialPlanId, plans, campaign, isMobilePreview, onTrack, onClose }) => {
   const k = useKit(); const inp = useInputStyle();
   const [name, setName] = useState(''); const [phone, setPhone] = useState(''); const [email, setEmail] = useState('');
   const [goal, setGoal] = useState(''); const [date, setDate] = useState(''); const [notes, setNotes] = useState('');
@@ -444,6 +445,16 @@ const RequestModal: React.FC<{
           <p className="text-white font-bold">Recibimos tu solicitud.</p>
           <p className="text-sm mt-2" style={{ color: `${k.text}88` }}>Guarda tu código de rastreo:</p>
           <CodeBox code={code} />
+          {type === 'inscripcion' && (() => {
+            const chosen = plans.find(p => p.id === planId);
+            return chosen ? (
+              <div className="mb-3">
+                <PaymentOptions profile={profile} ownerId={userId} amount={chosen.price + (chosen.enrollment_fee || 0)} reference={code}
+                  concept={`tu inscripción al plan ${chosen.name}${chosen.enrollment_fee > 0 ? ' (incluye matrícula)' : ''}`}
+                  customer={{ name: name.trim(), phone: phone.trim(), email: email.trim() }} isMobilePreview={isMobilePreview} />
+              </div>
+            ) : null;
+          })()}
           <PrimaryButton type="button" onClick={() => onTrack(code)} className="mt-1">Rastrear mi solicitud</PrimaryButton>
         </div>
       ) : (
@@ -591,7 +602,7 @@ const BookingModal: React.FC<{
 };
 
 /* ── Rastreador: solicitudes y reservas con el mismo código ───────────────── */
-const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; isMobilePreview?: boolean; onChanged: () => void; onClose: () => void }> = ({ userId, initialCode = '', isMobilePreview, onChanged, onClose }) => {
+const TrackerModal: React.FC<{ profile: any; userId?: string | null; initialCode?: string; isMobilePreview?: boolean; onChanged: () => void; onClose: () => void }> = ({ profile, userId, initialCode = '', isMobilePreview, onChanged, onClose }) => {
   const k = useKit(); const inp = useInputStyle();
   const [code, setCode] = useState(initialCode);
   const [res, setRes] = useState<{ kind: 'lead' | 'booking'; data: any } | null>(null);
@@ -642,6 +653,10 @@ const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; isM
           {res.data.status === 'cancelado'
             ? <div className="rounded-xl p-4 text-center border" style={{ background: 'rgba(248,113,113,0.1)', borderColor: 'rgba(248,113,113,0.3)', color: '#f87171' }}>Esta solicitud fue cancelada.</div>
             : <TrackerSteps steps={LEAD_STEPS} labels={LEAD_LABEL} current={res.data.status} />}
+          {res.data.request_type === 'inscripcion' && res.data.plan_amount > 0 && ['recibido', 'contactado', 'agendado'].includes(res.data.status) && (
+            <PaymentOptions profile={profile} ownerId={userId} amount={Number(res.data.plan_amount)} reference={res.data.code}
+              concept={`tu inscripción al plan ${res.data.plan_name}`} customer={{ name: res.data.client_name }} isMobilePreview={isMobilePreview} />
+          )}
           {res.data.status === 'inscrito' && res.data.member_code && (
             <div className="text-center"><p className="text-sm" style={{ color: `${k.text}88` }}>¡Bienvenido! Tu carnet de socio:</p><CodeBox code={res.data.member_code} small /></div>
           )}
@@ -677,7 +692,7 @@ const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; isM
 };
 
 /* ── Carnet de socio ───────────────────────────────────────────────────────── */
-const MemberModal: React.FC<{ userId?: string | null; initialId: string; waNumber: string; gymName: string; onClose: () => void }> = ({ userId, initialId, waNumber, gymName, onClose }) => {
+const MemberModal: React.FC<{ profile: any; userId?: string | null; initialId: string; waNumber: string; gymName: string; isMobilePreview?: boolean; onClose: () => void }> = ({ profile, userId, initialId, waNumber, gymName, isMobilePreview, onClose }) => {
   const k = useKit(); const inp = useInputStyle();
   const [id, setId] = useState(initialId);
   const [member, setMember] = useState<any | null>(null);
@@ -745,6 +760,11 @@ const MemberModal: React.FC<{ userId?: string | null; initialId: string; waNumbe
               <span className="font-bold flex items-center gap-1.5" style={{ color: k.accentLight }}><FaGift size={11} /> Tus beneficios</span>
               <p className="mt-1 whitespace-pre-wrap">{member.benefits}</p>
             </div>
+          )}
+          {needsRenewal && member.plan_price > 0 && (
+            <PaymentOptions profile={profile} ownerId={userId} amount={Number(member.plan_price)} reference={member.member_code}
+              title="Renueva tu plan" concept={`la renovación de tu plan ${member.plan_name || ''}`.trim()}
+              customer={{ name: member.name, phone: member.phone, email: member.email }} isMobilePreview={isMobilePreview} />
           )}
           {needsRenewal && waNumber && (
             <a href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hola, soy ${member.name} (${member.member_code}). Quiero renovar mi membresía.`)}`} target="_blank" rel="noopener noreferrer"

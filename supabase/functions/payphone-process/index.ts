@@ -1,5 +1,5 @@
 // Supabase Edge Function: payphone-process
-// Inicia un cobro con PayPhone (Ecuador) para la plantilla de barbería.
+// Inicia un cobro con PayPhone (Ecuador) para barbería, gimnasio y hotel.
 //
 // Despliegue (una sola vez):
 //   1. supabase login
@@ -9,10 +9,11 @@
 //
 // SEGURIDAD — leer antes de tocar este archivo:
 // El token de PayPhone NO se recibe del cliente y NO se guarda en
-// profiles.barber_gateways (esa columna la lee cualquier visitante del perfil
-// público: RLS `public_read_profiles` da SELECT a anon sobre todas las columnas).
-// Las credenciales viven en `barber_payment_secrets`, que no tiene política para
-// anon, y se leen aquí con el service_role. El navegador solo manda profile_id.
+// profiles.barber_gateways ni en profiles.payment_gateways (esas columnas las lee
+// cualquier visitante del perfil público: RLS `public_read_profiles` da SELECT a
+// anon sobre todas las columnas). Las credenciales viven en `payment_secrets`
+// (gimnasio/hotel) o `barber_payment_secrets` (barbería), que no tienen política
+// para anon, y se leen aquí con el service_role. El navegador solo manda profile_id.
 //
 // El cliente lo invoca con:
 //   supabase.functions.invoke('payphone-process', {
@@ -71,29 +72,39 @@ Deno.serve(async (req: Request) => {
     });
 
     // 1) El dueño debe tener PayPhone activado en su config pública.
+    //    Barbería guarda su config en `barber_gateways`; gimnasio y hotel, en
+    //    `payment_gateways`. Se lee la fila completa (select *) para no fallar si
+    //    alguna de las dos columnas no existe en esta base.
     const { data: profile, error: profileError } = await admin
       .from("profiles")
-      .select("barber_gateways, displayName")
+      .select("*")
       .eq("id", profile_id)
       .single();
 
     if (profileError || !profile) return json({ error: "Perfil no encontrado." }, 404);
 
-    const gateways = profile.barber_gateways;
-    const payphoneEnabled = gateways && !Array.isArray(gateways) && gateways.payphone?.enabled;
+    const isOn = (g: any) => !!g && !Array.isArray(g) && !!g.payphone?.enabled;
+    const payphoneEnabled = isOn(profile.barber_gateways) || isOn(profile.payment_gateways);
     if (!payphoneEnabled) {
       return json({ error: "PayPhone no está habilitado para este negocio." }, 400);
     }
 
-    // 2) Credenciales: solo del lado servidor.
-    const { data: secrets } = await admin
-      .from("barber_payment_secrets")
-      .select("payphone_token, payphone_client_id")
-      .eq("profile_id", profile_id)
-      .maybeSingle();
-
-    const token = secrets?.payphone_token;
-    const storeId = secrets?.payphone_client_id;
+    // 2) Credenciales: solo del lado servidor. `payment_secrets` (gimnasio/hotel)
+    //    primero; `barber_payment_secrets` como respaldo para la barbería.
+    let token: string | undefined;
+    let storeId: string | undefined;
+    for (const table of ["payment_secrets", "barber_payment_secrets"]) {
+      const { data: secrets } = await admin
+        .from(table)
+        .select("payphone_token, payphone_client_id")
+        .eq("profile_id", profile_id)
+        .maybeSingle();
+      if (secrets?.payphone_token && secrets?.payphone_client_id) {
+        token = secrets.payphone_token;
+        storeId = secrets.payphone_client_id;
+        break;
+      }
+    }
     if (!token || !storeId) {
       return json({ error: "El negocio no ha terminado de configurar PayPhone." }, 400);
     }
@@ -115,7 +126,7 @@ Deno.serve(async (req: Request) => {
       currency: "USD",
       clientTransactionId,
       storeId,
-      reference: reference || `Pago ${profile.displayName || "barbería"}`,
+      reference: reference || `Pago ${profile.displayName || "Connexo"}`,
       responseUrl: responseUrl || origin || undefined,
       cancellationUrl: cancellationUrl || origin || undefined,
       email: customer?.email || undefined,
