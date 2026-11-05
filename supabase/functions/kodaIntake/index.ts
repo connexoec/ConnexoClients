@@ -13,6 +13,10 @@
 //   { action: 'upsert', koda: {...}, negocio: {...} } → crea (o devuelve) el borrador
 //   { action: 'status', items: [{ envio_id, koda_prospect_id }] } → estado actual de cada envío
 //   { action: 'rellenar', envio_id } → vuelve a llenar un borrador con KODA + banco de recursos
+//   { action: 'detalle', envio_id } → qué se llenó y de dónde salió cada dato
+//   { action: 'estado_set', envio_id, estado } → revisión desde KODA: borrador↔aprobado, descartar y restaurar
+//
+// El WhatsApp, la aceptación y el vencimiento NO se mueven desde aquí: los maneja Connexo (SuperAdmin).
 //
 // Fase 2: al crear el borrador se completa el perfil. KODA manda (nombre, dirección, teléfono, WhatsApp,
 // redes, correo, calificación); el banco (tabla koda_recursos_nicho, setup_koda_recursos.sql) pone lo que
@@ -145,23 +149,33 @@ function respuesta(fila: Json) {
 // look, fotos del local, catálogo de EJEMPLO, horario tipo y textos genéricos.
 
 type Origen = "koda" | "banco" | "mixto";
+type TablaSemilla = { tabla: string; propietario: string; filas: Json[] };
 type Paquete = {
   logo?: { etiqueta?: string; fondo?: string; acento?: string; texto?: string };
   copy?: { jobTitle?: string; bio?: string; aboutMe?: string };
   perfil?: Json;
+  tablas?: TablaSemilla[];
 };
+type Vars = { nombre: string; ciudad: string | null; ubicacion: string; username: string; wa593: string };
+
+// Tablas propias de las plantillas que el banco puede sembrar (contenido de ejemplo, no transacciones).
+const TABLAS_SEMBRABLES = new Set([
+  "barber_staff", "ecom_staff", "realty_agents", "realty_properties",
+  "gym_plans", "gym_coaches", "gym_classes", "hotel_rooms", "hotel_services",
+]);
 
 // Estas plantillas muestran una «prueba social» propia; en las demás la calificación va al final de la bio.
 const PLANTILLAS_CON_PRUEBA_SOCIAL = new Set(["gastro", "petcare", "medical"]);
 const HEX_RE = /^#[0-9a-f]{3,8}$/i;
 const PALABRAS_VACIAS = new Set(["de", "del", "la", "el", "los", "las", "y", "e", "en", "the", "and"]);
 
-/** Cambia {{nombre}} y {{ciudad}} en todos los textos; sin ciudad, «en {{ciudad}}» desaparece. */
-function sustituir(valor: unknown, vars: { nombre: string; ciudad: string | null }): unknown {
+/** Cambia {{nombre}}, {{ciudad}}, {{ubicacion}}, {{username}} y {{wa593}}; sin ciudad, «en {{ciudad}}» desaparece. */
+function sustituir(valor: unknown, vars: Vars): unknown {
   if (typeof valor === "string") {
+    if (!valor.includes("{{")) return valor;
     let s = valor.split("{{nombre}}").join(vars.nombre);
     s = vars.ciudad ? s.split("{{ciudad}}").join(vars.ciudad) : s.replace(/\s+en \{\{ciudad\}\}/g, "").split("{{ciudad}}").join("");
-    return s;
+    return s.split("{{ubicacion}}").join(vars.ubicacion).split("{{username}}").join(vars.username).split("{{wa593}}").join(vars.wa593);
   }
   if (Array.isArray(valor)) return valor.map((v) => sustituir(v, vars));
   if (valor && typeof valor === "object") {
@@ -221,13 +235,52 @@ async function cargarPaquete(db: Admin, clave: string | null): Promise<Paquete |
   return (data?.pack as Paquete | undefined) ?? null;
 }
 
+/**
+ * Siembra las tablas propias de la plantilla (planes y clases, habitaciones, propiedades, equipo…).
+ * Los ids del banco son locales: se reasignan, y las referencias entre tablas (p. ej. clases → entrenador)
+ * se corrigen. Primero se borra lo que ESTE borrador ya tuviera (reintentos sin duplicar), de atrás hacia delante.
+ */
+async function sembrarTablas(db: Admin, uid: string, tablas: TablaSemilla[], vars: Vars): Promise<Record<string, number>> {
+  for (const t of tablas) {
+    if (!TABLAS_SEMBRABLES.has(t.tabla) || !/^[a-z_]+$/.test(t.propietario)) throw new Error(`tabla no permitida: ${t.tabla}`);
+  }
+  const ids = new Map<string, string>();
+  for (const t of tablas) for (const f of t.filas) if (typeof f.id === "string") ids.set(f.id, crypto.randomUUID());
+
+  for (const t of [...tablas].reverse()) {
+    const { error } = await db.from(t.tabla).delete().eq(t.propietario, uid);
+    if (error) throw new Error(`${t.tabla}: ${error.message}`);
+  }
+  const hechas: Record<string, number> = {};
+  for (const t of tablas) {
+    const filas = t.filas.map((f) => {
+      const o: Json = {};
+      for (const [k, v] of Object.entries(sustituir(f, vars) as Json)) o[k] = typeof v === "string" && ids.has(v) ? ids.get(v) : v;
+      o[t.propietario] = uid;
+      return o;
+    });
+    if (!filas.length) continue;
+    const { error } = await db.from(t.tabla).insert(filas);
+    if (error) throw new Error(`${t.tabla}: ${error.message}`);
+    hechas[t.tabla] = filas.length;
+  }
+  return hechas;
+}
+
 /** Completa el perfil con lo de KODA + el banco, y arma sus enlaces. Devuelve de dónde salió cada campo. */
-async function rellenarPerfil(db: Admin, uid: string, theme: string, clave: string | null, n: Json): Promise<Json> {
+async function rellenarPerfil(
+  db: Admin, uid: string, theme: string, clave: string | null, n: Json, username: string,
+): Promise<Json> {
   const nombre = str(n.nombre, 120);
   if (!nombre) throw new Error("El negocio no tiene nombre.");
   const ciudad = str(n.ciudad, 80);
   const paquete = await cargarPaquete(db, clave);
-  const vars = { nombre, ciudad };
+  const waKoda = str(n.whatsapp, 20);
+  const vars: Vars = {
+    nombre, ciudad, username,
+    ubicacion: ciudad ?? "Ecuador",
+    wa593: waKoda && WHATSAPP_RE.test(waKoda) ? waKoda.slice(1) : "",
+  };
   const banco = (paquete?.perfil ? sustituir(paquete.perfil, vars) : {}) as Json;
   const copy = (paquete?.copy ? sustituir(paquete.copy, vars) : {}) as Json;
 
@@ -295,17 +348,19 @@ async function rellenarPerfil(db: Admin, uid: string, theme: string, clave: stri
     );
     if (insErr) throw new Error(`enlaces: ${insErr.message}`);
   }
-  return { paquete: paquete ? clave : null, campos: origen, enlaces: enlaces.length };
+  // 5) Tablas propias de la plantilla (contenido de ejemplo).
+  const tablas = paquete?.tablas?.length ? await sembrarTablas(db, uid, paquete.tablas, vars) : {};
+  return { paquete: paquete ? clave : null, campos: origen, enlaces: enlaces.length, tablas };
 }
 
 /** Rellena y guarda el resultado en koda_prospectos. Nunca lanza: si falla, el borrador queda y se avisa en `detalle`. */
 async function aplicarRelleno(
-  db: Admin, fila: Json, uid: string, theme: string, clave: string | null, n: Json,
+  db: Admin, fila: Json, uid: string, theme: string, clave: string | null, n: Json, username: string,
 ): Promise<{ ok: boolean; fila: Json }> {
   const ahora = new Date().toISOString();
   const previo = typeof fila.detalle === "string" ? fila.detalle.replace(/^Relleno incompleto:[^·]*(· )?/, "").trim() : "";
   try {
-    const relleno = await rellenarPerfil(db, uid, theme, clave, n);
+    const relleno = await rellenarPerfil(db, uid, theme, clave, n, username);
     const { data, error } = await db.from("koda_prospectos")
       .update({ clave, relleno, detalle: previo || null, updated_at: ahora }).eq("id", fila.id).select("*").single();
     if (error) throw new Error(error.message);
@@ -421,7 +476,7 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
   }
 
   // Fase 2: completar el perfil con lo de KODA + el banco de recursos. Si falla, el borrador queda y se avisa.
-  const relleno = await aplicarRelleno(db, data, uid, theme, clave, n);
+  const relleno = await aplicarRelleno(db, data, uid, theme, clave, n, username);
   return json({ ...respuesta(relleno.fila), relleno_ok: relleno.ok });
 }
 
@@ -437,8 +492,16 @@ async function rellenarBorrador(db: Admin, body: Json): Promise<Response> {
 
   const negocio: Json = fila.negocio ?? {};
   const clave = claveDePack(fila.rubro ?? null, str(negocio.categoria, 120));
-  const res = await aplicarRelleno(db, fila, fila.user_id, fila.theme, clave, negocio);
+  const res = await aplicarRelleno(db, fila, fila.user_id, fila.theme, clave, negocio, fila.username ?? "");
   return json({ ...respuesta(res.fila), relleno_ok: res.ok, relleno: res.fila.relleno ?? null });
+}
+
+/** Resumen corto de lo que se llenó: cuántos datos vienen de KODA y cuántos son de ejemplo. */
+function resumenRelleno(r: Json | null | undefined): Json | null {
+  if (!r) return null;
+  const vals = Object.values((r.campos ?? {}) as Record<string, string>);
+  const n = (o: string) => vals.filter((v) => v === o).length;
+  return { paquete: r.paquete ?? null, koda: n("koda"), banco: n("banco"), mixto: n("mixto"), enlaces: Number(r.enlaces ?? 0), tablas: r.tablas ?? {} };
 }
 
 async function estados(db: Admin, body: Json): Promise<Response> {
@@ -448,7 +511,7 @@ async function estados(db: Admin, body: Json): Promise<Response> {
 
   const { data, error } = await db
     .from("koda_prospectos")
-    .select("koda_envio_id, koda_prospect_id, estado, user_id, username, theme, detalle, opt_out")
+    .select("koda_envio_id, koda_prospect_id, estado, user_id, username, theme, detalle, opt_out, clave, relleno")
     .in("koda_envio_id", ids);
   if (error) return json({ error: error.message }, 500);
 
@@ -463,8 +526,47 @@ async function estados(db: Admin, body: Json): Promise<Response> {
       theme: f.theme,
       detalle: f.detalle,
       opt_out: f.opt_out,
+      clave: f.clave ?? null,
+      relleno_resumen: resumenRelleno(f.relleno),
     })),
   });
+}
+
+/** Qué se llenó en un borrador y de dónde salió cada dato (para la pantalla de revisión). */
+async function detalleBorrador(db: Admin, body: Json): Promise<Response> {
+  const envio = body.envio_id;
+  if (typeof envio !== "string" || !UUID_RE.test(envio)) return json({ error: "envio_id inválido." }, 400);
+  const { data: fila, error } = await db.from("koda_prospectos").select("*").eq("koda_envio_id", envio).maybeSingle();
+  if (error) return json({ error: error.message }, 500);
+  if (!fila) return json({ error: "Ese envío no existe." }, 404);
+  return json({ ...respuesta(fila), relleno: fila.relleno ?? null, opt_out: fila.opt_out ?? false });
+}
+
+// Pasos que KODA puede dar sobre un borrador (revisión). Todo lo demás del embudo —enviar el WhatsApp,
+// que el negocio acepte o decline, que venza— lo maneja Connexo.
+const PASOS_DESDE_KODA: Record<string, string[]> = {
+  borrador: ["aprobado", "descartado"],
+  aprobado: ["borrador", "descartado"],
+  descartado: ["borrador"],
+};
+
+async function cambiarEstado(db: Admin, body: Json): Promise<Response> {
+  const envio = body.envio_id;
+  const nuevo = body.estado;
+  if (typeof envio !== "string" || !UUID_RE.test(envio)) return json({ error: "envio_id inválido." }, 400);
+  if (typeof nuevo !== "string") return json({ error: "Falta el estado." }, 400);
+  const { data: fila, error } = await db.from("koda_prospectos").select("*").eq("koda_envio_id", envio).maybeSingle();
+  if (error) return json({ error: error.message }, 500);
+  if (!fila) return json({ error: "Ese envío no existe." }, 404);
+  if (!(PASOS_DESDE_KODA[fila.estado] ?? []).includes(nuevo)) {
+    return json({ error: `Desde KODA no se puede pasar de «${fila.estado}» a «${nuevo}». Ese paso lo hace Connexo.` }, 409);
+  }
+  if (nuevo === "borrador" && !fila.user_id) return json({ error: "Ese envío no tiene cuenta borrador." }, 409);
+
+  const { data, error: uErr } = await db.from("koda_prospectos")
+    .update({ estado: nuevo, updated_at: new Date().toISOString() }).eq("id", fila.id).select("*").single();
+  if (uErr) return json({ error: uErr.message }, 500);
+  return json(respuesta(data));
 }
 
 Deno.serve(async (req: Request) => {
@@ -483,6 +585,8 @@ Deno.serve(async (req: Request) => {
     if (body.action === "upsert") return await upsertBorrador(db, body);
     if (body.action === "status") return await estados(db, body);
     if (body.action === "rellenar") return await rellenarBorrador(db, body);
+    if (body.action === "detalle") return await detalleBorrador(db, body);
+    if (body.action === "estado_set") return await cambiarEstado(db, body);
     return json({ error: "Acción desconocida." }, 400);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);
