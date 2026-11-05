@@ -174,7 +174,7 @@ const EcomClubModal: React.FC<EcomClubModalProps> = ({ profile, sellerId, onClos
         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         onClick={e => e.stopPropagation()}
       >
-        <button onClick={onClose} className="absolute top-4 right-4 text-white/30 hover:text-white transition">
+        <button onClick={onClose} className="absolute top-4 right-4 text-white/55 hover:text-white transition">
           <FaTimes className="w-4 h-4" />
         </button>
 
@@ -186,7 +186,7 @@ const EcomClubModal: React.FC<EcomClubModalProps> = ({ profile, sellerId, onClos
             <div className="bg-[#00e5a0]/10 border border-[#00e5a0]/30 rounded-2xl px-6 py-4">
               <p className="text-4xl font-black text-[#00e5a0] tracking-[0.2em]">{memberCode}</p>
             </div>
-            <p className="text-xs text-white/40">Guarda este código para obtener descuentos en tus próximas compras.</p>
+            <p className="text-xs text-white/60">Guarda este código para obtener descuentos en tus próximas compras.</p>
             <button onClick={onClose}
               className="w-full py-3 rounded-xl bg-[#00e5a0] text-black font-black text-sm uppercase tracking-wider transition-all active:scale-95">
               ¡Listo!
@@ -272,7 +272,7 @@ const EcomMemberLookup: React.FC<EcomMemberLookupProps> = ({ profile, sellerId, 
         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         onClick={e => e.stopPropagation()}
       >
-        <button onClick={onClose} className="absolute top-4 right-4 text-white/30 hover:text-white transition">
+        <button onClick={onClose} className="absolute top-4 right-4 text-white/55 hover:text-white transition">
           <FaTimes className="w-4 h-4" />
         </button>
         <div className="flex items-center gap-3 mb-5">
@@ -307,7 +307,7 @@ const EcomMemberLookup: React.FC<EcomMemberLookupProps> = ({ profile, sellerId, 
           <div className="space-y-4">
             <div className="bg-gradient-to-br from-[#00e5a0]/10 to-transparent border border-[#00e5a0]/25 rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs text-white/40 uppercase tracking-widest font-bold">Tarjeta de miembro</p>
+                <p className="text-xs text-white/60 uppercase tracking-widest font-bold">Tarjeta de miembro</p>
                 {member.is_vip && (
                   <span className="inline-flex items-center gap-1 text-[10px] font-black text-[#00e5a0] bg-[#00e5a0]/15 border border-[#00e5a0]/30 rounded-full px-2 py-0.5">
                     <FaCrown size={9} /> VIP
@@ -408,7 +408,7 @@ const EcomOrderTracker: React.FC<EcomOrderTrackerProps> = ({ sellerId, initialCo
         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         onClick={e => e.stopPropagation()}
       >
-        <button onClick={onClose} className="absolute top-4 right-4 text-white/30 hover:text-white transition">
+        <button onClick={onClose} className="absolute top-4 right-4 text-white/55 hover:text-white transition">
           <FaTimes className="w-4 h-4" />
         </button>
 
@@ -418,7 +418,7 @@ const EcomOrderTracker: React.FC<EcomOrderTrackerProps> = ({ sellerId, initialCo
           </div>
           <div>
             <h3 className="text-base font-black text-white">Estado de tu pedido</h3>
-            <p className="text-xs text-white/40">Actualiza cada pocos segundos</p>
+            <p className="text-xs text-white/60">Actualiza cada pocos segundos</p>
           </div>
         </div>
 
@@ -427,7 +427,7 @@ const EcomOrderTracker: React.FC<EcomOrderTrackerProps> = ({ sellerId, initialCo
             onSubmit={e => { e.preventDefault(); if (code.trim()) setTracking(true); }}
             className="space-y-3"
           >
-            <p className="text-xs text-white/40 leading-relaxed">
+            <p className="text-xs text-white/60 leading-relaxed">
               Ingresa el código que recibiste al hacer tu pedido.
             </p>
             <input
@@ -463,7 +463,7 @@ const EcomOrderTracker: React.FC<EcomOrderTrackerProps> = ({ sellerId, initialCo
           <div className="text-center py-6 space-y-2">
             <div className="text-4xl">❌</div>
             <p className="text-sm font-black text-red-400">Pedido cancelado</p>
-            <p className="text-[11px] text-white/30 font-mono tracking-widest">#{data.code}</p>
+            <p className="text-[11px] text-white/55 font-mono tracking-widest">#{data.code}</p>
           </div>
         ) : (
           <div className="space-y-5">
@@ -475,7 +475,7 @@ const EcomOrderTracker: React.FC<EcomOrderTrackerProps> = ({ sellerId, initialCo
                   Tiempo estimado: {data.estimated_minutes} min
                 </p>
               )}
-              <p className="text-[10px] text-white/25 mt-1 font-mono tracking-widest">Pedido #{data.code}</p>
+              <p className="text-[10px] text-white/55 mt-1 font-mono tracking-widest">Pedido #{data.code}</p>
             </div>
 
             {/* Pipeline */}
@@ -491,12 +491,12 @@ const EcomOrderTracker: React.FC<EcomOrderTrackerProps> = ({ sellerId, initialCo
                           ? active
                             ? 'bg-[#00e5a0] border-[#00e5a0] text-black shadow-lg shadow-[#00e5a0]/30 scale-110'
                             : 'bg-[#00e5a0] border-[#00e5a0] text-black'
-                          : 'bg-black/40 border-white/10 text-white/20'
+                          : 'bg-black/40 border-white/10 text-white/55'
                       }`}>
                         {done ? '✓' : i + 1}
                       </div>
                       <span className={`text-[9px] uppercase tracking-wide text-center leading-tight font-bold ${
-                        done ? 'text-[#00e5a0]' : 'text-white/20'
+                        done ? 'text-[#00e5a0]' : 'text-white/55'
                       }`}>
                         {ECOM_STATUS_META[step]?.label}
                       </span>
@@ -509,7 +509,7 @@ const EcomOrderTracker: React.FC<EcomOrderTrackerProps> = ({ sellerId, initialCo
               })}
             </div>
 
-            <p className="text-[10px] text-white/20 text-center">
+            <p className="text-[10px] text-white/55 text-center">
               Esta pantalla se actualiza automáticamente.
             </p>
           </div>
@@ -626,7 +626,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, profile, isUltra, 
               )}
             </>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-white/20 text-6xl">🛍️</div>
+            <div className="w-full h-full flex items-center justify-center text-white/55 text-6xl">🛍️</div>
           )}
           <button onClick={onClose}
             className="absolute top-3 right-3 z-10 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 transition">
@@ -659,7 +659,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, profile, isUltra, 
               <p className="text-[11px] text-white/50 uppercase tracking-widest font-bold mb-2">
                 {group.name}
                 {group.required && <span className="text-red-400 ml-1">*</span>}
-                {group.multiSelect && <span className="text-white/25 font-normal ml-1 normal-case tracking-normal">· Selección múltiple</span>}
+                {group.multiSelect && <span className="text-white/55 font-normal ml-1 normal-case tracking-normal">· Selección múltiple</span>}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {group.options.map(opt => {
@@ -697,16 +697,16 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, profile, isUltra, 
                 <FaLayerGroup size={10} /> Precios por volumen
               </p>
               <div className="grid grid-cols-[auto_1fr_auto] gap-x-3 gap-y-1">
-                <span className="text-[10px] text-white/30 font-bold uppercase">Desde</span>
-                <span className="text-[10px] text-white/30 font-bold uppercase">Precio unit.</span>
-                <span className="text-[10px] text-white/30 font-bold uppercase">Total</span>
+                <span className="text-[10px] text-white/55 font-bold uppercase">Desde</span>
+                <span className="text-[10px] text-white/55 font-bold uppercase">Precio unit.</span>
+                <span className="text-[10px] text-white/55 font-bold uppercase">Total</span>
                 {([...(product.priceTiers ?? [])].sort((a, b) => a.minQty - b.minQty)).map((tier, ti) => {
                   const active = qty >= tier.minQty;
                   return (
                     <React.Fragment key={ti}>
-                      <span className={`text-xs font-bold ${active ? 'text-[#00e5a0]' : 'text-white/40'}`}>{tier.minQty}+</span>
-                      <span className={`text-xs font-mono font-bold ${active ? 'text-[#00e5a0]' : 'text-white/40'}`}>{tier.price}</span>
-                      <span className={`text-xs font-mono ${active ? 'text-white/70' : 'text-white/25'}`}>
+                      <span className={`text-xs font-bold ${active ? 'text-[#00e5a0]' : 'text-white/60'}`}>{tier.minQty}+</span>
+                      <span className={`text-xs font-mono font-bold ${active ? 'text-[#00e5a0]' : 'text-white/60'}`}>{tier.price}</span>
+                      <span className={`text-xs font-mono ${active ? 'text-white/70' : 'text-white/55'}`}>
                         ${(parseFloat(tier.price.replace(/[^0-9.]/g, '')) * qty || 0).toFixed(2)}
                       </span>
                     </React.Fragment>
@@ -734,7 +734,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, profile, isUltra, 
                   </button>
                 </div>
                 {product.minQty && product.minQty > 1 && (
-                  <span className="text-[10px] text-white/30">Mín. {product.minQty}</span>
+                  <span className="text-[10px] text-white/55">Mín. {product.minQty}</span>
                 )}
               </div>
               {belowMinQty && (
@@ -819,7 +819,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ state, dispatch, profile, onChe
           {state.items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full gap-3 text-center py-12">
               <span className="text-5xl opacity-30">🛒</span>
-              <p className="text-white/40 text-sm">Tu carrito está vacío</p>
+              <p className="text-white/60 text-sm">Tu carrito está vacío</p>
             </div>
           ) : (
             state.items.map(item => (
@@ -838,7 +838,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ state, dispatch, profile, onChe
                     </p>
                   )}
                   {item.selectedExtras && item.selectedExtras.length > 0 && (
-                    <p className="text-[10px] text-white/30 mt-0.5 truncate">{item.selectedExtras.map(e => e.optionLabel).join(', ')}</p>
+                    <p className="text-[10px] text-white/55 mt-0.5 truncate">{item.selectedExtras.map(e => e.optionLabel).join(', ')}</p>
                   )}
                   <div className="flex items-center gap-2 mt-2">
                     <button onClick={() => dispatch({ type: 'UPDATE_QTY', productId: item.product.id, qty: item.quantity - 1 })}
@@ -853,7 +853,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ state, dispatch, profile, onChe
                   </div>
                 </div>
                 <button onClick={() => dispatch({ type: 'REMOVE', productId: item.product.id })}
-                  className="text-white/30 hover:text-red-400 transition self-start p-1">
+                  className="text-white/55 hover:text-red-400 transition self-start p-1">
                   <FaTimes className="w-3 h-3" />
                 </button>
               </div>
@@ -871,7 +871,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ state, dispatch, profile, onChe
               <FaShoppingBag className="w-4 h-4" /> Finalizar pedido
             </button>
             <button onClick={() => dispatch({ type: 'CLEAR' })}
-              className="w-full py-2 text-xs text-white/30 hover:text-white/60 transition">
+              className="w-full py-2 text-xs text-white/55 hover:text-white/60 transition">
               Vaciar carrito
             </button>
           </div>
@@ -977,7 +977,7 @@ const EcomInvoiceModal: React.FC<EcomInvoiceModalProps> = ({
 
         <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col overflow-hidden">
         <div className="flex-1 min-h-0 overflow-y-scroll p-5 space-y-4" style={{ WebkitOverflowScrolling: 'touch' }}>
-          <p className="text-xs text-white/40 -mt-1">
+          <p className="text-xs text-white/60 -mt-1">
             Pedido <span className="text-[#00e5a0] font-bold">#{orderCode}</span>. Completa los datos para tu factura electrónica.
           </p>
 
@@ -1307,18 +1307,18 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ items, profile, sellerId,
                     <div className="bg-black/30 border border-white/10 rounded-xl p-3.5 space-y-1.5">
                       <p className="text-sm font-bold text-white flex items-center gap-2"><FaUniversity className="text-[#00e5a0]" /> Transferencia bancaria</p>
                       <div className="text-xs text-white/70 space-y-1 pt-1">
-                        {bt?.bank && <div className="flex justify-between gap-2"><span className="text-white/40">Banco</span><span className="font-semibold text-white text-right">{bt.bank}</span></div>}
-                        {bt?.accountType && <div className="flex justify-between gap-2"><span className="text-white/40">Tipo</span><span className="font-semibold text-white text-right">{bt.accountType}</span></div>}
+                        {bt?.bank && <div className="flex justify-between gap-2"><span className="text-white/60">Banco</span><span className="font-semibold text-white text-right">{bt.bank}</span></div>}
+                        {bt?.accountType && <div className="flex justify-between gap-2"><span className="text-white/60">Tipo</span><span className="font-semibold text-white text-right">{bt.accountType}</span></div>}
                         {bt?.accountNumber && (
-                          <div className="flex justify-between gap-2 items-center"><span className="text-white/40">N° cuenta</span>
+                          <div className="flex justify-between gap-2 items-center"><span className="text-white/60">N° cuenta</span>
                             <button type="button" onClick={() => copyToClipboard(bt.accountNumber!, 'acc')} className="font-mono font-semibold text-white text-right flex items-center gap-1.5 hover:text-[#00e5a0] transition">
                               {bt.accountNumber} <FaCopy className="text-[10px] opacity-60" />{copied === 'acc' && <span className="text-[10px] text-[#00e5a0]">¡Copiado!</span>}
                             </button>
                           </div>
                         )}
-                        {bt?.holder && <div className="flex justify-between gap-2"><span className="text-white/40">Titular</span><span className="font-semibold text-white text-right">{bt.holder}</span></div>}
-                        {bt?.idNumber && <div className="flex justify-between gap-2"><span className="text-white/40">Cédula/RUC</span><span className="font-semibold text-white text-right">{bt.idNumber}</span></div>}
-                        {bt?.email && <div className="flex justify-between gap-2"><span className="text-white/40">Email</span><span className="font-semibold text-white text-right break-all">{bt.email}</span></div>}
+                        {bt?.holder && <div className="flex justify-between gap-2"><span className="text-white/60">Titular</span><span className="font-semibold text-white text-right">{bt.holder}</span></div>}
+                        {bt?.idNumber && <div className="flex justify-between gap-2"><span className="text-white/60">Cédula/RUC</span><span className="font-semibold text-white text-right">{bt.idNumber}</span></div>}
+                        {bt?.email && <div className="flex justify-between gap-2"><span className="text-white/60">Email</span><span className="font-semibold text-white text-right break-all">{bt.email}</span></div>}
                       </div>
                       {proofPhone && (
                         <a href={buildWALink(ecWa(proofPhone), proofMsg)} target="_blank" rel="noopener noreferrer"
@@ -1359,7 +1359,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ items, profile, sellerId,
             {invoiceDone && (
               <p className="text-xs text-[#00e5a0] text-center font-bold">✅ Datos de factura enviados</p>
             )}
-            <button onClick={onClose} className="w-full py-2 text-xs text-white/40 hover:text-white/70 transition">Cerrar</button>
+            <button onClick={onClose} className="w-full py-2 text-xs text-white/60 hover:text-white/70 transition">Cerrar</button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col overflow-hidden">
@@ -1432,7 +1432,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ items, profile, sellerId,
                 </div>
               )}
               <div className="border-t border-white/5 pt-2 flex justify-between items-center">
-                <span className="text-[10px] text-white/30 uppercase tracking-widest">Total ({itemCount})</span>
+                <span className="text-[10px] text-white/55 uppercase tracking-widest">Total ({itemCount})</span>
                 <span className="text-white font-black font-mono">${total.toFixed(2)}</span>
               </div>
             </div>
@@ -1494,7 +1494,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ items, profile, sellerId,
               className="w-full py-3.5 rounded-xl font-black text-sm uppercase tracking-wider text-black bg-[#00e5a0] hover:bg-[#00cfa0] disabled:opacity-50 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-[#00e5a0]/20">
               {submitting ? 'Enviando...' : <>Enviar pedido · ${total.toFixed(2)}</>}
             </button>
-            <p className="text-[10px] text-white/25 text-center">{profile.displayName} recibirá tu pedido al instante.</p>
+            <p className="text-[10px] text-white/55 text-center">{profile.displayName} recibirá tu pedido al instante.</p>
           </div>
           </form>
         )}
@@ -1792,12 +1792,12 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
         onClick={e => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
         {/* Header */}
         <div className="relative p-6 pb-4 border-b border-white/5 shrink-0">
-          <button onClick={onClose} className="absolute top-4 right-4 text-white/40 hover:text-white transition"><FaTimes /></button>
+          <button onClick={onClose} className="absolute top-4 right-4 text-white/60 hover:text-white transition"><FaTimes /></button>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ backgroundColor: `${accent}26` }}>📅</div>
             <div>
               <h3 className="font-black uppercase tracking-wider text-sm" style={{ color: accent }}>Agendar una cita</h3>
-              <p className="text-[11px] text-white/40">Elige qué necesitas, con quién y cuándo</p>
+              <p className="text-[11px] text-white/60">Elige qué necesitas, con quién y cuándo</p>
             </div>
           </div>
         </div>
@@ -1812,19 +1812,19 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
             <div className="bg-black/60 rounded-2xl px-6 py-5 border text-center" style={{ borderColor: `${accent}4d` }}>
               <p className="text-[10px] uppercase tracking-[3px] mb-2" style={{ color: `${accent}99` }}>Tu código de cita</p>
               <p className="text-3xl font-black tracking-[4px] mb-1" style={{ color: accent }}>{result.confirmation_code}</p>
-              <p className="text-[10px] text-white/30 leading-relaxed">Guárdalo para consultar el estado de tu cita.</p>
+              <p className="text-[10px] text-white/55 leading-relaxed">Guárdalo para consultar el estado de tu cita.</p>
             </div>
             <div className="border rounded-xl px-4 py-3 text-left text-xs text-white/70 space-y-1"
               style={{ backgroundColor: `${accent}0d`, borderColor: `${accent}26` }}>
-              {result.staff_name && <p><span className="text-white/40">Te atiende:</span> {result.staff_name}</p>}
-              <p><span className="text-white/40">Fecha:</span> {new Date(date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })}</p>
-              <p><span className="text-white/40">Hora:</span> {time}</p>
+              {result.staff_name && <p><span className="text-white/60">Te atiende:</span> {result.staff_name}</p>}
+              <p><span className="text-white/60">Fecha:</span> {new Date(date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })}</p>
+              <p><span className="text-white/60">Hora:</span> {time}</p>
               {selectedItems.length > 0 && (
-                <p><span className="text-white/40">Te interesa:</span> {selectedItems.map(p => p.name).join(', ')}</p>
+                <p><span className="text-white/60">Te interesa:</span> {selectedItems.map(p => p.name).join(', ')}</p>
               )}
               {/* Lo que el cliente respondió en el formulario del negocio */}
               {formAnswers.map(a => (
-                <p key={a.id}><span className="text-white/40">{a.label}:</span> {a.value}</p>
+                <p key={a.id}><span className="text-white/60">{a.label}:</span> {a.value}</p>
               ))}
             </div>
             <button onClick={onClose}
@@ -1845,7 +1845,7 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
                       {selectedItems.length} seleccionado{selectedItems.length !== 1 ? 's' : ''}
                     </span>
                   ) : (
-                    <span className="text-[10px] text-white/30">Opcional</span>
+                    <span className="text-[10px] text-white/55">Opcional</span>
                   )}
                 </div>
                 {/* Lo ya elegido, en compacto (con quitar) */}
@@ -1856,13 +1856,13 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
                         <div className="w-9 h-9 rounded-lg overflow-hidden bg-black/40 shrink-0">
                           {p.imageURL
                             ? <img src={p.imageURL} alt={p.name} className="w-full h-full object-cover" />
-                            : <div className="w-full h-full flex items-center justify-center text-sm text-white/20">🛍️</div>}
+                            : <div className="w-full h-full flex items-center justify-center text-sm text-white/55">🛍️</div>}
                         </div>
                         <p className="flex-1 min-w-0 text-[11px] font-bold text-white truncate">{p.name}</p>
                         {p.price && <span className="text-[11px] font-black shrink-0" style={{ color: accent }}>{p.price}</span>}
                         <button type="button" title="Quitar"
                           onClick={() => setPicked(prev => ({ ...prev, [p.id]: false }))}
-                          className="w-6 h-6 rounded-lg flex items-center justify-center text-white/30 hover:text-red-400 transition shrink-0">
+                          className="w-6 h-6 rounded-lg flex items-center justify-center text-white/55 hover:text-red-400 transition shrink-0">
                           <FaTimes className="w-2.5 h-2.5" />
                         </button>
                       </div>
@@ -1945,7 +1945,7 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
                           style={{ backgroundColor: `${accent}1a`, color: accent }}>👤</div>
                       )}
                       <p className="text-[11px] font-bold text-white leading-tight truncate">{s.name}</p>
-                      {s.role && <p className="text-[9px] text-white/40 truncate mt-0.5">{s.role}</p>}
+                      {s.role && <p className="text-[9px] text-white/60 truncate mt-0.5">{s.role}</p>}
                     </button>
                   );
                 })}
@@ -1962,7 +1962,7 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
                 onChange={e => setDate(e.target.value)}
                 disabled={!selStaff}
                 className={`${inputCls} disabled:opacity-40`} />
-              {!selStaff && <p className="text-[11px] text-white/30 mt-1.5">Primero elige quién te atiende.</p>}
+              {!selStaff && <p className="text-[11px] text-white/55 mt-1.5">Primero elige quién te atiende.</p>}
             </div>
 
             {/* 4· Hora */}
@@ -1970,7 +1970,7 @@ const EcomAppointmentModal: React.FC<EcomAppointmentModalProps> = ({
               <div>
                 <label className={labelCls} style={{ color: `${accent}b3` }}>Hora disponible</label>
                 {loadingSlots ? (
-                  <p className="text-xs text-white/40">Buscando horas libres...</p>
+                  <p className="text-xs text-white/60">Buscando horas libres...</p>
                 ) : !dayHours || !dayHours.isOpen ? (
                   <p className="text-xs text-amber-300/80">{selStaff.name} no atiende ese día. Elige otra fecha.</p>
                 ) : slots.length === 0 ? (
@@ -2086,9 +2086,9 @@ const EcomAppointmentLookup: React.FC<EcomAppointmentLookupProps> = ({ sellerId,
       <div className="bg-[#0b1219] border border-[#00e5a0]/20 w-full max-w-sm rounded-2xl shadow-2xl relative text-white overflow-hidden max-h-[92svh] overflow-y-auto"
         onClick={e => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
         <div className="relative p-6 pb-4 border-b border-white/5">
-          <button onClick={onClose} className="absolute top-4 right-4 text-white/40 hover:text-white transition"><FaTimes /></button>
+          <button onClick={onClose} className="absolute top-4 right-4 text-white/60 hover:text-white transition"><FaTimes /></button>
           <h3 className="font-black uppercase tracking-wider text-sm" style={{ color: accent }}>Consultar mi cita</h3>
-          <p className="text-[11px] text-white/40 mt-1">Ingresa el código que recibiste al agendar</p>
+          <p className="text-[11px] text-white/60 mt-1">Ingresa el código que recibiste al agendar</p>
         </div>
 
         <div className="p-5 space-y-4">
@@ -2116,18 +2116,18 @@ const EcomAppointmentLookup: React.FC<EcomAppointmentLookupProps> = ({ sellerId,
                 <p className="font-black text-white text-sm">{meta.label}</p>
               </div>
               <div className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-xs text-white/70 space-y-1.5">
-                <p><span className="text-white/40">A nombre de:</span> {data.customer_name}</p>
-                {data.staff_name && <p><span className="text-white/40">Te atiende:</span> {data.staff_name}</p>}
-                <p><span className="text-white/40">Fecha:</span> {new Date(data.appointment_date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })}</p>
-                <p><span className="text-white/40">Hora:</span> {data.appointment_time}</p>
+                <p><span className="text-white/60">A nombre de:</span> {data.customer_name}</p>
+                {data.staff_name && <p><span className="text-white/60">Te atiende:</span> {data.staff_name}</p>}
+                <p><span className="text-white/60">Fecha:</span> {new Date(data.appointment_date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })}</p>
+                <p><span className="text-white/60">Hora:</span> {data.appointment_time}</p>
                 {items.length > 0 && (
-                  <p><span className="text-white/40">Te interesa:</span> {items.map((i: any) => i.name).join(', ')}</p>
+                  <p><span className="text-white/60">Te interesa:</span> {items.map((i: any) => i.name).join(', ')}</p>
                 )}
                 {/* Respuestas del formulario del negocio. Sale solo si el RPC
                     las devuelve, para no romper si aún corre la versión vieja. */}
                 {(Array.isArray(data?.form_data) ? data.form_data : []).map((a: any, i: number) => (
                   a?.value ? (
-                    <p key={a.id || i}><span className="text-white/40">{a.label}:</span> {a.value}</p>
+                    <p key={a.id || i}><span className="text-white/60">{a.label}:</span> {a.value}</p>
                   ) : null
                 ))}
               </div>
@@ -2574,13 +2574,13 @@ export const ProfileEcomTemplate: React.FC<ProfileEcomTemplateProps> = ({
             {products.length > 6 && (
               <div className="mb-4 space-y-3">
                 <div className="relative">
-                  <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/25 w-3.5 h-3.5" />
+                  <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/55 w-3.5 h-3.5" />
                   <input value={catalogQuery} onChange={e => setCatalogQuery(e.target.value)}
                     placeholder="Buscar por nombre, marca o categoría"
                     className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-xl pl-10 pr-9 py-2.5 focus:outline-none focus:border-[#00e5a0]/40 placeholder-white/25" />
                   {catalogQuery && (
                     <button onClick={() => setCatalogQuery('')} aria-label="Limpiar búsqueda"
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition p-1">
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/55 hover:text-white transition p-1">
                       <FaTimes size={12} />
                     </button>
                   )}
@@ -2659,7 +2659,7 @@ export const ProfileEcomTemplate: React.FC<ProfileEcomTemplateProps> = ({
                           )}
                           <div className="mt-0.5"><StockBadge stock={product.stock} /></div>
                         </div>
-                        <span className="text-[10px] text-white/40 border border-white/10 rounded-lg px-1.5 py-0.5 font-bold uppercase tracking-widest group-hover:border-[#00e5a0]/30 group-hover:text-[#00e5a0]/60 transition shrink-0">
+                        <span className="text-[10px] text-white/60 border border-white/10 rounded-lg px-1.5 py-0.5 font-bold uppercase tracking-widest group-hover:border-[#00e5a0]/30 group-hover:text-[#00e5a0]/60 transition shrink-0">
                           Ver
                         </span>
                       </div>
@@ -2755,13 +2755,13 @@ export const ProfileEcomTemplate: React.FC<ProfileEcomTemplateProps> = ({
                     )}
                     <div>
                       <p className="text-[11px] font-black text-[#00e5a0] uppercase tracking-wider">{t.author}</p>
-                      {t.authorTitle && <p className="text-[10px] text-white/40">{t.authorTitle}</p>}
+                      {t.authorTitle && <p className="text-[10px] text-white/60">{t.authorTitle}</p>}
                     </div>
                   </div>
                 </div>
               ))}
               {(!Array.isArray(profile.testimonials) || profile.testimonials.length === 0) && (
-                <p className="text-xs text-white/40 italic text-center py-3">Aún no hay reseñas. ¡Sé el primero en dejar una!</p>
+                <p className="text-xs text-white/60 italic text-center py-3">Aún no hay reseñas. ¡Sé el primero en dejar una!</p>
               )}
             </div>
             {onLeaveTestimonial && !isMobilePreview && (
@@ -2802,7 +2802,7 @@ export const ProfileEcomTemplate: React.FC<ProfileEcomTemplateProps> = ({
                 {day.isOpen ? (
                   <span className="text-sm font-bold" style={{ color: accent }}>{day.openTime} – {day.closeTime}</span>
                 ) : (
-                  <span className="text-xs text-white/30 font-bold uppercase tracking-wider">Cerrado</span>
+                  <span className="text-xs text-white/55 font-bold uppercase tracking-wider">Cerrado</span>
                 )}
               </div>
             ))}
@@ -2834,7 +2834,7 @@ export const ProfileEcomTemplate: React.FC<ProfileEcomTemplateProps> = ({
         {profile.logoURL && (
           <img src={profile.logoURL} alt="Logo" className="h-8 object-contain mx-auto opacity-50 mb-3" />
         )}
-        <p className="text-[10px] text-white/20 tracking-widest uppercase">Powered by Connexo</p>
+        <p className="text-[10px] text-white/55 tracking-widest uppercase">Powered by Connexo</p>
       </div>
 
       {/* ── Modals ──────────────────────────────────────── */}

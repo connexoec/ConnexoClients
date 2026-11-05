@@ -22,6 +22,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { sanearPaleta, paletaLogo } from "./paleta.mjs";
 
 const aqui = path.dirname(fileURLToPath(import.meta.url));
 const raiz = path.resolve(aqui, "..", "..");
@@ -385,11 +386,12 @@ for (const p of paquetes) {
   const extra = { "02": ["Navaja & Cuero"], "03": ["Brasa & Mar"], "04": ["Cumbre"], "06": ["Huellitas"], "07": ["Vitalis"], "08": ["Cimientos"], "10": ["Titán"], "11": ["Costa Rosa"] };
   const marcas = [d.displayName, d.company, ...(extra[p.demo] ?? [])].filter(Boolean).sort((a, b) => b.length - a.length);
   const perfil = sinMarca(p.perfil(d), marcas);
+  Object.assign(perfil, sanearPaleta(perfil));   // contraste (WCAG): acento legible, texto de botón y de página
   if (perfil.galleryImageURLs?.length) perfil.galleryTitle = GALERIA_TITULO;
   const tablas = sinMarca(p.tablas ? p.tablas(d, F[p.demo]) : [], marcas);
   const paquete = {
     clave: p.clave, theme: p.theme, fuente: `setup_demo_${p.demo}`,
-    logo: { etiqueta: p.etiqueta, fondo: d.backgroundColor, acento: d.buttonColor, texto: d.textColor },
+    logo: { etiqueta: p.etiqueta, ...paletaLogo({ fondo: perfil.backgroundColor ?? d.backgroundColor, acento: perfil.buttonColor ?? d.buttonColor, texto: perfil.textColor ?? d.textColor }) },
     copy: p.copy, perfil,
   };
   if (tablas.length) paquete.tablas = tablas;

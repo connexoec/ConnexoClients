@@ -450,7 +450,7 @@ export const ProfileGastroTemplate: React.FC<ProfileGastroTemplateProps> = ({
 
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-center">{profile?.displayName}</h1>
         {profile?.company && <p className="text-[#ffefe5]/60 text-sm mt-1 tracking-wide">{profile.company}</p>}
-        {profile?.jobTitle && <p className="text-[#ff6b35]/80 text-xs mt-0.5 uppercase tracking-widest font-bold">{profile.jobTitle}</p>}
+        {profile?.jobTitle && <p className="text-[#ff6b35]/90 text-xs mt-0.5 uppercase tracking-widest font-bold">{profile.jobTitle}</p>}
         {profile?.bio && <p className="mt-3 text-center text-xs opacity-80 px-6 leading-relaxed max-w-md text-gray-300 italic">{profile.bio}</p>}
 
         {/* ── Contact Icon Buttons ─── */}
@@ -588,7 +588,7 @@ export const ProfileGastroTemplate: React.FC<ProfileGastroTemplateProps> = ({
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}`}
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs text-[#ffefe5]/60 hover:text-[#ff6b35] transition-colors">
-              <FaMapMarkerAlt className="text-[#ff6b35]/70 shrink-0" size={11} />
+              <FaMapMarkerAlt className="text-[#ff6b35]/90 shrink-0" size={11} />
               <span>{loc}</span>
             </a>
           ))}
@@ -679,7 +679,7 @@ export const ProfileGastroTemplate: React.FC<ProfileGastroTemplateProps> = ({
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-black uppercase italic tracking-widest text-[#ff6b35] font-mono">Platos Estrella</h2>
           {allProducts.length > 0 && (
-            <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{allProducts.length} platos</span>
+            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">{allProducts.length} platos</span>
           )}
         </div>
 
@@ -728,20 +728,20 @@ export const ProfileGastroTemplate: React.FC<ProfileGastroTemplateProps> = ({
                     <div className="p-3">
                       <h4 className="cnx-product-text font-bold text-xs text-[#ffefe5] truncate leading-snug">{product.cleanName}</h4>
                       {product.shortDescription && (
-                        <p className="text-[10px] text-gray-500 mt-0.5 line-clamp-2 leading-snug">{product.shortDescription}</p>
+                        <p className="text-[10px] text-gray-400 mt-0.5 line-clamp-2 leading-snug">{product.shortDescription}</p>
                       )}
                       <div className="flex items-center justify-between mt-2">
                         {product.price
                           ? <span className="font-mono text-xs font-black text-[#ff6b35]">{product.price}</span>
                           : <span />}
-                        {!agotado && <span className="text-[9px] font-black uppercase tracking-wider text-[#ff6b35]/70">Pedir →</span>}
+                        {!agotado && <span className="text-[9px] font-black uppercase tracking-wider text-[#ff6b35]/90">Pedir →</span>}
                       </div>
                     </div>
                   </div>
                 );
               })}
             </div>
-            <p className="text-[10px] text-gray-600 mt-1.5 text-center tracking-wide">👈 Desliza para ver más platos 👉</p>
+            <p className="text-[10px] text-gray-400 mt-1.5 text-center tracking-wide">👈 Desliza para ver más platos 👉</p>
 
             <button
               onClick={() => { setCatalogQuery(''); setShowFullMenu(true); }}
@@ -751,7 +751,7 @@ export const ProfileGastroTemplate: React.FC<ProfileGastroTemplateProps> = ({
             </button>
           </>
         ) : (
-          <div className="text-center py-10 text-gray-500">
+          <div className="text-center py-10 text-gray-400">
             <FaInbox className="mx-auto text-3xl mb-2" />
             <p className="text-xs">El menú estará disponible pronto.</p>
           </div>
@@ -1016,7 +1016,7 @@ export const ProfileGastroTemplate: React.FC<ProfileGastroTemplateProps> = ({
             </p>
 
             <div className="my-6 p-4 rounded-xl bg-black/40 border border-[#ff6b35]/20 w-full">
-              <div className="text-[9px] uppercase font-bold tracking-widest text-gray-500 mb-1">Código de Validación</div>
+              <div className="text-[9px] uppercase font-bold tracking-widest text-gray-400 mb-1">Código de Validación</div>
               <div className="text-3xl font-mono font-black tracking-widest text-[#ff6b35]">{successOrder.verification_code}</div>
               {successOrder.order_type === 'mesa' ? (
                 <div className="text-xs text-gray-400 mt-1 font-bold">Mesa {successOrder.mesa_number}</div>
@@ -1080,18 +1080,18 @@ export const ProfileGastroTemplate: React.FC<ProfileGastroTemplateProps> = ({
                     <div className="bg-black/40 border border-[#ff6b35]/20 rounded-xl p-3.5 space-y-1.5">
                       <p className="text-xs font-black text-white flex items-center gap-2"><FaUniversity className="text-[#ff6b35]" /> Transferencia bancaria</p>
                       <div className="text-[11px] text-white/70 space-y-1 pt-1">
-                        {bt?.bank && <div className="flex justify-between gap-2"><span className="text-white/40">Banco</span><span className="font-semibold text-white text-right">{bt.bank}</span></div>}
-                        {bt?.accountType && <div className="flex justify-between gap-2"><span className="text-white/40">Tipo</span><span className="font-semibold text-white text-right">{bt.accountType}</span></div>}
+                        {bt?.bank && <div className="flex justify-between gap-2"><span className="text-white/60">Banco</span><span className="font-semibold text-white text-right">{bt.bank}</span></div>}
+                        {bt?.accountType && <div className="flex justify-between gap-2"><span className="text-white/60">Tipo</span><span className="font-semibold text-white text-right">{bt.accountType}</span></div>}
                         {bt?.accountNumber && (
-                          <div className="flex justify-between gap-2 items-center"><span className="text-white/40">N° cuenta</span>
+                          <div className="flex justify-between gap-2 items-center"><span className="text-white/60">N° cuenta</span>
                             <button type="button" onClick={() => copyAccount(bt.accountNumber!)} className="font-mono font-semibold text-white text-right flex items-center gap-1.5 hover:text-[#ff6b35] transition">
                               {bt.accountNumber} <FaCopy className="text-[10px] opacity-60" />{copiedAcc && <span className="text-[10px] text-[#ff6b35]">¡Copiado!</span>}
                             </button>
                           </div>
                         )}
-                        {bt?.holder && <div className="flex justify-between gap-2"><span className="text-white/40">Titular</span><span className="font-semibold text-white text-right">{bt.holder}</span></div>}
-                        {bt?.idNumber && <div className="flex justify-between gap-2"><span className="text-white/40">Cédula/RUC</span><span className="font-semibold text-white text-right">{bt.idNumber}</span></div>}
-                        {bt?.email && <div className="flex justify-between gap-2"><span className="text-white/40">Email</span><span className="font-semibold text-white text-right break-all">{bt.email}</span></div>}
+                        {bt?.holder && <div className="flex justify-between gap-2"><span className="text-white/60">Titular</span><span className="font-semibold text-white text-right">{bt.holder}</span></div>}
+                        {bt?.idNumber && <div className="flex justify-between gap-2"><span className="text-white/60">Cédula/RUC</span><span className="font-semibold text-white text-right">{bt.idNumber}</span></div>}
+                        {bt?.email && <div className="flex justify-between gap-2"><span className="text-white/60">Email</span><span className="font-semibold text-white text-right break-all">{bt.email}</span></div>}
                       </div>
                       {proofPhone && (
                         <button type="button" onClick={sendProof}
@@ -1274,7 +1274,7 @@ const OrderTracker: React.FC<{
     <div className="fixed inset-0 z-[118] flex items-end sm:items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={onClose}>
       <div className="w-full max-w-sm bg-[#0f0702] rounded-2xl border border-[#ff6b35]/30 shadow-2xl p-6 relative"
            onClick={(e) => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition"><FaTimes size={16} /></button>
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white transition"><FaTimes size={16} /></button>
         <h3 className="text-base font-black text-white flex items-center gap-2 mb-4"><FaClock className="text-[#ff6b35]" /> Estado de tu pedido o reserva</h3>
 
         {!tracking ? (
@@ -1307,7 +1307,7 @@ const OrderTracker: React.FC<{
                 <div className="text-center">
                   <div className="text-4xl">{rm.emoji}</div>
                   <p className="text-lg font-black text-white mt-1">{rm.label}</p>
-                  <p className="text-[10px] text-gray-500 mt-1 font-mono tracking-widest">Reserva · Código {data.code}</p>
+                  <p className="text-[10px] text-gray-400 mt-1 font-mono tracking-widest">Reserva · Código {data.code}</p>
                 </div>
 
                 {/* Detalle de la reserva */}
@@ -1355,7 +1355,7 @@ const OrderTracker: React.FC<{
                   </div>
                 )}
 
-                <p className="text-[10px] text-gray-500 text-center">Esta pantalla se actualiza sola cada pocos segundos.</p>
+                <p className="text-[10px] text-gray-400 text-center">Esta pantalla se actualiza sola cada pocos segundos.</p>
               </div>
             );
           })()
@@ -1363,7 +1363,7 @@ const OrderTracker: React.FC<{
           <div className="text-center py-4 space-y-2">
             <div className="text-4xl">❌</div>
             <p className="text-sm font-black text-red-400">Pedido cancelado</p>
-            <p className="text-xs text-gray-500">Código {data.code}</p>
+            <p className="text-xs text-gray-400">Código {data.code}</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -1373,7 +1373,7 @@ const OrderTracker: React.FC<{
               {data.estimated_minutes ? (
                 <p className="text-xs text-[#ff6b35] font-bold mt-0.5">Tiempo estimado: {data.estimated_minutes} min</p>
               ) : null}
-              <p className="text-[10px] text-gray-500 mt-1 font-mono tracking-widest">Código {data.code}</p>
+              <p className="text-[10px] text-gray-400 mt-1 font-mono tracking-widest">Código {data.code}</p>
             </div>
 
             {/* Estado del pago — una vez confirmado (o el pedido avanzó), ya no se pide comprobante */}
@@ -1417,10 +1417,10 @@ const OrderTracker: React.FC<{
                 return (
                   <React.Fragment key={s}>
                     <div className="flex flex-col items-center gap-1 flex-1">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm border transition-all ${done ? 'bg-[#ff6b35] border-[#ff6b35] text-white' : 'bg-black/40 border-white/10 text-gray-600'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm border transition-all ${done ? 'bg-[#ff6b35] border-[#ff6b35] text-white' : 'bg-black/40 border-white/10 text-gray-400'}`}>
                         {done ? '✓' : i + 1}
                       </div>
-                      <span className={`text-[8px] uppercase tracking-wide text-center ${done ? 'text-[#ff6b35] font-bold' : 'text-gray-600'}`}>{ORDER_META[s]?.label}</span>
+                      <span className={`text-[8px] uppercase tracking-wide text-center ${done ? 'text-[#ff6b35] font-bold' : 'text-gray-400'}`}>{ORDER_META[s]?.label}</span>
                     </div>
                     {i < steps.length - 1 && <div className={`h-0.5 flex-1 ${i < currentIdx ? 'bg-[#ff6b35]' : 'bg-white/10'}`} />}
                   </React.Fragment>
@@ -1434,7 +1434,7 @@ const OrderTracker: React.FC<{
                 🧾 ¿Necesitas factura?
               </button>
             )}
-            <p className="text-[10px] text-gray-500 text-center">Esta pantalla se actualiza sola cada pocos segundos.</p>
+            <p className="text-[10px] text-gray-400 text-center">Esta pantalla se actualiza sola cada pocos segundos.</p>
           </div>
         )}
       </div>
@@ -1510,7 +1510,7 @@ const InvoiceModal: React.FC<{
     <div className="fixed inset-0 z-[122] flex items-end sm:items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={onClose}>
       <div className="w-full max-w-sm bg-[#0f0702] rounded-2xl border border-[#ff6b35]/30 shadow-2xl p-6 relative max-h-[92vh] overflow-y-auto"
            onClick={(e) => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition"><FaTimes size={16} /></button>
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white transition"><FaTimes size={16} /></button>
         <h3 className="text-base font-black text-white flex items-center gap-2 mb-1">🧾 Solicitar factura</h3>
         <p className="text-[11px] text-gray-400 mb-4">Pedido <span className="font-mono text-[#ff6b35]">{code}</span></p>
 
@@ -1598,7 +1598,7 @@ const MembershipLookup: React.FC<{
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#ff6b35]/15 rounded-full blur-3xl pointer-events-none" />
         <div className="flex justify-between items-start mb-3">
           <div>
-            <div className="text-[10px] uppercase font-bold tracking-widest text-[#ff6b35]/80">Connexo Pass</div>
+            <div className="text-[10px] uppercase font-bold tracking-widest text-[#ff6b35]/90">Connexo Pass</div>
             <h3 className="text-base font-bold text-white mt-0.5">{result.name || 'Tu Membresía'}</h3>
           </div>
           {result.is_vip && (
@@ -1608,7 +1608,7 @@ const MembershipLookup: React.FC<{
           )}
         </div>
         <div className="p-4 rounded-xl bg-black/40 border border-[#ff6b35]/20 text-center">
-          <div className="text-[9px] uppercase font-bold tracking-widest text-gray-500 mb-1">Tu código de miembro</div>
+          <div className="text-[9px] uppercase font-bold tracking-widest text-gray-400 mb-1">Tu código de miembro</div>
           <div className="text-3xl font-mono font-black tracking-[0.3em] text-[#ff6b35]">{result.member_code}</div>
         </div>
         <div className="mt-3">
@@ -1619,7 +1619,7 @@ const MembershipLookup: React.FC<{
           {result.discount_percent ? (
             <span className="text-emerald-400 font-bold">{result.discount_percent}% de descuento activo</span>
           ) : (
-            <span className="text-gray-500 italic">Sigue visitándonos para más beneficios</span>
+            <span className="text-gray-400 italic">Sigue visitándonos para más beneficios</span>
           )}
         </div>
 
@@ -1634,17 +1634,17 @@ const MembershipLookup: React.FC<{
         {/* Movimientos (historial de pedidos) */}
         {Array.isArray(result.movements) && result.movements.length > 0 && (
           <div className="mt-3">
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Tus movimientos</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Tus movimientos</p>
             <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
               {result.movements.map((m: any, i: number) => (
                 <div key={i} className="flex items-center justify-between bg-black/30 border border-white/5 rounded-lg px-3 py-2">
                   <div className="min-w-0">
                     <span className="text-[11px] font-mono font-bold text-[#ff6b35]">{m.code}</span>
-                    <span className="text-[10px] text-gray-500 ml-2">{m.order_type === 'delivery' ? '🛵' : '🍽️'} {new Date(m.created_at).toLocaleDateString('es-EC', { day: '2-digit', month: 'short' })}</span>
+                    <span className="text-[10px] text-gray-400 ml-2">{m.order_type === 'delivery' ? '🛵' : '🍽️'} {new Date(m.created_at).toLocaleDateString('es-EC', { day: '2-digit', month: 'short' })}</span>
                   </div>
                   <div className="text-right shrink-0">
                     <div className="text-xs font-bold text-white">${Number(m.total ?? 0).toFixed(2)}</div>
-                    <div className="text-[9px] text-gray-500 capitalize">{m.status}</div>
+                    <div className="text-[9px] text-gray-400 capitalize">{m.status}</div>
                   </div>
                 </div>
               ))}
@@ -1653,7 +1653,7 @@ const MembershipLookup: React.FC<{
         )}
 
         <button onClick={() => { setResult(null); setIdentifier(''); }}
-          className="mt-3 w-full py-2 text-[11px] text-gray-500 hover:text-gray-300 transition">
+          className="mt-3 w-full py-2 text-[11px] text-gray-400 hover:text-gray-300 transition">
           Consultar otra membresía
         </button>
       </div>
@@ -1665,7 +1665,7 @@ const MembershipLookup: React.FC<{
       <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#ff6b35]/15 rounded-full blur-3xl pointer-events-none" />
       <div className="flex justify-between items-start mb-4">
         <div>
-          <div className="text-[10px] uppercase font-bold tracking-widest text-[#ff6b35]/80">Connexo Pass</div>
+          <div className="text-[10px] uppercase font-bold tracking-widest text-[#ff6b35]/90">Connexo Pass</div>
           <h3 className="text-base font-bold text-white mt-0.5">Mi Tarjeta de Fidelidad</h3>
         </div>
         <div className="px-2.5 py-1 rounded-lg bg-[#ff6b35]/10 border border-[#ff6b35]/20 text-[9px] text-[#ff6b35] font-black uppercase tracking-widest">
@@ -1748,7 +1748,7 @@ const ClubSecretoModal: React.FC<{
       <div className="w-full max-w-sm bg-[#0f0702] rounded-2xl border border-[#ff6b35]/30 shadow-2xl shadow-[#ff6b35]/10 p-6 relative"
            onClick={(e) => e.stopPropagation()}
            style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition">
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white transition">
           <FaTimes size={16} />
         </button>
 
@@ -1758,7 +1758,7 @@ const ClubSecretoModal: React.FC<{
             <h3 className="text-lg font-black text-white">¡Bienvenido al {clubName}!</h3>
             {member?.member_code && (
               <div className="my-2 p-4 rounded-xl bg-black/40 border border-[#ff6b35]/30">
-                <div className="text-[9px] uppercase font-bold tracking-widest text-gray-500 mb-1">Tu código de miembro</div>
+                <div className="text-[9px] uppercase font-bold tracking-widest text-gray-400 mb-1">Tu código de miembro</div>
                 <div className="text-3xl font-mono font-black tracking-[0.3em] text-[#ff6b35]">{member.member_code}</div>
                 {member.is_vip && <div className="mt-1 text-[10px] font-black uppercase tracking-widest text-[#ff6b35]">⭐ Cliente VIP</div>}
                 {member.discount_percent ? <div className="text-[11px] text-emerald-400 font-bold mt-0.5">{member.discount_percent}% de descuento</div> : null}
@@ -1796,7 +1796,7 @@ const ClubSecretoModal: React.FC<{
                 {submitting ? 'Registrando...' : '🎁 ¡Quiero unirme!'}
               </button>
             </form>
-            <p className="text-[10px] text-gray-600 text-center mt-3">Sin spam. Solo ofertas del restaurante.</p>
+            <p className="text-[10px] text-gray-400 text-center mt-3">Sin spam. Solo ofertas del restaurante.</p>
           </>
         )}
       </div>
@@ -1900,7 +1900,7 @@ const ReserveModal: React.FC<{
     <div className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={onClose}>
       <div className="w-full max-w-sm bg-[#0f0702] rounded-2xl border border-[#ff6b35]/30 shadow-2xl p-6 relative max-h-[92vh] overflow-y-auto"
            onClick={(e) => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition"><FaTimes size={16} /></button>
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white transition"><FaTimes size={16} /></button>
 
         {result ? (
           <div className="text-center py-4 space-y-3">
@@ -1910,7 +1910,7 @@ const ReserveModal: React.FC<{
             </h3>
             {result.code && (
               <div className="my-2 p-4 rounded-xl bg-black/40 border border-[#ff6b35]/30">
-                <div className="text-[9px] uppercase font-bold tracking-widest text-gray-500 mb-1">Código de reserva</div>
+                <div className="text-[9px] uppercase font-bold tracking-widest text-gray-400 mb-1">Código de reserva</div>
                 <div className="text-3xl font-mono font-black tracking-[0.3em] text-[#ff6b35]">{result.code}</div>
               </div>
             )}
@@ -1930,7 +1930,7 @@ const ReserveModal: React.FC<{
                     </div>
                   ))}
                 </div>
-                <p className="text-[10px] text-gray-500 mt-1.5">El pago se realiza en el local.</p>
+                <p className="text-[10px] text-gray-400 mt-1.5">El pago se realiza en el local.</p>
               </div>
             )}
             <button onClick={onClose} className="w-full mt-2 py-3 rounded-xl bg-[#ff6b35] hover:bg-[#e85a25] text-white font-black text-xs uppercase tracking-wider transition-all">Cerrar</button>
@@ -1950,24 +1950,24 @@ const ReserveModal: React.FC<{
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email (opcional)" className={inp} />
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Fecha</label>
+                  <label className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Fecha</label>
                   <input required type="date" value={date} min={minDate} max={maxDate} onChange={(e) => setDate(e.target.value)} className={inp} />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Hora</label>
+                  <label className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Hora</label>
                   <select required value={time} onChange={(e) => setTime(e.target.value)} className={inp}>
                     {slots.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
               </div>
               <div>
-                <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Personas</label>
+                <label className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Personas</label>
                 <div className="flex items-center gap-3 bg-black/40 border border-[#ff6b35]/20 rounded-xl px-4 py-2.5">
                   <button type="button" onClick={() => setParty(p => Math.max(1, p - 1))} className="w-8 h-8 rounded-lg bg-white/5 border border-[#ff6b35]/10 flex items-center justify-center text-sm font-black text-white">−</button>
                   <span className="font-mono font-bold text-white flex-1 text-center">{party}</span>
                   <button type="button" onClick={() => setParty(p => Math.min(maxParty, p + 1))} className="w-8 h-8 rounded-lg bg-white/5 border border-[#ff6b35]/10 flex items-center justify-center text-sm font-black text-white">+</button>
                 </div>
-                <p className="text-[10px] text-gray-600 mt-1">Máximo {maxParty} personas por reserva.</p>
+                <p className="text-[10px] text-gray-400 mt-1">Máximo {maxParty} personas por reserva.</p>
               </div>
               <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notas (cumpleaños, alergias, ubicación preferida…)" rows={2} className={`${inp} resize-none`} />
 
@@ -2005,7 +2005,7 @@ const ReserveModal: React.FC<{
                       );
                     })}
                   </div>
-                  <p className="text-[10px] text-gray-500 px-3 py-2">Solo se muestran platos disponibles. El pago se realiza en el local.</p>
+                  <p className="text-[10px] text-gray-400 px-3 py-2">Solo se muestran platos disponibles. El pago se realiza en el local.</p>
                 </div>
               )}
 

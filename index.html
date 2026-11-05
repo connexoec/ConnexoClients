@@ -327,7 +327,9 @@
         border-color: var(--cnx-border-color, currentColor) !important;
       }
 
-      .cnx-btn-text :where(button, a[class*="rounded"], a[class*="px-"]) {
+      /* Los botones donde ese color no se leería (los marca src/lib/buttonTextGuard.ts con
+         data-cnx-keep) conservan el color de su plantilla. */
+      .cnx-btn-text :where(button, a[class*="rounded"], a[class*="px-"]):not([data-cnx-keep]) {
         color: var(--cnx-btn-text) !important;
       }
 
