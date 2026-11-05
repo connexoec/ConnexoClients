@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../src/lib/supabase';
+import KodaProspectsTab from '../components/KodaProspectsTab';
 
 const COUNTRY_KEY = 'connexo_admin_country';
 const TAB_KEY = 'connexo_admin_tab';
@@ -7,7 +8,7 @@ const TAB_KEY = 'connexo_admin_tab';
 // ─── Constants ────────────────────────────────────────────────────────────────
 const ALLOWED_ADMINS = (import.meta.env.VITE_SUPER_ADMIN_EMAILS || '').split(',').map((e: string) => e.trim().toLowerCase()).filter(Boolean);
 
-type Tab = 'dashboard' | 'clients' | 'create' | 'admins' | 'security';
+type Tab = 'dashboard' | 'clients' | 'create' | 'koda' | 'admins' | 'security';
 type Country = 'EC' | 'VE';
 
 // Roles de plataforma. La fuente de verdad es la tabla admin_users en Supabase
@@ -199,6 +200,14 @@ const Ico = {
       <path d="M10.7 12.3 21 2m-4 4 3 3m-6-6 3 3"/>
     </svg>
   ),
+  Radar: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="4.5"/>
+      <path d="M12 12 18.4 5.6"/>
+      <circle cx="12" cy="12" r="1" fill="currentColor"/>
+    </svg>
+  ),
   UserCog: () => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="9" cy="7" r="4"/>
@@ -294,6 +303,8 @@ const SuperAdmin: React.FC = () => {
   const [loadingData, setLoadingData] = useState(false);
   const [search, setSearch]           = useState('');
   const [themeFilter, setThemeFilter] = useState<string>('all'); // 'all' | theme | 'plan:free|pro|ultra'
+  // Borradores que llegaron de KODA y esperan revisión (globo de la pestaña KODA).
+  const [kodaPendientes, setKodaPendientes] = useState(0);
 
   const [editingId, setEditingId]   = useState<string | null>(null);
   const [editVals, setEditVals]     = useState({ plan: 'free', theme: 'default' });
@@ -390,6 +401,18 @@ const SuperAdmin: React.FC = () => {
   useEffect(() => {
     if (unlocked && (activeTab === 'dashboard' || activeTab === 'clients')) fetchProfiles();
   }, [unlocked, activeTab, country]);
+
+  // Cuántos borradores de KODA esperan revisión. Falla en silencio si el puente aún no está
+  // instalado (la tabla no existe): solo significa que no hay globo que mostrar.
+  // Dentro de la pestaña KODA la cuenta la reporta la propia pestaña.
+  useEffect(() => {
+    if (!unlocked || activeTab === 'koda') return;
+    Promise.resolve(
+      supabase.from('koda_prospectos').select('id', { count: 'exact', head: true }).eq('estado', 'borrador'),
+    )
+      .then((res: any) => { if (typeof res?.count === 'number') setKodaPendientes(res.count); })
+      .catch(() => { /* sin puente: sin globo */ });
+  }, [unlocked, activeTab]);
 
   // La pestaña de operadores es exclusiva del Super Admin: si un operador la
   // tuviera guardada en localStorage de una sesión anterior, se le devuelve al
@@ -2277,6 +2300,19 @@ const SuperAdmin: React.FC = () => {
         )}
 
         {/* ══════════════════════════════ OPERADORES ══════════════════════════════ */}
+        {/* ══ KODA: bandeja de prospectos que llegan del puente ══ */}
+        {activeTab === 'koda' && (
+          <KodaProspectsTab
+            onToast={showToast}
+            onPendientes={setKodaPendientes}
+            onOpenClient={(username) => {
+              setSearch(username);
+              setThemeFilter('all');
+              updateTab('clients');
+            }}
+          />
+        )}
+
         {activeTab === 'admins' && isSuper && (
           <div style={{ padding: '22px 18px 40px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div>
@@ -2493,6 +2529,7 @@ const SuperAdmin: React.FC = () => {
           { id: 'dashboard' as Tab, label: 'Dashboard', icon: <Ico.Grid /> },
           { id: 'clients'   as Tab, label: 'Clientes',  icon: <Ico.Users /> },
           { id: 'create'    as Tab, label: 'Nuevo',     icon: <Ico.Plus /> },
+          { id: 'koda'      as Tab, label: 'KODA',      icon: <Ico.Radar />, badge: kodaPendientes },
           ...(isSuper ? [{ id: 'admins' as Tab, label: 'Accesos', icon: <Ico.UserCog /> }] : []),
           { id: 'security'  as Tab, label: 'Cuenta',    icon: <Ico.Key /> },
         ].map(tab => {
@@ -2519,7 +2556,21 @@ const SuperAdmin: React.FC = () => {
                   background: 'linear-gradient(90deg, #ff6b35, #c94000)',
                 }} />
               )}
-              {tab.icon}
+              <span style={{ position: 'relative', display: 'flex' }}>
+                {tab.icon}
+                {'badge' in tab && (tab.badge ?? 0) > 0 && (
+                  <span
+                    data-testid={`nav-badge-${tab.id}`}
+                    style={{
+                      position: 'absolute', top: '-6px', right: '-12px',
+                      minWidth: '16px', height: '16px', padding: '0 4px', boxSizing: 'border-box',
+                      borderRadius: '999px', background: '#ff6b35', color: '#fff',
+                      fontSize: '9px', fontWeight: 800, lineHeight: '16px', textAlign: 'center',
+                      fontFamily: "'Tomorrow', monospace",
+                    }}
+                  >{(tab.badge ?? 0) > 99 ? '99+' : tab.badge}</span>
+                )}
+              </span>
               <span style={{
                 fontSize: '10px',
                 fontWeight: active ? 800 : 500,
