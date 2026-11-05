@@ -65,6 +65,19 @@ const VideoLinkCard: React.FC<{ href: string; thumbnailURL?: string; isVertical:
 );
 
 // ─── Página de cuenta suspendida ─────────────────────────────────────────────
+// ¿Quien mira es un administrador de la plataforma? Solo con sesión iniciada; la respuesta la
+// da la base de datos (get_my_admin_role), no el navegador. Cualquier fallo cuenta como «no».
+const esAdminDePlataforma = async (): Promise<boolean> => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return false;
+    const { data, error } = await supabase.rpc('get_my_admin_role');
+    return !error && !!(data as { is_admin?: boolean } | null)?.is_admin;
+  } catch {
+    return false;
+  }
+};
+
 const SuspendedPage: React.FC<{ reason: 'disabled' | 'expired' }> = ({ reason }) => (
   <div style={{
     minHeight: '100dvh',
@@ -239,6 +252,8 @@ const PublicProfile: React.FC = () => {
   const [isVCardLoading, setIsVCardLoading] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  // Un administrador de plataforma está viendo un perfil inactivo (p. ej. un borrador de KODA).
+  const [adminDraft, setAdminDraft] = useState(false);
   const [visitorProfile, setVisitorProfile] = useState<any>(null); // Para guardar el perfil del VISITANTE
   const [foundUserId, setFoundUserId] = useState<string | null>(null); // Nuevo estado para guardar el userId encontrado
   const userId = foundUserId;
@@ -331,6 +346,8 @@ const PublicProfile: React.FC = () => {
 
       setLoading(true);
       setIsLoading(true);
+      setAdminDraft(false);
+      let esBorrador = false; // inactivo, visto por un administrador de plataforma
       let foundUserId = null; // Variable para guardar el ID
       let userProfile: any = null; // Declarar fuera del bloque
 
@@ -349,10 +366,17 @@ const PublicProfile: React.FC = () => {
 
           // ── Verificar si el perfil está desactivado manualmente ──────────
           if (userProfile.is_active === false) {
-            setSuspended('disabled');
-            setLoading(false);
-            setIsLoading(false);
-            return;
+            // Los borradores del puente KODA nacen inactivos. Un administrador de la plataforma
+            // sí puede verlos (para revisarlos antes de aprobarlos); cualquier otro visitante ve
+            // la pantalla de suspendido de siempre.
+            if (!(await esAdminDePlataforma())) {
+              setSuspended('disabled');
+              setLoading(false);
+              setIsLoading(false);
+              return;
+            }
+            esBorrador = true;
+            setAdminDraft(true);
           }
 
           // ── Verificar si el trial expiró ──────────────────────────────────
@@ -384,8 +408,8 @@ const PublicProfile: React.FC = () => {
             setHeatmapEnabled(true);
           }
 
-          // 2. Track profile view
-          trackProfileView(foundUserId, userProfile.plan || 'conecta');
+          // 2. Track profile view (la revisión de un borrador por el equipo no cuenta como visita)
+          if (!esBorrador) trackProfileView(foundUserId, userProfile.plan || 'conecta');
         } else {
           console.error("Profile not found for username:", perfilKey);
           setProfile(null);
@@ -432,7 +456,24 @@ const PublicProfile: React.FC = () => {
 
     fetchData();
   }, [perfilKey]); // <-- Depende de la ruta completa, no sólo del primer segmento
-  
+
+  // Aviso fijo mientras un administrador mira un perfil inactivo. Se pega al <body> en vez de
+  // tocar las 11 ramas de render de las plantillas; no intercepta clics.
+  useEffect(() => {
+    if (!adminDraft) return;
+    const aviso = document.createElement('div');
+    aviso.setAttribute('data-testid', 'admin-draft-banner');
+    aviso.textContent = 'BORRADOR · inactivo · solo lo ves tú como administrador';
+    Object.assign(aviso.style, {
+      position: 'fixed', bottom: '14px', left: '50%', transform: 'translateX(-50%)', zIndex: '99999',
+      padding: '8px 14px', borderRadius: '999px', background: 'rgba(245,158,11,0.95)', color: '#1a0d00',
+      font: '800 11px/1 system-ui, sans-serif', letterSpacing: '0.06em', whiteSpace: 'nowrap',
+      boxShadow: '0 6px 24px rgba(0,0,0,0.45)', pointerEvents: 'none',
+    });
+    document.body.appendChild(aviso);
+    return () => { aviso.remove(); };
+  }, [adminDraft]);
+
   // Registro de visita. Antes llamaba a la Edge Function `trackView`, que no
   // existe en el proyecto (404) — ahora es una RPC. Ver setup_analytics.sql.
   const trackProfileView = (userId: string, _userPlan: string) => {
