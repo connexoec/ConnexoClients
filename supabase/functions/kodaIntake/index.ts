@@ -12,11 +12,16 @@
 // Acciones (todas con { v: 1 }):
 //   { action: 'upsert', koda: {...}, negocio: {...} } → crea (o devuelve) el borrador
 //   { action: 'status', items: [{ envio_id, koda_prospect_id }] } → estado actual de cada envío
+//   { action: 'rellenar', envio_id } → vuelve a llenar un borrador con KODA + banco de recursos
+//
+// Fase 2: al crear el borrador se completa el perfil. KODA manda (nombre, dirección, teléfono, WhatsApp,
+// redes, correo, calificación); el banco (tabla koda_recursos_nicho, setup_koda_recursos.sql) pone lo que
+// KODA no trae: look, fotos del local, catálogo de ejemplo, horario tipo y textos genéricos.
 //
 // Despliegue (una sola vez):
 //   1. supabase secrets set KODA_BRIDGE_SECRET=<el mismo valor que CONNEXO_BRIDGE_SECRET en KODA>
 //   2. supabase functions deploy kodaIntake --no-verify-jwt --project-ref wxkqmotksjcjwhytodvx
-//   Requiere haber ejecutado setup_koda_bridge.sql.
+//   Requiere haber ejecutado setup_koda_bridge.sql y setup_koda_recursos.sql.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -38,7 +43,7 @@ const USERNAMES_RESERVADOS = new Set([
 
 // Excepciones por categoría: un rubro de KODA es más amplio que la plantilla de Connexo.
 const SOBRE_CATEGORIA: { re: RegExp; theme: string }[] = [
-  { re: /veterinar|pet.?shop|mascota/, theme: "petcare" },
+  { re: /veterinar|pet.?(shop|store)|mascota/, theme: "petcare" },
   { re: /inmobiliar|estate.?agent|real.?estate|bienes.?raices/, theme: "realty" },
 ];
 
@@ -82,13 +87,27 @@ function admin() {
 
 type Admin = ReturnType<typeof admin>;
 
-/** Plantilla (profiles.theme) que le toca a este negocio, o null si su rubro aún no tiene. */
-async function resolverPlantilla(db: Admin, rubro: string | null, categoria: string | null): Promise<string | null> {
+/** Nicho del banco de recursos (koda_recursos_nicho.clave) que le toca a este negocio. */
+function claveDePack(rubro: string | null, categoria: string | null): string | null {
   const cat = sinAcentos(categoria ?? "").toLowerCase();
-  for (const o of SOBRE_CATEGORIA) if (o.re.test(cat)) return o.theme;
-  if (!rubro) return null;
+  if (/veterinar/.test(cat)) return "veterinaria";
+  if (/pet.?(shop|store)|mascota/.test(cat)) return "mascotas";
+  if (/inmobiliar|estate.?agent|real.?estate|bienes.?raices/.test(cat)) return "inmobiliaria";
+  if (rubro === "belleza") return /barber/.test(cat) ? "barberia" : "belleza";
+  if (rubro === "salud") return /doctor|clinic|hospital|medic|physio|fisio|dentist|dental|odontolog/.test(cat) ? "clinica" : "salud";
+  return rubro;
+}
+
+/** Plantilla (profiles.theme) y nicho del banco que le tocan a este negocio; theme null si su rubro aún no tiene. */
+async function resolverPlantilla(
+  db: Admin, rubro: string | null, categoria: string | null,
+): Promise<{ theme: string | null; clave: string | null }> {
+  const clave = claveDePack(rubro, categoria);
+  const cat = sinAcentos(categoria ?? "").toLowerCase();
+  for (const o of SOBRE_CATEGORIA) if (o.re.test(cat)) return { theme: o.theme, clave };
+  if (!rubro) return { theme: null, clave };
   const { data } = await db.from("koda_rubro_plantilla").select("theme").eq("rubro", rubro).maybeSingle();
-  return (data?.theme as string | null) ?? null;
+  return { theme: (data?.theme as string | null) ?? null, clave };
 }
 
 /** Username público único: nombre, luego nombre-ciudad, luego nombre-2, nombre-3… */
@@ -116,7 +135,187 @@ function respuesta(fila: Json) {
     username: fila.username ?? null,
     theme: fila.theme ?? null,
     detalle: fila.detalle ?? null,
+    clave: fila.clave ?? null,
   };
+}
+
+// ── Relleno del perfil (Fase 2) ──────────────────────────────────────────────
+// KODA manda sobre el banco: nombre, dirección, teléfono, WhatsApp, redes, correo y calificación de
+// Google se usan siempre. El banco (tabla koda_recursos_nicho) solo completa lo que KODA no trae:
+// look, fotos del local, catálogo de EJEMPLO, horario tipo y textos genéricos.
+
+type Origen = "koda" | "banco" | "mixto";
+type Paquete = {
+  logo?: { etiqueta?: string; fondo?: string; acento?: string; texto?: string };
+  copy?: { jobTitle?: string; bio?: string; aboutMe?: string };
+  perfil?: Json;
+};
+
+// Estas plantillas muestran una «prueba social» propia; en las demás la calificación va al final de la bio.
+const PLANTILLAS_CON_PRUEBA_SOCIAL = new Set(["gastro", "petcare", "medical"]);
+const HEX_RE = /^#[0-9a-f]{3,8}$/i;
+const PALABRAS_VACIAS = new Set(["de", "del", "la", "el", "los", "las", "y", "e", "en", "the", "and"]);
+
+/** Cambia {{nombre}} y {{ciudad}} en todos los textos; sin ciudad, «en {{ciudad}}» desaparece. */
+function sustituir(valor: unknown, vars: { nombre: string; ciudad: string | null }): unknown {
+  if (typeof valor === "string") {
+    let s = valor.split("{{nombre}}").join(vars.nombre);
+    s = vars.ciudad ? s.split("{{ciudad}}").join(vars.ciudad) : s.replace(/\s+en \{\{ciudad\}\}/g, "").split("{{ciudad}}").join("");
+    return s;
+  }
+  if (Array.isArray(valor)) return valor.map((v) => sustituir(v, vars));
+  if (valor && typeof valor === "object") {
+    return Object.fromEntries(Object.entries(valor as Json).map(([k, v]) => [k, sustituir(v, vars)]));
+  }
+  return valor;
+}
+
+/** Logo provisional con las iniciales del negocio (mismo estilo que las cuentas demo). */
+function logoSvg(nombre: string, etiqueta: string, fondo?: string, acento?: string, texto?: string): string {
+  const f = fondo && HEX_RE.test(fondo) ? fondo : "#111111";
+  const a = acento && HEX_RE.test(acento) ? acento : "#ff6b35";
+  const t = texto && HEX_RE.test(texto) ? texto : "#f5f5f5";
+  const palabras = nombre.split(/[\s&\-_/.,]+/)
+    .map((w) => w.replace(/[^\p{L}\p{N}]/gu, ""))
+    .filter((w) => w && !PALABRAS_VACIAS.has(sinAcentos(w).toLowerCase()));
+  const iniciales = (palabras.length > 1 ? palabras.slice(0, 3).map((w) => w[0]).join("") : (palabras[0] ?? nombre).slice(0, 2))
+    .toUpperCase().slice(0, 3);
+  const xml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const rotulo = etiqueta
+    ? `<text x="256" y="370" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="700" fill="${a}" letter-spacing="7">${xml(etiqueta.slice(0, 14))}</text>`
+    : "";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
+    `<stop offset="0" stop-color="${f}"/><stop offset="1" stop-color="${a}" stop-opacity=".55"/></linearGradient></defs>` +
+    `<rect width="512" height="512" rx="256" fill="url(#g)"/>` +
+    `<rect x="26" y="26" width="460" height="460" rx="230" fill="none" stroke="${a}" stroke-width="7" opacity=".9"/>` +
+    `<text x="256" y="${etiqueta ? 292 : 310}" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="${iniciales.length > 2 ? 118 : 150}" font-weight="700" fill="${t}" letter-spacing="2">${xml(iniciales)}</text>` +
+    `${rotulo}</svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+/** URL de una red social o web a partir de lo que trajo KODA (URL completa, @usuario o dominio). */
+function urlRed(v: unknown, red: "instagram" | "facebook" | "tiktok" | "website"): string | null {
+  const t = str(v, 300);
+  if (!t) return null;
+  if (/^https?:\/\//i.test(t)) return t;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(t)) return null;   // javascript:, mailto:, etc.
+  const h = t.replace(/^@/, "");
+  if (red === "instagram" && /^[\w.]+$/.test(h)) return `https://instagram.com/${h}`;
+  if (red === "facebook" && /^[\w.\-]+$/.test(h)) return `https://facebook.com/${h}`;
+  if (red === "tiktok" && /^[\w.]+$/.test(h)) return `https://tiktok.com/@${h}`;
+  if (/^[^\s/]+\.[^\s]{2,}/.test(t)) return `https://${t}`;
+  return null;
+}
+
+function frasePuntaje(rating: unknown, resenas: unknown): string | null {
+  const r = typeof rating === "number" ? rating : Number(rating);
+  if (!Number.isFinite(r) || r <= 0 || r > 5) return null;
+  const c = Math.round(Number(resenas));
+  const base = `⭐ ${r.toFixed(1)} en Google`;
+  return Number.isFinite(c) && c > 0 ? `${base} (${c} ${c === 1 ? "reseña" : "reseñas"})` : base;
+}
+
+async function cargarPaquete(db: Admin, clave: string | null): Promise<Paquete | null> {
+  if (!clave) return null;
+  const { data } = await db.from("koda_recursos_nicho").select("pack").eq("clave", clave).maybeSingle();
+  return (data?.pack as Paquete | undefined) ?? null;
+}
+
+/** Completa el perfil con lo de KODA + el banco, y arma sus enlaces. Devuelve de dónde salió cada campo. */
+async function rellenarPerfil(db: Admin, uid: string, theme: string, clave: string | null, n: Json): Promise<Json> {
+  const nombre = str(n.nombre, 120);
+  if (!nombre) throw new Error("El negocio no tiene nombre.");
+  const ciudad = str(n.ciudad, 80);
+  const paquete = await cargarPaquete(db, clave);
+  const vars = { nombre, ciudad };
+  const banco = (paquete?.perfil ? sustituir(paquete.perfil, vars) : {}) as Json;
+  const copy = (paquete?.copy ? sustituir(paquete.copy, vars) : {}) as Json;
+
+  const cols: Json = {};
+  const origen: Record<string, Origen> = {};
+  const poner = (k: string, v: unknown, de: Origen) => {
+    if (v === undefined || v === null || v === "") return;
+    cols[k] = v;
+    origen[k] = de;
+  };
+
+  // 1) Banco: look, fotos, catálogo de ejemplo, horario tipo, textos genéricos.
+  for (const [k, v] of Object.entries(banco)) poner(k, v, "banco");
+  for (const k of ["jobTitle", "bio", "aboutMe"]) poner(k, copy[k], "banco");
+
+  // 2) KODA: manda sobre el banco.
+  poner("displayName", nombre, "koda");
+  poner("company", nombre, "koda");
+  const direccion = str(n.direccion, 300) ?? str(n.ciudad, 120);
+  if (direccion) { poner("location", direccion, "koda"); poner("locations", [direccion], "koda"); }
+  poner("phone", str(n.telefono, 30), "koda");
+  const wa = str(n.whatsapp, 20);
+  if (wa && WHATSAPP_RE.test(wa)) poner("whatsapp", "0" + wa.slice(4), "koda");   // +593991234567 → 0991234567
+  const correo = str(n.email, 200)?.toLowerCase();
+  if (correo && EMAIL_RE.test(correo)) poner("contactEmail", correo, "koda");
+
+  const redes: Record<string, string> = {};
+  for (const r of ["instagram", "facebook", "tiktok", "website"] as const) {
+    const u = urlRed(n[r], r);
+    if (u) redes[r] = u;
+  }
+  if (Object.keys(redes).length) poner("socialMedia", redes, "koda");
+
+  const descripcion = str(n.descripcion, 300);
+  if (descripcion) poner("bio", descripcion, "koda");
+  const puntaje = frasePuntaje(n.rating, n.reviews_count);
+  if (puntaje) {
+    if (PLANTILLAS_CON_PRUEBA_SOCIAL.has(theme)) poner("socialProof", puntaje, "koda");
+    else poner("bio", `${cols.bio ? cols.bio + " " : ""}${puntaje}`, cols.bio && origen.bio === "banco" ? "mixto" : "koda");
+  }
+
+  // 3) Logo provisional con las iniciales.
+  poner("logoURL", logoSvg(nombre, paquete?.logo?.etiqueta ?? "", paquete?.logo?.fondo, paquete?.logo?.acento, paquete?.logo?.texto), "banco");
+
+  const { error } = await db.from("profiles").update(cols).eq("id", uid);
+  if (error) throw new Error(`perfil: ${error.message}`);
+
+  // 4) Enlaces del perfil, con los datos reales de KODA.
+  const enlaces: { title: string; url: string }[] = [];
+  if (wa && WHATSAPP_RE.test(wa)) {
+    enlaces.push({ title: "Escríbenos por WhatsApp", url: `https://wa.me/${wa.slice(1)}?text=${encodeURIComponent("Hola, vi tu perfil y quisiera más información.")}` });
+  }
+  const mapa = str(n.google_maps_url, 500);
+  if (mapa && /^https?:\/\//i.test(mapa)) enlaces.push({ title: "Ubicación en Google Maps", url: mapa });
+  if (redes.instagram) enlaces.push({ title: "Síguenos en Instagram", url: redes.instagram });
+  if (redes.facebook) enlaces.push({ title: "Síguenos en Facebook", url: redes.facebook });
+  if (redes.tiktok) enlaces.push({ title: "Síguenos en TikTok", url: redes.tiktok });
+  if (redes.website) enlaces.push({ title: "Visita nuestra página web", url: redes.website });
+
+  const { error: delErr } = await db.from("links").delete().eq("userId", uid);   // solo los de este borrador
+  if (delErr) throw new Error(`enlaces: ${delErr.message}`);
+  if (enlaces.length) {
+    const { error: insErr } = await db.from("links").insert(
+      enlaces.map((e, i) => ({ userId: uid, title: e.title, url: e.url, isActive: true, order: i, clickCount: 0 })),
+    );
+    if (insErr) throw new Error(`enlaces: ${insErr.message}`);
+  }
+  return { paquete: paquete ? clave : null, campos: origen, enlaces: enlaces.length };
+}
+
+/** Rellena y guarda el resultado en koda_prospectos. Nunca lanza: si falla, el borrador queda y se avisa en `detalle`. */
+async function aplicarRelleno(
+  db: Admin, fila: Json, uid: string, theme: string, clave: string | null, n: Json,
+): Promise<{ ok: boolean; fila: Json }> {
+  const ahora = new Date().toISOString();
+  const previo = typeof fila.detalle === "string" ? fila.detalle.replace(/^Relleno incompleto:[^·]*(· )?/, "").trim() : "";
+  try {
+    const relleno = await rellenarPerfil(db, uid, theme, clave, n);
+    const { data, error } = await db.from("koda_prospectos")
+      .update({ clave, relleno, detalle: previo || null, updated_at: ahora }).eq("id", fila.id).select("*").single();
+    if (error) throw new Error(error.message);
+    return { ok: true, fila: data };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    const detalle = `Relleno incompleto: ${msg}${previo ? ` · ${previo}` : ""}`;
+    const { data } = await db.from("koda_prospectos").update({ detalle, updated_at: ahora }).eq("id", fila.id).select("*").maybeSingle();
+    return { ok: false, fila: data ?? { ...fila, detalle } };
+  }
 }
 
 async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
@@ -141,7 +340,7 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
 
   const rubro = str(n.rubro, 40);
   const categoria = str(n.categoria, 120);
-  const theme = await resolverPlantilla(db, rubro, categoria);
+  const { theme, clave } = await resolverPlantilla(db, rubro, categoria);
 
   const comun = {
     koda_envio_id: k.envio_id,
@@ -204,7 +403,7 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
     displayName: nombre,
     plan: "ultra",
     theme,
-    location: "EC",
+    location: str(n.direccion, 300) ?? str(n.ciudad, 120) ?? "Ecuador",
     is_active: false,
   }, { onConflict: "id" });
   if (perfErr) {
@@ -220,7 +419,26 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
     await deshacer();
     return json({ error: error.message }, 500);
   }
-  return json(respuesta(data));
+
+  // Fase 2: completar el perfil con lo de KODA + el banco de recursos. Si falla, el borrador queda y se avisa.
+  const relleno = await aplicarRelleno(db, data, uid, theme, clave, n);
+  return json({ ...respuesta(relleno.fila), relleno_ok: relleno.ok });
+}
+
+/** Vuelve a llenar un borrador (p. ej. tras corregir el banco). Solo mientras siga en `borrador`. */
+async function rellenarBorrador(db: Admin, body: Json): Promise<Response> {
+  const envio = body.envio_id;
+  if (typeof envio !== "string" || !UUID_RE.test(envio)) return json({ error: "envio_id inválido." }, 400);
+  const { data: fila, error } = await db.from("koda_prospectos").select("*").eq("koda_envio_id", envio).maybeSingle();
+  if (error) return json({ error: error.message }, 500);
+  if (!fila) return json({ error: "Ese envío no existe." }, 404);
+  if (!fila.user_id || !fila.theme) return json({ error: "Ese envío no tiene cuenta borrador." }, 409);
+  if (fila.estado !== "borrador") return json({ error: `Solo se puede rellenar un borrador (estado actual: ${fila.estado}).` }, 409);
+
+  const negocio: Json = fila.negocio ?? {};
+  const clave = claveDePack(fila.rubro ?? null, str(negocio.categoria, 120));
+  const res = await aplicarRelleno(db, fila, fila.user_id, fila.theme, clave, negocio);
+  return json({ ...respuesta(res.fila), relleno_ok: res.ok, relleno: res.fila.relleno ?? null });
 }
 
 async function estados(db: Admin, body: Json): Promise<Response> {
@@ -264,6 +482,7 @@ Deno.serve(async (req: Request) => {
     const db = admin();
     if (body.action === "upsert") return await upsertBorrador(db, body);
     if (body.action === "status") return await estados(db, body);
+    if (body.action === "rellenar") return await rellenarBorrador(db, body);
     return json({ error: "Acción desconocida." }, 400);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);
