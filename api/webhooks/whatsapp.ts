@@ -1,18 +1,25 @@
 /**
- * Webhook de la WhatsApp Cloud API (Meta) → Discord.
+ * Webhook de la WhatsApp Cloud API (Meta) → Discord (+ puente KODA).
  *
  * Vercel convierte este archivo en una función serverless en
  * `/api/webhooks/whatsapp`: es la URL pública HTTPS que Meta necesita.
  *
  *   GET  → verificación inicial de Meta (hub.mode / hub.verify_token / hub.challenge)
- *   POST → mensajes entrantes, reenviados como texto al webhook de Discord
+ *   POST → mensajes entrantes, reenviados como texto al webhook de Discord.
+ *          Además, si el puente KODA está configurado, el payload completo se pasa a la
+ *          función `kodaWhatsApp` de Supabase, que atiende los botones de la plantilla
+ *          «saludo_inicial_connexo» (¡Sí, enviar demo! / Ver más tarde), las bajas por texto
+ *          y los mensajes que Meta no pudo entregar.
  *
  * Variables de entorno (Vercel → Settings → Environment Variables):
  *   WHATSAPP_VERIFY_TOKEN          token que se escribe también en el panel de Meta
  *   DISCORD_WHATSAPP_WEBHOOK_URL   URL del webhook del canal de Discord
+ *   KODA_WA_URL                    (opcional) https://<ref>.supabase.co/functions/v1/kodaWhatsApp
+ *   KODA_BRIDGE_SECRET             (opcional) el mismo secreto compartido de kodaIntake/kodaWhatsApp
  *
- * Ninguno de los dos valores va en el código: el repo se sube a GitHub y quien
- * tenga la URL del webhook de Discord puede escribir en el canal.
+ * Ninguno de los valores va en el código: el repo se sube a GitHub y quien
+ * tenga la URL del webhook de Discord puede escribir en el canal. Sin las dos variables
+ * KODA_* el webhook funciona exactamente como antes (solo Discord).
  */
 
 // Tipos mínimos de lo que Vercel entrega al handler. Se definen aquí en vez de
@@ -48,6 +55,7 @@ interface WaValue {
   metadata?: { display_phone_number?: string }
   contacts?: Array<{ wa_id?: string; profile?: { name?: string } }>
   messages?: WaMessage[]
+  statuses?: Array<{ id?: string; status?: string }>
 }
 interface WaPayload {
   object?: string
@@ -122,6 +130,39 @@ async function sendToDiscord(url: string, content: string): Promise<void> {
   if (!res.ok) throw new Error(`Discord respondió ${res.status}`)
 }
 
+/** ¿Este payload trae algo que le importe al puente KODA? (mensajes de clientes o entregas fallidas). */
+function interesaAKoda(payload: WaPayload): boolean {
+  for (const entry of payload.entry ?? []) {
+    for (const change of entry.changes ?? []) {
+      const v = change.value
+      if (!v) continue
+      if ((v.messages ?? []).length > 0) return true
+      if ((v.statuses ?? []).some((s) => s.status === 'failed')) return true
+    }
+  }
+  return false
+}
+
+/**
+ * Pasa el payload a la función `kodaWhatsApp`. Falla (lanza) solo si conviene que Meta REINTENTE:
+ * red caída, timeout o 5xx. Un 4xx (secreto mal puesto, contrato distinto) se anota y no se reintenta:
+ * repetirlo no lo arregla.
+ */
+async function forwardToKoda(payload: WaPayload): Promise<void> {
+  const url = process.env.KODA_WA_URL
+  const secret = process.env.KODA_BRIDGE_SECRET
+  if (!url || !secret || !interesaAKoda(payload)) return
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-koda-secret': secret },
+    body: JSON.stringify({ v: 1, action: 'webhook', payload }),
+    signal: AbortSignal.timeout(20000),
+  })
+  if (res.status >= 500) throw new Error(`kodaWhatsApp respondió ${res.status}`)
+  if (!res.ok) console.error(`[whatsapp] kodaWhatsApp rechazó el aviso (${res.status}); no se reintenta`)
+}
+
 function verify(req: Req, res: Res) {
   const params = new URL(req.url ?? '', 'http://localhost').searchParams
   const expected = process.env.WHATSAPP_VERIFY_TOKEN
@@ -144,6 +185,17 @@ async function receive(req: Req, res: Res) {
     return res.status(400).send('Bad Request')
   }
 
+  // 1) Puente KODA primero: que un botón tocado («¡Sí, enviar demo!») no dependa de que Discord responda.
+  //    Todo lo que hace kodaWhatsApp es idempotente, así que si Meta reintenta por otro motivo no se duplica nada.
+  let kodaError: string | null = null
+  try {
+    await forwardToKoda(payload)
+  } catch (err) {
+    kodaError = err instanceof Error ? err.message : String(err)
+    console.error('[whatsapp] No se pudo avisar a kodaWhatsApp:', kodaError)
+  }
+
+  // 2) Discord, como siempre.
   const discordUrl = process.env.DISCORD_WHATSAPP_WEBHOOK_URL
   if (!discordUrl) {
     console.error('[whatsapp] Falta DISCORD_WHATSAPP_WEBHOOK_URL')
@@ -167,6 +219,9 @@ async function receive(req: Req, res: Res) {
     console.error('[whatsapp] No se pudo reenviar a Discord:', err instanceof Error ? err.message : err)
     return res.status(500).send('Forward failed')
   }
+
+  // 500 → Meta reintenta (hasta ~7 días con espera creciente): no se pierde el toque de un botón.
+  if (kodaError) return res.status(500).send('KODA forward failed')
 
   return res.status(200).send('EVENT_RECEIVED')
 }
