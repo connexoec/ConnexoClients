@@ -14,6 +14,8 @@
  * aspecto es una elección explícita del dueño del perfil.
  */
 
+import { installButtonTextGuard } from './buttonTextGuard';
+
 export interface ProfileStyleLayer {
     className: string;
     style: Record<string, string>;
@@ -56,6 +58,9 @@ export const profileStyleLayer = (profile: any): ProfileStyleLayer => {
     if (profile?.buttonTextColor) {
         classes.push('cnx-btn-text');
         style['--cnx-btn-text'] = profile.buttonTextColor;
+        // Los botones donde ese color no se leería (p. ej. texto oscuro sobre un botón de vidrio oscuro)
+        // se marcan y conservan el color de su plantilla. Ver buttonTextGuard.ts.
+        installButtonTextGuard();
     }
 
     // Colores de texto de productos y testimonios (plan PRO). Se aplican por

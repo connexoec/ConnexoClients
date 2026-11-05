@@ -733,7 +733,7 @@ export const ProfileBarberTemplate: React.FC<ProfileBarberTemplateProps> = ({
                   {profile.businessHours.map((day: any, index: number) => (
                     <div key={index} className="flex justify-between items-center text-xs py-1.5 border-b border-white/5 last:border-b-0">
                       <span className="capitalize font-bold text-[#ffefe5]/90 tracking-wide">{day.day}</span>
-                      <span className={`font-black tracking-widest ${day.isOpen && day.openTime && day.closeTime ? 'text-[#ffa35d]' : 'text-white/40'}`}>
+                      <span className={`font-black tracking-widest ${day.isOpen && day.openTime && day.closeTime ? 'text-[#ffa35d]' : 'text-white/60'}`}>
                         {day.isOpen && day.openTime && day.closeTime ? `${day.openTime} - ${day.closeTime}` : t('closed') || 'CERRADO'}
                       </span>
                     </div>
@@ -861,7 +861,7 @@ export const ProfileBarberTemplate: React.FC<ProfileBarberTemplateProps> = ({
             className="h-10 object-contain mx-auto opacity-80 mb-4"
           />
         )}
-        <p className="text-[10px] text-white/30 tracking-widest font-tomorrow font-bold uppercase">
+        <p className="text-[10px] text-white/55 tracking-widest font-tomorrow font-bold uppercase">
           Powered by Connexo
         </p>
       </div>
@@ -1050,17 +1050,17 @@ const BarberMembershipLookup: React.FC<BarberMembershipLookupProps> = ({
           <div className="flex gap-4 text-center">
             <div>
               <p className="text-lg font-black text-[#ffa35d]">{result.visits}</p>
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Visitas</p>
+              <p className="text-[10px] text-white/60 uppercase tracking-wider">Visitas</p>
             </div>
             {result.discount_percent > 0 && (
               <div>
                 <p className="text-lg font-black text-green-400">{result.discount_percent}%</p>
-                <p className="text-[10px] text-white/40 uppercase tracking-wider">Descuento</p>
+                <p className="text-[10px] text-white/60 uppercase tracking-wider">Descuento</p>
               </div>
             )}
             <div>
               <p className="text-lg font-black text-[#ffa35d]">{stamps}/10</p>
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Sellos</p>
+              <p className="text-[10px] text-white/60 uppercase tracking-wider">Sellos</p>
             </div>
           </div>
 
@@ -1068,13 +1068,13 @@ const BarberMembershipLookup: React.FC<BarberMembershipLookupProps> = ({
           <div className="space-y-1.5">
             <div className="flex gap-1 justify-center">
               {Array.from({ length: 10 }, (_, i) => (
-                <span key={i} className={`text-base leading-none ${i < stamps ? 'text-[#ffa35d]' : 'text-white/15'}`}>★</span>
+                <span key={i} className={`text-base leading-none ${i < stamps ? 'text-[#ffa35d]' : 'text-white/40'}`}>★</span>
               ))}
             </div>
             {stamps >= 10 ? (
               <p className="text-center text-xs text-[#ffa35d] font-black">🎉 ¡Completaste tus 10 sellos!</p>
             ) : (
-              <p className="text-center text-[11px] text-white/35">{10 - stamps} sello{10 - stamps !== 1 ? 's' : ''} para tu recompensa</p>
+              <p className="text-center text-[11px] text-white/55">{10 - stamps} sello{10 - stamps !== 1 ? 's' : ''} para tu recompensa</p>
             )}
             {stampsReward && (
               <p className="text-center text-[11px] text-[#ffa35d]/70 border-t border-white/5 pt-2">
@@ -1135,14 +1135,14 @@ const ClubBarberModal: React.FC<ClubBarberModalProps> = ({ barberId, isMobilePre
       >
         {/* Header */}
         <div className="relative p-6 pb-4 border-b border-white/5">
-          <button onClick={onClose} className="absolute top-4 right-4 text-white/40 hover:text-white transition">
+          <button onClick={onClose} className="absolute top-4 right-4 text-white/60 hover:text-white transition">
             <FaTimes />
           </button>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#ffa35d]/15 flex items-center justify-center text-xl">💈</div>
             <div>
               <h3 className="font-black font-tomorrow text-[#ffa35d] uppercase tracking-wider text-sm">Club Barber</h3>
-              <p className="text-[11px] text-white/40">Descuentos y beneficios exclusivos</p>
+              <p className="text-[11px] text-white/60">Descuentos y beneficios exclusivos</p>
             </div>
           </div>
         </div>
@@ -1211,7 +1211,7 @@ const ClubBarberModal: React.FC<ClubBarberModalProps> = ({ barberId, isMobilePre
                 <p className="text-[10px] text-[#ffa35d]/60 uppercase tracking-[3px] font-tomorrow mb-2">Tu código único</p>
                 <p className="text-4xl font-black font-tomorrow text-[#ffa35d] tracking-[6px] mb-1">{result.member_code}</p>
                 <div className="mt-3 text-left"><MemberPlanBadge ownerId={barberId} identifier={result.member_code} system="barber" accent="#ffa35d" /></div>
-                <p className="text-[10px] text-white/30 leading-relaxed">
+                <p className="text-[10px] text-white/55 leading-relaxed">
                   Este código es único e intransferible.
                 </p>
               </div>
@@ -1368,7 +1368,7 @@ const BarberServiceModal: React.FC<BarberServiceModalProps> = ({ service, barber
                 <p className="text-xs text-white/50 mt-1 leading-relaxed">{service.shortDescription}</p>
               )}
             </div>
-            <button onClick={onClose} className="text-white/40 hover:text-white transition shrink-0 mt-0.5"><FaTimes /></button>
+            <button onClick={onClose} className="text-white/60 hover:text-white transition shrink-0 mt-0.5"><FaTimes /></button>
           </div>
 
           {/* Price display */}
@@ -1376,7 +1376,7 @@ const BarberServiceModal: React.FC<BarberServiceModalProps> = ({ service, barber
             <div className="bg-black/40 rounded-xl p-4 border border-white/5 flex items-center justify-between">
               <div>
                 {finalPrice && (
-                  <p className="text-[11px] text-white/40 line-through">{service.price}</p>
+                  <p className="text-[11px] text-white/60 line-through">{service.price}</p>
                 )}
                 <p className={`text-2xl font-black font-tomorrow ${finalPrice ? 'text-green-400' : 'text-[#ffa35d]'}`}>
                   {finalPrice ? `${currency}${finalPrice}` : service.price}
@@ -1394,7 +1394,7 @@ const BarberServiceModal: React.FC<BarberServiceModalProps> = ({ service, barber
           {/* Member code input */}
           {!member && (
             <div className="space-y-2">
-              <p className="text-[11px] text-white/40">¿Tienes código de miembro? Ingresa tu código para aplicar tu descuento.</p>
+              <p className="text-[11px] text-white/60">¿Tienes código de miembro? Ingresa tu código para aplicar tu descuento.</p>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -1429,7 +1429,7 @@ const BarberServiceModal: React.FC<BarberServiceModalProps> = ({ service, barber
           {/* Métodos de pago (solo los activados por el dueño) */}
           {enabledMethods.length > 0 && amount > 0 && (
             <div className="space-y-2 pt-1">
-              <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">
+              <p className="text-[10px] text-white/60 uppercase tracking-widest font-bold">
                 {isProduct ? 'Comprar ahora' : 'Reservar y pagar'}
               </p>
               {enabledMethods.map(m => (
@@ -1457,8 +1457,8 @@ const BarberServiceModal: React.FC<BarberServiceModalProps> = ({ service, barber
               {payMethod === 'bank_transfer' && bank && (
                 <div className="bg-black/40 border border-[#ffa35d]/15 rounded-xl p-4 space-y-2">
                   <p className="text-[10px] text-[#ffa35d]/70 uppercase tracking-widest font-bold">Datos para la transferencia</p>
-                  {bank.bank_name && <p className="text-xs text-white/70"><span className="text-white/40">Banco:</span> {bank.bank_name}</p>}
-                  {bank.account_type && <p className="text-xs text-white/70"><span className="text-white/40">Tipo:</span> {bank.account_type}</p>}
+                  {bank.bank_name && <p className="text-xs text-white/70"><span className="text-white/60">Banco:</span> {bank.bank_name}</p>}
+                  {bank.account_type && <p className="text-xs text-white/70"><span className="text-white/60">Tipo:</span> {bank.account_type}</p>}
                   {bank.account_number && (
                     <button onClick={copyAccount} className="w-full flex items-center justify-between gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-left hover:border-[#ffa35d]/40 transition">
                       <span className="text-xs text-white font-mono">{bank.account_number}</span>
@@ -1467,9 +1467,9 @@ const BarberServiceModal: React.FC<BarberServiceModalProps> = ({ service, barber
                       </span>
                     </button>
                   )}
-                  {bank.holder && <p className="text-xs text-white/70"><span className="text-white/40">Titular:</span> {bank.holder}</p>}
-                  {bank.id_number && <p className="text-xs text-white/70"><span className="text-white/40">Cédula/RUC:</span> {bank.id_number}</p>}
-                  {bank.email && <p className="text-xs text-white/70 break-all"><span className="text-white/40">Email:</span> {bank.email}</p>}
+                  {bank.holder && <p className="text-xs text-white/70"><span className="text-white/60">Titular:</span> {bank.holder}</p>}
+                  {bank.id_number && <p className="text-xs text-white/70"><span className="text-white/60">Cédula/RUC:</span> {bank.id_number}</p>}
+                  {bank.email && <p className="text-xs text-white/70 break-all"><span className="text-white/60">Email:</span> {bank.email}</p>}
                   <button
                     onClick={sendVoucher}
                     className="w-full mt-2 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-2 active:scale-95 transition-all"
@@ -1632,12 +1632,12 @@ const BarberReservationModal: React.FC<BarberReservationModalProps> = ({ profile
       <div className="bg-[#0f0702] border border-[#ffa35d]/20 w-full max-w-md rounded-2xl shadow-2xl relative text-white overflow-hidden max-h-[92vh] flex flex-col" onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="relative p-6 pb-4 border-b border-white/5 shrink-0">
-          <button onClick={onClose} className="absolute top-4 right-4 text-white/40 hover:text-white transition"><FaTimes /></button>
+          <button onClick={onClose} className="absolute top-4 right-4 text-white/60 hover:text-white transition"><FaTimes /></button>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#ffa35d]/15 flex items-center justify-center text-xl">📅</div>
             <div>
               <h3 className="font-black font-tomorrow text-[#ffa35d] uppercase tracking-wider text-sm">Reservar una cita</h3>
-              <p className="text-[11px] text-white/40">Elige servicio, barbero y hora</p>
+              <p className="text-[11px] text-white/60">Elige servicio, barbero y hora</p>
             </div>
           </div>
         </div>
@@ -1652,13 +1652,13 @@ const BarberReservationModal: React.FC<BarberReservationModalProps> = ({ profile
             <div className="bg-black/60 rounded-2xl px-6 py-5 border border-[#ffa35d]/30 text-center">
               <p className="text-[10px] text-[#ffa35d]/60 uppercase tracking-[3px] font-tomorrow mb-2">Tu código de cita</p>
               <p className="text-3xl font-black font-tomorrow text-[#ffa35d] tracking-[4px] mb-1">{result.confirmation_code}</p>
-              <p className="text-[10px] text-white/30 leading-relaxed">Guárdalo para consultar el estado de tu cita.</p>
+              <p className="text-[10px] text-white/55 leading-relaxed">Guárdalo para consultar el estado de tu cita.</p>
             </div>
             <div className="bg-[#ffa35d]/5 border border-[#ffa35d]/15 rounded-xl px-4 py-3 text-left text-xs text-white/70 space-y-1">
-              {result.staff_name && <p><span className="text-white/40">Barbero:</span> {result.staff_name}</p>}
-              <p><span className="text-white/40">Fecha:</span> {new Date(date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })}</p>
-              <p><span className="text-white/40">Hora:</span> {time}</p>
-              {serviceName && <p><span className="text-white/40">Servicio:</span> {serviceName}</p>}
+              {result.staff_name && <p><span className="text-white/60">Barbero:</span> {result.staff_name}</p>}
+              <p><span className="text-white/60">Fecha:</span> {new Date(date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })}</p>
+              <p><span className="text-white/60">Hora:</span> {time}</p>
+              {serviceName && <p><span className="text-white/60">Servicio:</span> {serviceName}</p>}
             </div>
             <button onClick={onClose} className="w-full py-3 rounded-xl bg-[var(--cnx-accent)] text-black font-black text-sm font-tomorrow uppercase tracking-wider active:scale-95 transition-all">
               ¡Perfecto!
@@ -1694,7 +1694,7 @@ const BarberReservationModal: React.FC<BarberReservationModalProps> = ({ profile
                       <div className="w-12 h-12 rounded-full bg-[#ffa35d]/10 flex items-center justify-center text-[#ffa35d]"><FaUserTie /></div>
                     )}
                     <span className="text-[10px] font-bold text-white text-center leading-tight line-clamp-1">{st.name}</span>
-                    {st.role && <span className="text-[8px] text-white/40 text-center leading-tight line-clamp-1">{st.role}</span>}
+                    {st.role && <span className="text-[8px] text-white/60 text-center leading-tight line-clamp-1">{st.role}</span>}
                   </button>
                 ))}
               </div>
@@ -1712,13 +1712,13 @@ const BarberReservationModal: React.FC<BarberReservationModalProps> = ({ profile
               <div>
                 <label className="block text-[10px] text-[#ffa35d]/70 uppercase tracking-widest font-bold mb-2">Hora disponible</label>
                 {loadingSlots ? (
-                  <p className="text-xs text-white/40 py-3 text-center">Buscando disponibilidad...</p>
+                  <p className="text-xs text-white/60 py-3 text-center">Buscando disponibilidad...</p>
                 ) : !dayHours || !dayHours.isOpen ? (
-                  <p className="text-xs text-white/40 py-3 text-center bg-white/5 rounded-xl border border-white/10">
+                  <p className="text-xs text-white/60 py-3 text-center bg-white/5 rounded-xl border border-white/10">
                     {selStaff.name} no atiende ese día. Elige otra fecha.
                   </p>
                 ) : slots.length === 0 ? (
-                  <p className="text-xs text-white/40 py-3 text-center bg-white/5 rounded-xl border border-white/10">
+                  <p className="text-xs text-white/60 py-3 text-center bg-white/5 rounded-xl border border-white/10">
                     No quedan horas libres ese día. Prueba con otra fecha.
                   </p>
                 ) : (
@@ -1822,9 +1822,9 @@ const BarberReservationLookup: React.FC<{ barberId: string; isMobilePreview?: bo
           {result?.found && (
             <div className="rounded-xl bg-gradient-to-br from-[#1a0800] to-black border border-[#ffa35d]/20 p-4 space-y-1.5">
               <p className="text-sm font-black text-[#ffa35d] font-tomorrow">{STATUS_LABEL[result.status] || result.status}</p>
-              <p className="text-xs text-white/70"><span className="text-white/40">Fecha:</span> {new Date(result.reservation_date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })} · {result.reservation_time}</p>
-              {result.staff_name && <p className="text-xs text-white/70"><span className="text-white/40">Barbero:</span> {result.staff_name}</p>}
-              {result.service_name && <p className="text-xs text-white/70"><span className="text-white/40">Servicio:</span> {result.service_name}</p>}
+              <p className="text-xs text-white/70"><span className="text-white/60">Fecha:</span> {new Date(result.reservation_date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })} · {result.reservation_time}</p>
+              {result.staff_name && <p className="text-xs text-white/70"><span className="text-white/60">Barbero:</span> {result.staff_name}</p>}
+              {result.service_name && <p className="text-xs text-white/70"><span className="text-white/60">Servicio:</span> {result.service_name}</p>}
             </div>
           )}
         </>

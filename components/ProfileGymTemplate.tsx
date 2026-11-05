@@ -196,7 +196,7 @@ export const ProfileGymTemplate: React.FC<Props> = ({
                 Rastrear mi solicitud o reserva
               </PillLink>
               {isOn(profile, 'links') && sorted.map(l => (
-                <PillLink key={l.id} href={l.url} onNavigate={() => onLinkClick?.(l.id)} icon={<FaLink size={12} style={{ color: `${TEXT}66` }} />}>{l.title}</PillLink>
+                <PillLink key={l.id} href={l.url} onNavigate={() => onLinkClick?.(l.id)} icon={<FaLink size={12} style={{ color: `${TEXT}b3` }} />}>{l.title}</PillLink>
               ))}
             </div>
 
@@ -257,7 +257,7 @@ export const ProfileGymTemplate: React.FC<Props> = ({
                   })}
                 </div>
                 <div className="space-y-2.5">
-                  {dayClasses.length === 0 && <p className="text-center text-sm py-6" style={{ color: `${TEXT}66` }}>No hay clases este día.</p>}
+                  {dayClasses.length === 0 && <p className="text-center text-sm py-6" style={{ color: `${TEXT}b3` }}>No hay clases este día.</p>}
                   {dayClasses.map(c => {
                     const date = days[dayIdx];
                     const taken = booked[`${c.id}|${date}`] || 0;
@@ -267,15 +267,15 @@ export const ProfileGymTemplate: React.FC<Props> = ({
                     const lv = LEVEL[c.level] || LEVEL.todos;
                     const lvColor = lv.color || accent;
                     return (
-                      <div key={c.id} className={`flex items-stretch rounded-2xl border overflow-hidden ${started ? 'opacity-50' : ''}`} style={{ background: SURFACE, borderColor: `${TEXT}12` }}>
+                      <div key={c.id} className={`flex items-stretch rounded-2xl border overflow-hidden ${started ? 'opacity-70' : ''}`} style={{ background: SURFACE, borderColor: `${TEXT}12` }}>
                         <span className="w-1 shrink-0" style={{ background: lvColor }} />
                         <div className="w-[68px] shrink-0 py-3 text-center">
                           <p className="text-[16px] font-black leading-none" style={{ fontFamily: TITLE_FONT, color: '#fff' }}>{c.start_time}</p>
-                          {c.end_time && <p className="text-[10px] mt-1" style={{ color: `${TEXT}66` }}>{c.end_time}</p>}
+                          {c.end_time && <p className="text-[10px] mt-1" style={{ color: `${TEXT}b3` }}>{c.end_time}</p>}
                         </div>
                         <div className="flex-1 min-w-0 py-3">
                           <p className="text-white font-semibold text-[14px] truncate">{c.name}</p>
-                          <p className="text-[11px] truncate mt-0.5" style={{ color: `${TEXT}88` }}>{[c.coach_name, c.room].filter(Boolean).join(' · ') || ' '}</p>
+                          <p className="text-[11px] truncate mt-0.5" style={{ color: `${TEXT}b3` }}>{[c.coach_name, c.room].filter(Boolean).join(' · ') || ' '}</p>
                           <span className="inline-block mt-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] px-2 py-0.5 rounded-full" style={{ color: lvColor, border: `1px solid ${lvColor}55` }}>{lv.label}</span>
                         </div>
                         <div className="pr-3 pl-2 flex flex-col items-end justify-center gap-1.5 shrink-0">
@@ -299,7 +299,7 @@ export const ProfileGymTemplate: React.FC<Props> = ({
                   })}
                 </div>
                 {!bookingOn && (
-                  <p className="text-[11px] text-center mt-3" style={{ color: `${TEXT}66` }}>
+                  <p className="text-[11px] text-center mt-3" style={{ color: `${TEXT}b3` }}>
                     ¿Quieres probar una clase? <button type="button" className="underline" style={{ color: theme.accentLight }} onClick={() => setRequest({ type: 'prueba' })}>Pídela aquí</button>.
                   </p>
                 )}
@@ -338,7 +338,7 @@ export const ProfileGymTemplate: React.FC<Props> = ({
 
             <footer className="text-center pt-6">
               <a href="https://connexo.app" target="_blank" rel="noopener noreferrer"
-                className="text-[10px] uppercase tracking-[0.3em] transition" style={{ color: `${TEXT}33` }}>Powered by Connexo</a>
+                className="text-[10px] uppercase tracking-[0.3em] transition" style={{ color: `${TEXT}b3` }}>Powered by Connexo</a>
             </footer>
           </ProfileHero>
         </div>
@@ -375,15 +375,15 @@ const PlanCard: React.FC<{ plan: GymPlan; onChoose: () => void }> = ({ plan: p, 
       )}
       <div className="p-5">
         <h3 className="cnx-product-text text-white text-lg font-semibold uppercase tracking-[0.08em]" style={{ fontFamily: k.titleFont }}>{p.name}</h3>
-        {p.description && <p className="text-[12px] mt-1" style={{ color: `${k.text}88` }}>{p.description}</p>}
+        {p.description && <p className="text-[12px] mt-1" style={{ color: `${k.text}b3` }}>{p.description}</p>}
         <div className="flex items-end gap-2 mt-4">
           <p className="text-[38px] leading-none font-black text-white" style={{ fontFamily: k.titleFont }}>{fmtMoney(p.price)}</p>
-          <p className="text-[12px] pb-1.5" style={{ color: `${k.text}88` }}>/ {PERIOD[p.billing_period] || p.billing_period}</p>
+          <p className="text-[12px] pb-1.5" style={{ color: `${k.text}b3` }}>/ {PERIOD[p.billing_period] || p.billing_period}</p>
           {save > 0 && (
             <span className="ml-auto mb-1.5 text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md" style={{ background: `${k.accent}26`, color: k.accentLight }}>Ahorra {save}%</span>
           )}
         </div>
-        {save > 0 && <p className="text-[12px] line-through mt-0.5" style={{ color: `${k.text}55` }}>{fmtMoney(p.compare_price)}</p>}
+        {save > 0 && <p className="text-[12px] line-through mt-0.5" style={{ color: `${k.text}b3` }}>{fmtMoney(p.compare_price)}</p>}
         {(p.features?.length > 0 || p.sessions_limit) && (
           <ul className="mt-4 space-y-2">
             {p.sessions_limit ? (
@@ -394,7 +394,7 @@ const PlanCard: React.FC<{ plan: GymPlan; onChoose: () => void }> = ({ plan: p, 
             ))}
           </ul>
         )}
-        {p.enrollment_fee > 0 && <p className="text-[11px] mt-3" style={{ color: `${k.text}77` }}>+ {fmtMoney(p.enrollment_fee)} de matrícula (pago único)</p>}
+        {p.enrollment_fee > 0 && <p className="text-[11px] mt-3" style={{ color: `${k.text}b3` }}>+ {fmtMoney(p.enrollment_fee)} de matrícula (pago único)</p>}
         <button type="button" onClick={onChoose}
           className="mt-5 w-full py-3.5 rounded-xl text-[12px] font-bold uppercase tracking-[0.18em] transition hover:brightness-110"
           style={p.is_popular ? { background: k.accent, color: k.onAccent, fontFamily: k.titleFont } : { border: `1px solid ${k.accent}66`, color: k.text, fontFamily: k.titleFont }}>
@@ -443,7 +443,7 @@ const RequestModal: React.FC<{
         <div className="py-3 text-center">
           <FaClipboardCheck className="mx-auto text-4xl mb-3" style={{ color: k.accentLight }} />
           <p className="text-white font-bold">Recibimos tu solicitud.</p>
-          <p className="text-sm mt-2" style={{ color: `${k.text}88` }}>Guarda tu código de rastreo:</p>
+          <p className="text-sm mt-2" style={{ color: `${k.text}b3` }}>Guarda tu código de rastreo:</p>
           <CodeBox code={code} />
           {type === 'inscripcion' && (() => {
             const chosen = plans.find(p => p.id === planId);
@@ -559,9 +559,9 @@ const BookingModal: React.FC<{
           <FaCalendarCheck className="mx-auto text-4xl mb-3" style={{ color: k.accentLight }} />
           <p className="text-white font-bold">{cls.name}</p>
           <p className="text-sm mt-1" style={{ color: `${k.text}99` }}>{prettyDate(date, { weekday: 'long', day: 'numeric', month: 'long' })} · {cls.start_time}</p>
-          <p className="text-sm mt-3" style={{ color: `${k.text}88` }}>Tu código de reserva:</p>
+          <p className="text-sm mt-3" style={{ color: `${k.text}b3` }}>Tu código de reserva:</p>
           <CodeBox code={code} />
-          <p className="text-[11px] mb-3" style={{ color: `${k.text}77` }}>Con este código puedes consultar o cancelar tu cupo.</p>
+          <p className="text-[11px] mb-3" style={{ color: `${k.text}b3` }}>Con este código puedes consultar o cancelar tu cupo.</p>
           <PrimaryButton type="button" onClick={() => onTrack(code)}>Ver mi reserva</PrimaryButton>
         </div>
       ) : (
@@ -647,7 +647,7 @@ const TrackerModal: React.FC<{ profile: any; userId?: string | null; initialCode
         <div className="space-y-4 pt-1">
           <div className="flex items-center justify-between text-sm">
             <span className="font-bold" style={{ color: k.accentLight }}>{LEAD_TYPE[res.data.request_type] || 'Solicitud'}</span>
-            <span className="font-mono text-xs" style={{ color: `${k.text}88` }}>{res.data.code}</span>
+            <span className="font-mono text-xs" style={{ color: `${k.text}b3` }}>{res.data.code}</span>
           </div>
           {res.data.plan_name && <p className="text-sm" style={{ color: `${k.text}cc` }}><span className="font-bold" style={{ color: k.accentLight }}>Plan:</span> {res.data.plan_name}</p>}
           {res.data.status === 'cancelado'
@@ -658,7 +658,7 @@ const TrackerModal: React.FC<{ profile: any; userId?: string | null; initialCode
               concept={`tu inscripción al plan ${res.data.plan_name}`} customer={{ name: res.data.client_name }} isMobilePreview={isMobilePreview} />
           )}
           {res.data.status === 'inscrito' && res.data.member_code && (
-            <div className="text-center"><p className="text-sm" style={{ color: `${k.text}88` }}>¡Bienvenido! Tu carnet de socio:</p><CodeBox code={res.data.member_code} small /></div>
+            <div className="text-center"><p className="text-sm" style={{ color: `${k.text}b3` }}>¡Bienvenido! Tu carnet de socio:</p><CodeBox code={res.data.member_code} small /></div>
           )}
           {res.data.admin_note && (
             <div className="rounded-xl p-3 border text-sm" style={{ background: `${k.accent}0f`, borderColor: `${k.accent}33`, color: `${k.text}dd` }}>
@@ -666,7 +666,7 @@ const TrackerModal: React.FC<{ profile: any; userId?: string | null; initialCode
               <p className="mt-1 whitespace-pre-wrap">{res.data.admin_note}</p>
             </div>
           )}
-          {res.data.preferred_date && <p className="text-xs" style={{ color: `${k.text}77` }}>📅 Fecha solicitada: {res.data.preferred_date}</p>}
+          {res.data.preferred_date && <p className="text-xs" style={{ color: `${k.text}b3` }}>📅 Fecha solicitada: {res.data.preferred_date}</p>}
         </div>
       )}
 
@@ -676,7 +676,7 @@ const TrackerModal: React.FC<{ profile: any; userId?: string | null; initialCode
             <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: k.accentLight }}>Reserva de clase</p>
             <p className="text-white font-semibold text-lg mt-1" style={{ fontFamily: k.titleFont }}>{res.data.class_name}</p>
             <p className="text-sm mt-1 capitalize" style={{ color: `${k.text}cc` }}>{prettyDate(res.data.class_date, { weekday: 'long', day: 'numeric', month: 'long' })} · {res.data.start_time}</p>
-            {res.data.coach_name && <p className="text-xs mt-0.5" style={{ color: `${k.text}88` }}>con {res.data.coach_name}</p>}
+            {res.data.coach_name && <p className="text-xs mt-0.5" style={{ color: `${k.text}b3` }}>con {res.data.coach_name}</p>}
             <p className="inline-block mt-3 text-[10px] font-bold uppercase tracking-[0.18em] px-3 py-1 rounded-full"
               style={{ background: res.data.status === 'cancelada' || res.data.status === 'no_asistio' ? 'rgba(248,113,113,0.15)' : `${k.accent}26`, color: res.data.status === 'cancelada' || res.data.status === 'no_asistio' ? '#f87171' : k.accentLight }}>
               {BOOKING_LABEL[res.data.status] || res.data.status}
@@ -747,12 +747,12 @@ const MemberModal: React.FC<{ profile: any; userId?: string | null; initialId: s
           </div>
           <div className="grid grid-cols-2 gap-2.5 text-center">
             <div className="rounded-xl p-3 border" style={{ background: 'rgba(255,255,255,0.03)', borderColor: `${k.text}12` }}>
-              <FaRunning className="mx-auto" style={{ color: k.accentLight }} /><p className="text-white font-black text-lg mt-1" style={{ fontFamily: k.titleFont }}>{member.visits || 0}</p><p className="text-[9px] uppercase tracking-widest" style={{ color: `${k.text}66` }}>Asistencias</p>
+              <FaRunning className="mx-auto" style={{ color: k.accentLight }} /><p className="text-white font-black text-lg mt-1" style={{ fontFamily: k.titleFont }}>{member.visits || 0}</p><p className="text-[9px] uppercase tracking-widest" style={{ color: `${k.text}b3` }}>Asistencias</p>
             </div>
             <div className="rounded-xl p-3 border" style={{ background: 'rgba(255,255,255,0.03)', borderColor: `${k.text}12` }}>
               {member.is_vip ? <FaCrown className="mx-auto" style={{ color: k.accentLight }} /> : <FaStopwatch className="mx-auto" style={{ color: k.accentLight }} />}
               <p className="text-white font-black text-lg mt-1" style={{ fontFamily: k.titleFont }}>{member.is_vip ? 'VIP' : member.discount_percent > 0 ? `${member.discount_percent}%` : '—'}</p>
-              <p className="text-[9px] uppercase tracking-widest" style={{ color: `${k.text}66` }}>{member.is_vip ? 'Socio' : 'Descuento'}</p>
+              <p className="text-[9px] uppercase tracking-widest" style={{ color: `${k.text}b3` }}>{member.is_vip ? 'Socio' : 'Descuento'}</p>
             </div>
           </div>
           {member.benefits && (

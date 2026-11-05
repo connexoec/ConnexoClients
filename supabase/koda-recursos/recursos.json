@@ -17,7 +17,7 @@
     "perfil": {
       "backgroundColor": "#0c0907",
       "buttonColor": "#ff6b35",
-      "buttonTextColor": "#ffffff",
+      "buttonTextColor": "#0c0907",
       "textColor": "#f5e6d3",
       "showSchedule": true,
       "businessHours": [
@@ -438,7 +438,7 @@
     "perfil": {
       "backgroundColor": "#0c0907",
       "buttonColor": "#ff6b35",
-      "buttonTextColor": "#ffffff",
+      "buttonTextColor": "#0c0907",
       "textColor": "#f5e6d3",
       "showSchedule": true,
       "businessHours": [
@@ -701,7 +701,7 @@
     "perfil": {
       "backgroundColor": "#0b0502",
       "buttonColor": "#ff6b35",
-      "buttonTextColor": "#ffffff",
+      "buttonTextColor": "#0b0502",
       "textColor": "#fde8d3",
       "showSchedule": true,
       "businessHours": [
@@ -1073,7 +1073,7 @@
     "perfil": {
       "backgroundColor": "#0b0502",
       "buttonColor": "#ff6b35",
-      "buttonTextColor": "#ffffff",
+      "buttonTextColor": "#0b0502",
       "textColor": "#fde8d3",
       "showSchedule": true,
       "businessHours": [
@@ -1290,7 +1290,7 @@
     "logo": {
       "etiqueta": "SALUD",
       "fondo": "#020813",
-      "acento": "#2563eb",
+      "acento": "#6692f1",
       "texto": "#eaf2ff"
     },
     "copy": {
@@ -1300,8 +1300,8 @@
     },
     "perfil": {
       "backgroundColor": "#020813",
-      "buttonColor": "#2563eb",
-      "buttonTextColor": "#ffffff",
+      "buttonColor": "#6692f1",
+      "buttonTextColor": "#020813",
       "textColor": "#eaf2ff",
       "showSchedule": true,
       "businessHours": [
@@ -1564,7 +1564,7 @@
     "logo": {
       "etiqueta": "SALUD",
       "fondo": "#020813",
-      "acento": "#2563eb",
+      "acento": "#6692f1",
       "texto": "#eaf2ff"
     },
     "copy": {
@@ -1574,8 +1574,8 @@
     },
     "perfil": {
       "backgroundColor": "#020813",
-      "buttonColor": "#2563eb",
-      "buttonTextColor": "#ffffff",
+      "buttonColor": "#6692f1",
+      "buttonTextColor": "#020813",
       "textColor": "#eaf2ff",
       "showSchedule": true,
       "businessHours": [
@@ -1838,7 +1838,7 @@
     "logo": {
       "etiqueta": "VETERINARIA",
       "fondo": "#04100f",
-      "acento": "#0ea5a4",
+      "acento": "#13a7a6",
       "texto": "#e6fffd"
     },
     "copy": {
@@ -1848,8 +1848,8 @@
     },
     "perfil": {
       "backgroundColor": "#04100f",
-      "buttonColor": "#0ea5a4",
-      "buttonTextColor": "#ffffff",
+      "buttonColor": "#13a7a6",
+      "buttonTextColor": "#04100f",
       "textColor": "#e6fffd",
       "showSchedule": true,
       "businessHours": [
@@ -2075,7 +2075,7 @@
     "logo": {
       "etiqueta": "MASCOTAS",
       "fondo": "#04100f",
-      "acento": "#0ea5a4",
+      "acento": "#13a7a6",
       "texto": "#e6fffd"
     },
     "copy": {
@@ -2085,8 +2085,8 @@
     },
     "perfil": {
       "backgroundColor": "#04100f",
-      "buttonColor": "#0ea5a4",
-      "buttonTextColor": "#ffffff",
+      "buttonColor": "#13a7a6",
+      "buttonTextColor": "#04100f",
       "textColor": "#e6fffd",
       "showSchedule": true,
       "businessHours": [

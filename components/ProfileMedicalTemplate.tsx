@@ -503,7 +503,7 @@ export const ProfileMedicalTemplate: React.FC<ProfileMedicalTemplateProps> = ({
       {/* ══ SECCIÓN 4 · PETSHOP Y FARMACIA DIGITAL (venta por impulso) ══════ */}
       <div className="px-4 max-w-md mx-auto mt-8 cinema-animate-in-delay-2">
         {sectionTitle(<FaShoppingBag size={13} />, 'Farmacia y Productos',
-          allProducts.length > 0 ? <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{allProducts.length} productos</span> : undefined)}
+          allProducts.length > 0 ? <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">{allProducts.length} productos</span> : undefined)}
 
         {allProducts.length > 0 ? (
           <>
@@ -532,7 +532,7 @@ export const ProfileMedicalTemplate: React.FC<ProfileMedicalTemplateProps> = ({
                     </div>
                     <div className="p-3">
                       <h4 className="cnx-product-text font-bold text-xs text-[#e8f1ff] truncate leading-snug">{product.cleanName}</h4>
-                      {product.shortDescription && <p className="text-[10px] text-gray-500 mt-0.5 line-clamp-2 leading-snug">{product.shortDescription}</p>}
+                      {product.shortDescription && <p className="text-[10px] text-gray-400 mt-0.5 line-clamp-2 leading-snug">{product.shortDescription}</p>}
                       <div className="flex items-center justify-between mt-2">
                         {product.price ? <span className="font-mono text-xs font-black" style={{ color: accent }}>{product.price}</span> : <span />}
                         {!agotado && <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: accent }}>Comprar →</span>}
@@ -542,12 +542,12 @@ export const ProfileMedicalTemplate: React.FC<ProfileMedicalTemplateProps> = ({
                 );
               })}
             </div>
-            <p className="text-[10px] text-gray-600 mt-1.5 text-center tracking-wide">👈 Desliza para ver más productos 👉</p>
+            <p className="text-[10px] text-gray-400 mt-1.5 text-center tracking-wide">👈 Desliza para ver más productos 👉</p>
             <button onClick={() => { setCatalogQuery(''); setShowFullMenu(true); }} style={{ backgroundColor: accent }}
               className="mt-4 w-full py-3.5 rounded-xl font-black text-xs uppercase tracking-widest text-white shadow-lg transition-all hover:brightness-110 hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-2"><FaSearch size={12} /> Buscar en el catálogo ({allProducts.length})</button>
           </>
         ) : (
-          <div className="text-center py-10 text-gray-500"><FaInbox className="mx-auto text-3xl mb-2" /><p className="text-xs">El catálogo estará disponible pronto.</p></div>
+          <div className="text-center py-10 text-gray-400"><FaInbox className="mx-auto text-3xl mb-2" /><p className="text-xs">El catálogo estará disponible pronto.</p></div>
         )}
       </div>
 
@@ -601,7 +601,7 @@ export const ProfileMedicalTemplate: React.FC<ProfileMedicalTemplateProps> = ({
       {((Array.isArray(profile?.digitalFiles) && profile.digitalFiles.length > 0) || (Array.isArray(profile?.faqs) && profile.faqs.length > 0)) && (
         <div className="px-4 max-w-md mx-auto mt-8">
           {sectionTitle(<FaBookMedical size={13} />, 'Centro del Paciente')}
-          <p className="text-[11px] text-gray-500 mb-3 leading-snug">Guías de salud y respuestas rápidas para que te cuides sin esperas.</p>
+          <p className="text-[11px] text-gray-400 mb-3 leading-snug">Guías de salud y respuestas rápidas para que te cuides sin esperas.</p>
         </div>
       )}
       <ProfileExtraSections profile={profile} accent={accent} isMobilePreview={isMobilePreview} />
@@ -702,7 +702,7 @@ export const ProfileMedicalTemplate: React.FC<ProfileMedicalTemplateProps> = ({
             <h3 className="text-xl font-bold text-white">¡Pedido Registrado!</h3>
             <p className="text-xs text-gray-400 mt-2 leading-relaxed px-4">Tu pedido fue enviado a la clínica. Muestra esta pantalla en recepción para validarlo.</p>
             <div className="my-6 p-4 rounded-xl bg-black/40 border border-[#2563eb]/20 w-full">
-              <div className="text-[9px] uppercase font-bold tracking-widest text-gray-500 mb-1">Código de Validación</div>
+              <div className="text-[9px] uppercase font-bold tracking-widest text-gray-400 mb-1">Código de Validación</div>
               <div className="text-3xl font-mono font-black tracking-widest" style={{ color: accent }}>{successOrder.verification_code}</div>
               <div className="text-xs text-gray-400 mt-1 font-bold">{successOrder.order_type === 'mesa' ? 'Retiro en clínica' : `Delivery${successOrder.customer_name ? ` · ${successOrder.customer_name}` : ''}`}</div>
             </div>
@@ -807,7 +807,7 @@ const OrderTracker: React.FC<{
   return (
     <div className="fixed inset-0 z-[118] flex items-end sm:items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={onClose}>
       <div className="w-full max-w-sm bg-[#0b1b33] rounded-2xl border border-[#2563eb]/30 shadow-2xl p-6 relative" onClick={(e) => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition"><FaTimes size={16} /></button>
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white transition"><FaTimes size={16} /></button>
         <h3 className="text-base font-black text-white flex items-center gap-2 mb-4"><FaClock style={{ color: accent }} /> Estado de tu pedido o cita</h3>
         {!tracking ? (
           <form onSubmit={(e) => { e.preventDefault(); if (code.trim()) setTracking(true); }} className="space-y-3">
@@ -825,7 +825,7 @@ const OrderTracker: React.FC<{
             const dateLabel = data.reservation_date ? new Date(data.reservation_date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' }) : '';
             return (
               <div className="space-y-4">
-                <div className="text-center"><div className="text-4xl">{rm.emoji}</div><p className="text-lg font-black text-white mt-1">{rm.label}</p><p className="text-[10px] text-gray-500 mt-1 font-mono tracking-widest">Cita · Código {data.code}</p></div>
+                <div className="text-center"><div className="text-4xl">{rm.emoji}</div><p className="text-lg font-black text-white mt-1">{rm.label}</p><p className="text-[10px] text-gray-400 mt-1 font-mono tracking-widest">Cita · Código {data.code}</p></div>
                 <div className="rounded-xl bg-black/30 border border-[#2563eb]/15 divide-y divide-white/5">
                   <div className="flex items-center justify-between px-4 py-2.5"><span className="text-xs text-gray-400">Fecha</span><span className="text-xs font-bold text-white capitalize">{dateLabel} · {data.reservation_time}</span></div>
                   <div className="flex items-center justify-between px-4 py-2.5"><span className="text-xs text-gray-400">Personas</span><span className="text-xs font-bold text-white">{data.party_size}</span></div>
@@ -842,15 +842,15 @@ const OrderTracker: React.FC<{
                 {Array.isArray(data.preorder_items) && data.preorder_items.length > 0 && (
                   <div className="p-3 rounded-xl bg-[#2563eb]/10 border border-[#2563eb]/20"><p className="text-[10px] font-black uppercase tracking-widest mb-1.5" style={{ color: accent }}>Tu pre-pedido</p><div className="space-y-1">{data.preorder_items.map((it: any, i: number) => (<div key={i} className="flex justify-between text-xs text-[#e8f1ff]/85"><span>{it.qty}x {it.name}</span>{it.price && <span className="font-mono" style={{ color: accent }}>{it.price}</span>}</div>))}</div></div>
                 )}
-                <p className="text-[10px] text-gray-500 text-center">Esta pantalla se actualiza sola cada pocos segundos.</p>
+                <p className="text-[10px] text-gray-400 text-center">Esta pantalla se actualiza sola cada pocos segundos.</p>
               </div>
             );
           })()
         ) : cancelled ? (
-          <div className="text-center py-4 space-y-2"><div className="text-4xl">❌</div><p className="text-sm font-black text-red-400">Pedido cancelado</p><p className="text-xs text-gray-500">Código {data.code}</p></div>
+          <div className="text-center py-4 space-y-2"><div className="text-4xl">❌</div><p className="text-sm font-black text-red-400">Pedido cancelado</p><p className="text-xs text-gray-400">Código {data.code}</p></div>
         ) : (
           <div className="space-y-4">
-            <div className="text-center"><div className="text-4xl">{ORDER_META[data.status]?.emoji ?? '📦'}</div><p className="text-lg font-black text-white mt-1">{ORDER_META[data.status]?.label ?? data.status}</p>{data.estimated_minutes ? <p className="text-xs font-bold mt-0.5" style={{ color: accent }}>Tiempo estimado: {data.estimated_minutes} min</p> : null}<p className="text-[10px] text-gray-500 mt-1 font-mono tracking-widest">Código {data.code}</p></div>
+            <div className="text-center"><div className="text-4xl">{ORDER_META[data.status]?.emoji ?? '📦'}</div><p className="text-lg font-black text-white mt-1">{ORDER_META[data.status]?.label ?? data.status}</p>{data.estimated_minutes ? <p className="text-xs font-bold mt-0.5" style={{ color: accent }}>Tiempo estimado: {data.estimated_minutes} min</p> : null}<p className="text-[10px] text-gray-400 mt-1 font-mono tracking-widest">Código {data.code}</p></div>
             {(data.payment_status === 'pagado' || data.status !== 'pendiente') ? (
               <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs font-bold text-center">✅ Pago confirmado</div>
             ) : data.payment_status === 'comprobante' ? (
@@ -878,7 +878,7 @@ const OrderTracker: React.FC<{
               })}
             </div>
             {onInvoice && <button onClick={() => onInvoice(data.code)} className="w-full py-2.5 rounded-lg bg-white/5 border border-[#2563eb]/20 text-[#e8f1ff] text-xs font-black uppercase tracking-wider hover:bg-white/10 transition">🧾 ¿Necesitas factura?</button>}
-            <p className="text-[10px] text-gray-500 text-center">Esta pantalla se actualiza sola cada pocos segundos.</p>
+            <p className="text-[10px] text-gray-400 text-center">Esta pantalla se actualiza sola cada pocos segundos.</p>
           </div>
         )}
       </div>
@@ -927,7 +927,7 @@ const InvoiceModal: React.FC<{ restaurantId: string | null; code: string; isMobi
   return (
     <div className="fixed inset-0 z-[122] flex items-end sm:items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={onClose}>
       <div className="w-full max-w-sm bg-[#0b1b33] rounded-2xl border border-[#2563eb]/30 shadow-2xl p-6 relative max-h-[92vh] overflow-y-auto" onClick={(e) => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition"><FaTimes size={16} /></button>
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white transition"><FaTimes size={16} /></button>
         <h3 className="text-base font-black text-white flex items-center gap-2 mb-1">🧾 Solicitar factura</h3>
         <p className="text-[11px] text-gray-400 mb-4">Pedido <span className="font-mono" style={{ color: accent }}>{code}</span></p>
         {done ? (
@@ -1016,7 +1016,7 @@ const MembershipLookup: React.FC<{ restaurantId: string | null; isMobilePreview:
     const cycle = 6; const filled = visits % cycle === 0 && visits > 0 ? cycle : visits % cycle;
     return (
       <div className="mt-3 p-3 rounded-xl bg-black/30 border border-[#2563eb]/20">
-        <div className="flex items-center justify-between mb-2"><p className="text-[10px] font-black uppercase tracking-widest" style={{ color: accent }}>🩺 Carnet de puntos</p><span className="text-[10px] text-gray-500">{filled}/{cycle}</span></div>
+        <div className="flex items-center justify-between mb-2"><p className="text-[10px] font-black uppercase tracking-widest" style={{ color: accent }}>🩺 Carnet de puntos</p><span className="text-[10px] text-gray-400">{filled}/{cycle}</span></div>
         <div className="flex items-center justify-between gap-1.5">
           {Array.from({ length: cycle }).map((_, i) => (
             <div key={i} className="flex-1 aspect-square rounded-lg flex items-center justify-center text-sm border" style={i < filled ? { backgroundColor: `${accent}22`, borderColor: `${accent}66`, color: accent } : { background: 'rgba(0,0,0,0.3)', borderColor: 'rgba(255,255,255,0.08)', color: '#4b5563' }}>{i === cycle - 1 ? '🎁' : <FaUserMd size={12} />}</div>
@@ -1032,21 +1032,21 @@ const MembershipLookup: React.FC<{ restaurantId: string | null; isMobilePreview:
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0a1a38] via-[#07132b] to-[#0c2148] border border-[#2563eb]/30 p-5 shadow-2xl">
         <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl pointer-events-none" style={{ background: `${accent}26` }} />
         <div className="flex justify-between items-start mb-3">
-          <div><div className="text-[10px] uppercase font-bold tracking-widest" style={{ color: `${accent}cc` }}>Expediente de Salud</div><h3 className="text-base font-bold text-white mt-0.5">{result.name || 'Tu Membresía'}</h3></div>
+          <div><div className="text-[10px] uppercase font-bold tracking-widest" style={{ color: accent }}>Expediente de Salud</div><h3 className="text-base font-bold text-white mt-0.5">{result.name || 'Tu Membresía'}</h3></div>
           {result.is_vip && <div className="px-2.5 py-1 rounded-lg bg-[#2563eb]/15 border border-[#2563eb]/30 text-[9px] font-black uppercase tracking-widest" style={{ color: accent }}>⭐ VIP</div>}
         </div>
         <div className="p-4 rounded-xl bg-black/40 border border-[#2563eb]/20 text-center">
-          <div className="text-[9px] uppercase font-bold tracking-widest text-gray-500 mb-1">Tu código de miembro</div>
+          <div className="text-[9px] uppercase font-bold tracking-widest text-gray-400 mb-1">Tu código de miembro</div>
           <div className="text-3xl font-mono font-black tracking-[0.3em]" style={{ color: accent }}>{result.member_code}</div>
         </div>
         <div className="mt-3"><MemberPlanBadge ownerId={restaurantId} identifier={result.member_code} system="gastro" accent={accent} /></div>
-        <div className="flex items-center justify-between mt-3 text-xs"><span className="text-gray-400">{result.visits ?? 0} visita{(result.visits ?? 0) !== 1 ? 's' : ''}</span>{result.discount_percent ? <span className="text-emerald-400 font-bold">{result.discount_percent}% de descuento activo</span> : <span className="text-gray-500 italic">Sigue visitándonos para más beneficios</span>}</div>
+        <div className="flex items-center justify-between mt-3 text-xs"><span className="text-gray-400">{result.visits ?? 0} visita{(result.visits ?? 0) !== 1 ? 's' : ''}</span>{result.discount_percent ? <span className="text-emerald-400 font-bold">{result.discount_percent}% de descuento activo</span> : <span className="text-gray-400 italic">Sigue visitándonos para más beneficios</span>}</div>
         <StampRow visits={result.visits ?? 0} />
         {result.benefits && String(result.benefits).trim() && (
           <div className="mt-3 p-3 rounded-xl bg-[#2563eb]/10 border border-[#2563eb]/20"><p className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: accent }}>🎁 Tus beneficios</p><p className="text-xs text-[#e8f1ff]/85 leading-snug whitespace-pre-wrap">{result.benefits}</p></div>
         )}
         {Array.isArray(result.movements) && result.movements.length > 0 && (
-          <div className="mt-3"><p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Historial (carnet)</p><div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">{result.movements.map((m: any, i: number) => (<div key={i} className="flex items-center justify-between bg-black/30 border border-white/5 rounded-lg px-3 py-2"><div className="min-w-0"><span className="text-[11px] font-mono font-bold" style={{ color: accent }}>{m.code}</span><span className="text-[10px] text-gray-500 ml-2">{m.order_type === 'delivery' ? '🛵' : '🏥'} {new Date(m.created_at).toLocaleDateString('es-EC', { day: '2-digit', month: 'short' })}</span></div><div className="text-right shrink-0"><div className="text-xs font-bold text-white">${Number(m.total ?? 0).toFixed(2)}</div><div className="text-[9px] text-gray-500 capitalize">{m.status}</div></div></div>))}</div></div>
+          <div className="mt-3"><p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Historial (carnet)</p><div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">{result.movements.map((m: any, i: number) => (<div key={i} className="flex items-center justify-between bg-black/30 border border-white/5 rounded-lg px-3 py-2"><div className="min-w-0"><span className="text-[11px] font-mono font-bold" style={{ color: accent }}>{m.code}</span><span className="text-[10px] text-gray-400 ml-2">{m.order_type === 'delivery' ? '🛵' : '🏥'} {new Date(m.created_at).toLocaleDateString('es-EC', { day: '2-digit', month: 'short' })}</span></div><div className="text-right shrink-0"><div className="text-xs font-bold text-white">${Number(m.total ?? 0).toFixed(2)}</div><div className="text-[9px] text-gray-400 capitalize">{m.status}</div></div></div>))}</div></div>
         )}
         {/* Historial médico resumido */}
         {medRecords.length > 0 && (
@@ -1067,12 +1067,12 @@ const MembershipLookup: React.FC<{ restaurantId: string | null; isMobilePreview:
                   <div key={rec.id ?? i} className="bg-black/40 border border-[#2563eb]/15 rounded-xl p-3 text-xs">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <span className="font-black text-white/90">{rec.record_type}</span>
-                      <span className="text-gray-500 text-[10px]">{new Date(rec.record_date + 'T00:00:00').toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                      <span className="text-gray-400 text-[10px]">{new Date(rec.record_date + 'T00:00:00').toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                     </div>
                     {rec.pet_name && <div className="text-[#2563eb]/80 text-[10px] mb-1">🩺 {rec.pet_name}</div>}
-                    {rec.diagnosis && <div className="text-white/75"><span className="text-gray-500 font-bold">Dx: </span>{rec.diagnosis}</div>}
-                    {rec.treatment && <div className="text-white/75"><span className="text-gray-500 font-bold">Tto: </span>{rec.treatment}</div>}
-                    {rec.medications && <div className="text-white/75"><span className="text-gray-500 font-bold">Med: </span>{rec.medications}</div>}
+                    {rec.diagnosis && <div className="text-white/75"><span className="text-gray-400 font-bold">Dx: </span>{rec.diagnosis}</div>}
+                    {rec.treatment && <div className="text-white/75"><span className="text-gray-400 font-bold">Tto: </span>{rec.treatment}</div>}
+                    {rec.medications && <div className="text-white/75"><span className="text-gray-400 font-bold">Med: </span>{rec.medications}</div>}
                     {rec.next_visit_date && <div className="mt-1 text-amber-300 text-[10px] font-bold">📅 Próxima: {new Date(rec.next_visit_date + 'T00:00:00').toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' })}</div>}
                   </div>
                 ))}
@@ -1080,7 +1080,7 @@ const MembershipLookup: React.FC<{ restaurantId: string | null; isMobilePreview:
             )}
           </div>
         )}
-        <button onClick={() => { setResult(null); setIdentifier(''); setMedRecords([]); setShowMedHistory(false); }} className="mt-3 w-full py-2 text-[11px] text-gray-500 hover:text-gray-300 transition">Consultar otra membresía</button>
+        <button onClick={() => { setResult(null); setIdentifier(''); setMedRecords([]); setShowMedHistory(false); }} className="mt-3 w-full py-2 text-[11px] text-gray-400 hover:text-gray-300 transition">Consultar otra membresía</button>
       </div>
     );
   }
@@ -1089,7 +1089,7 @@ const MembershipLookup: React.FC<{ restaurantId: string | null; isMobilePreview:
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0a1a38] via-[#07132b] to-[#0c2148] border border-[#2563eb]/30 p-5 shadow-2xl">
       <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl pointer-events-none" style={{ background: `${accent}26` }} />
       <div className="flex justify-between items-start mb-4">
-        <div><div className="text-[10px] uppercase font-bold tracking-widest" style={{ color: `${accent}cc` }}>Expediente de Salud</div><h3 className="text-base font-bold text-white mt-0.5">Mi carnet de paciente</h3></div>
+        <div><div className="text-[10px] uppercase font-bold tracking-widest" style={{ color: accent }}>Expediente de Salud</div><h3 className="text-base font-bold text-white mt-0.5">Mi carnet de paciente</h3></div>
         <div className="px-2.5 py-1 rounded-lg bg-[#2563eb]/10 border border-[#2563eb]/20 text-[9px] font-black uppercase tracking-widest" style={{ color: accent }}>VIP</div>
       </div>
       <p className="text-xs text-gray-400 mb-3 leading-relaxed">¿Ya eres miembro? Ingresa tu código, email o teléfono para ver tu carnet, tus puntos y beneficios.</p>
@@ -1129,11 +1129,11 @@ const ClubPetModal: React.FC<{ restaurantId: string | null; isMobilePreview: boo
   return (
     <div className="fixed inset-0 z-[115] flex items-end sm:items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={onClose}>
       <div className="w-full max-w-sm bg-[#0b1b33] rounded-2xl border border-[#2563eb]/30 shadow-2xl p-6 relative" onClick={(e) => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition"><FaTimes size={16} /></button>
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white transition"><FaTimes size={16} /></button>
         {done ? (
           <div className="text-center py-4 space-y-3">
             <div className="text-5xl">🩺</div><h3 className="text-lg font-black text-white">¡Bienvenido al {clubName}!</h3>
-            {member?.member_code && (<div className="my-2 p-4 rounded-xl bg-black/40 border border-[#2563eb]/30"><div className="text-[9px] uppercase font-bold tracking-widest text-gray-500 mb-1">Tu código de miembro</div><div className="text-3xl font-mono font-black tracking-[0.3em]" style={{ color: accent }}>{member.member_code}</div>{member.is_vip && <div className="mt-1 text-[10px] font-black uppercase tracking-widest" style={{ color: accent }}>⭐ Cliente VIP</div>}{member.discount_percent ? <div className="text-[11px] text-emerald-400 font-bold mt-0.5">{member.discount_percent}% de descuento</div> : null}</div>)}
+            {member?.member_code && (<div className="my-2 p-4 rounded-xl bg-black/40 border border-[#2563eb]/30"><div className="text-[9px] uppercase font-bold tracking-widest text-gray-400 mb-1">Tu código de miembro</div><div className="text-3xl font-mono font-black tracking-[0.3em]" style={{ color: accent }}>{member.member_code}</div>{member.is_vip && <div className="mt-1 text-[10px] font-black uppercase tracking-widest" style={{ color: accent }}>⭐ Cliente VIP</div>}{member.discount_percent ? <div className="text-[11px] text-emerald-400 font-bold mt-0.5">{member.discount_percent}% de descuento</div> : null}</div>)}
             <p className="text-sm text-gray-400">Guarda tu código y muéstralo en cada visita para acumular puntos y reclamar beneficios.</p>
             <button onClick={onClose} style={{ backgroundColor: accent }} className="w-full mt-2 py-3 rounded-xl text-white font-black text-xs uppercase tracking-wider transition-all hover:brightness-110">Cerrar</button>
           </div>
@@ -1148,7 +1148,7 @@ const ClubPetModal: React.FC<{ restaurantId: string | null; isMobilePreview: boo
               {errorMsg && <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-bold text-center">{errorMsg}</div>}
               <button type="submit" disabled={submitting || !name.trim() || !email.trim()} style={{ backgroundColor: accent }} className="w-full py-3.5 rounded-xl font-black text-sm uppercase tracking-wider text-white disabled:opacity-50 transition-all active:scale-95 hover:brightness-110">{submitting ? 'Registrando...' : '🩺 ¡Quiero afiliarme!'}</button>
             </form>
-            <p className="text-[10px] text-gray-600 text-center mt-3">Sin spam. Solo recordatorios de citas y novedades.</p>
+            <p className="text-[10px] text-gray-400 text-center mt-3">Sin spam. Solo recordatorios de citas y novedades.</p>
           </>
         )}
       </div>
@@ -1233,12 +1233,12 @@ const ReserveModal: React.FC<{
   return (
     <div className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={onClose}>
       <div className="w-full max-w-sm bg-[#0b1b33] rounded-2xl border border-[#2563eb]/30 shadow-2xl p-6 relative max-h-[92vh] overflow-y-auto" onClick={(e) => e.stopPropagation()} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition"><FaTimes size={16} /></button>
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white transition"><FaTimes size={16} /></button>
         {result ? (
           <div className="text-center py-4 space-y-3">
             <div className="text-5xl">{result.status === 'confirmada' ? '✅' : '📅'}</div>
             <h3 className="text-lg font-black text-white">{result.status === 'confirmada' ? '¡Cita confirmada!' : '¡Cita recibida!'}</h3>
-            {result.code && (<div className="my-2 p-4 rounded-xl bg-black/40 border border-[#2563eb]/30"><div className="text-[9px] uppercase font-bold tracking-widest text-gray-500 mb-1">Código de cita</div><div className="text-3xl font-mono font-black tracking-[0.3em]" style={{ color: accent }}>{result.code}</div></div>)}
+            {result.code && (<div className="my-2 p-4 rounded-xl bg-black/40 border border-[#2563eb]/30"><div className="text-[9px] uppercase font-bold tracking-widest text-gray-400 mb-1">Código de cita</div><div className="text-3xl font-mono font-black tracking-[0.3em]" style={{ color: accent }}>{result.code}</div></div>)}
             <p className="text-sm text-gray-400">{result.status === 'confirmada' ? `Te esperamos el ${new Date(date + 'T00:00:00').toLocaleDateString('es-EC', { weekday: 'long', day: '2-digit', month: 'long' })} a las ${time}.` : `${restaurantName || 'La clínica'} revisará tu cita y te confirmará por WhatsApp.`}</p>
             <div className="text-left p-3 rounded-xl bg-amber-500/10 border border-amber-500/25">
               <p className="text-[11px] text-amber-200/90 font-bold leading-snug">💳 Para bloquear el horario, paga la consulta por adelantado:</p>
@@ -1267,7 +1267,7 @@ const ReserveModal: React.FC<{
                 )}
               </div>
               <div>
-                <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Servicio</label>
+                <label className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Servicio</label>
                 <select value={service} onChange={(e) => setService(e.target.value)} className={inp}>{services.map(s => <option key={s} value={s}>{s}</option>)}</select>
               </div>
               <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Tu nombre *" className={inp} />
@@ -1282,17 +1282,17 @@ const ReserveModal: React.FC<{
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Fecha</label><input required type="date" value={date} min={minDate} max={maxDate} onChange={(e) => setDate(e.target.value)} className={inp} /></div>
-                <div><label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Hora</label><select required value={time} onChange={(e) => setTime(e.target.value)} className={inp}>{slots.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
+                <div><label className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Fecha</label><input required type="date" value={date} min={minDate} max={maxDate} onChange={(e) => setDate(e.target.value)} className={inp} /></div>
+                <div><label className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Hora</label><select required value={time} onChange={(e) => setTime(e.target.value)} className={inp}>{slots.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
               </div>
               <div>
-                <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Personas</label>
+                <label className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Personas</label>
                 <div className="flex items-center gap-3 bg-black/40 border border-[#2563eb]/20 rounded-xl px-4 py-2.5">
                   <button type="button" onClick={() => setParty(p => Math.max(1, p - 1))} className="w-8 h-8 rounded-lg bg-white/5 border border-[#2563eb]/10 flex items-center justify-center text-sm font-black text-white">−</button>
                   <span className="font-mono font-bold text-white flex-1 text-center">{party}</span>
                   <button type="button" onClick={() => setParty(p => Math.min(maxParty, p + 1))} className="w-8 h-8 rounded-lg bg-white/5 border border-[#2563eb]/10 flex items-center justify-center text-sm font-black text-white">+</button>
                 </div>
-                <p className="text-[10px] text-gray-600 mt-1">Máximo {maxParty} personas por cita.</p>
+                <p className="text-[10px] text-gray-400 mt-1">Máximo {maxParty} personas por cita.</p>
               </div>
               <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Motivo / síntomas (opcional)" rows={2} className={`${inp} resize-none`} />
               {errorMsg && <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-bold text-center">{errorMsg}</div>}

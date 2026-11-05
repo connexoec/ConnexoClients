@@ -258,7 +258,7 @@ export const ProfileHotelTemplate: React.FC<Props> = ({
 
                 {offers && (
                   <div className="mt-5 space-y-3">
-                    {offers.length === 0 && <p className="text-center text-sm py-4" style={{ color: `${TEXT}77` }}>No hay habitaciones para esas fechas.</p>}
+                    {offers.length === 0 && <p className="text-center text-sm py-4" style={{ color: `${TEXT}b3` }}>No hay habitaciones para esas fechas.</p>}
                     {offers.map(o => (
                       <OfferCard key={o.room.id} offer={o} highlighted={highlight === o.room.id}
                         onDetail={() => setDetail(o.room)} onBook={() => setBooking(o)} />
@@ -276,7 +276,7 @@ export const ProfileHotelTemplate: React.FC<Props> = ({
                 </PillLink>
               )}
               {isOn(profile, 'links') && sorted.map(l => (
-                <PillLink key={l.id} href={l.url} onNavigate={() => onLinkClick?.(l.id)} icon={<FaLink size={12} style={{ color: `${TEXT}66` }} />}>{l.title}</PillLink>
+                <PillLink key={l.id} href={l.url} onNavigate={() => onLinkClick?.(l.id)} icon={<FaLink size={12} style={{ color: `${TEXT}b3` }} />}>{l.title}</PillLink>
               ))}
             </div>
 
@@ -331,13 +331,13 @@ export const ProfileHotelTemplate: React.FC<Props> = ({
                       <div className="p-3.5">
                         {s.category && <p className="text-[9px] uppercase tracking-[0.2em] font-semibold" style={{ color: theme.accentLight }}>{s.category}</p>}
                         <p className="text-white font-bold text-[14px] mt-0.5" style={{ fontFamily: TITLE_FONT }}>{s.name}</p>
-                        {s.description && <p className="text-[11px] mt-1 leading-snug line-clamp-2" style={{ color: `${TEXT}88` }}>{s.description}</p>}
-                        <p className="text-[13px] font-bold mt-2" style={{ color: accent }}>{s.price > 0 ? fmtMoney(s.price) : 'Incluido'} <span className="text-[10px] font-normal" style={{ color: `${TEXT}66` }}>{s.price > 0 ? MODE_LABEL[s.price_mode] : ''}</span></p>
+                        {s.description && <p className="text-[11px] mt-1 leading-snug line-clamp-2" style={{ color: `${TEXT}b3` }}>{s.description}</p>}
+                        <p className="text-[13px] font-bold mt-2" style={{ color: accent }}>{s.price > 0 ? fmtMoney(s.price) : 'Incluido'} <span className="text-[10px] font-normal" style={{ color: `${TEXT}b3` }}>{s.price > 0 ? MODE_LABEL[s.price_mode] : ''}</span></p>
                       </div>
                     </div>
                   ))}
                 </div>
-                <p className="text-[11px] text-center mt-2" style={{ color: `${TEXT}66` }}>Puedes añadirlos al reservar tu habitación.</p>
+                <p className="text-[11px] text-center mt-2" style={{ color: `${TEXT}b3` }}>Puedes añadirlos al reservar tu habitación.</p>
               </section>
             )}
 
@@ -348,8 +348,8 @@ export const ProfileHotelTemplate: React.FC<Props> = ({
                 <div className="rounded-2xl border overflow-hidden" style={{ background: SURFACE, borderColor: `${TEXT}12` }}>
                   {(settings.checkInTime || settings.checkOutTime) && (
                     <div className="grid grid-cols-2 divide-x" style={{ borderColor: `${TEXT}12` }}>
-                      <div className="p-4 text-center"><FaClock className="mx-auto mb-1.5" style={{ color: theme.accentLight }} /><p className="text-[9px] uppercase tracking-widest" style={{ color: `${TEXT}66` }}>Check-in</p><p className="text-white font-bold mt-0.5" style={{ fontFamily: TITLE_FONT }}>{settings.checkInTime || '—'}</p></div>
-                      <div className="p-4 text-center" style={{ borderColor: `${TEXT}12` }}><FaClock className="mx-auto mb-1.5" style={{ color: theme.accentLight }} /><p className="text-[9px] uppercase tracking-widest" style={{ color: `${TEXT}66` }}>Check-out</p><p className="text-white font-bold mt-0.5" style={{ fontFamily: TITLE_FONT }}>{settings.checkOutTime || '—'}</p></div>
+                      <div className="p-4 text-center"><FaClock className="mx-auto mb-1.5" style={{ color: theme.accentLight }} /><p className="text-[9px] uppercase tracking-widest" style={{ color: `${TEXT}b3` }}>Check-in</p><p className="text-white font-bold mt-0.5" style={{ fontFamily: TITLE_FONT }}>{settings.checkInTime || '—'}</p></div>
+                      <div className="p-4 text-center" style={{ borderColor: `${TEXT}12` }}><FaClock className="mx-auto mb-1.5" style={{ color: theme.accentLight }} /><p className="text-[9px] uppercase tracking-widest" style={{ color: `${TEXT}b3` }}>Check-out</p><p className="text-white font-bold mt-0.5" style={{ fontFamily: TITLE_FONT }}>{settings.checkOutTime || '—'}</p></div>
                     </div>
                   )}
                   <ul className="p-4 space-y-2.5 text-[13px] border-t" style={{ borderColor: `${TEXT}12`, color: `${TEXT}cc` }}>
@@ -370,7 +370,7 @@ export const ProfileHotelTemplate: React.FC<Props> = ({
 
             <footer className="text-center pt-6">
               <a href="https://connexo.app" target="_blank" rel="noopener noreferrer"
-                className="text-[10px] uppercase tracking-[0.3em] transition" style={{ color: `${TEXT}33` }}>Powered by Connexo</a>
+                className="text-[10px] uppercase tracking-[0.3em] transition" style={{ color: `${TEXT}b3` }}>Powered by Connexo</a>
             </footer>
           </ProfileHero>
         </div>
@@ -425,12 +425,12 @@ const OfferCard: React.FC<{ offer: Offer; highlighted: boolean; onDetail: () => 
       </button>
       <div className="flex-1 min-w-0 p-3.5">
         <p className="text-white font-bold text-[14px] truncate" style={{ fontFamily: k.titleFont }}>{o.room.name}</p>
-        <p className="text-[11px] mt-0.5 truncate" style={{ color: `${k.text}88` }}>{[o.room.beds, `${o.room.max_adults} adultos`].filter(Boolean).join(' · ')}</p>
+        <p className="text-[11px] mt-0.5 truncate" style={{ color: `${k.text}b3` }}>{[o.room.beds, `${o.room.max_adults} adultos`].filter(Boolean).join(' · ')}</p>
         {!blocked && o.units_free <= 2 && <p className="text-[10px] font-semibold uppercase tracking-wider mt-1" style={{ color: '#fbbf24' }}>¡Quedan {o.units_free}!</p>}
         <div className="flex items-end justify-between gap-2 mt-2">
           <div>
             <p className="text-[18px] font-bold leading-none text-white" style={{ fontFamily: k.titleFont }}>{fmtMoney(total)}</p>
-            <p className="text-[10px] mt-1" style={{ color: `${k.text}77` }}>{o.nights} noche{o.nights === 1 ? '' : 's'}{o.needed > 1 ? ` · ${o.needed} hab.` : ''} · {fmtMoney(o.nightly_avg)}/noche</p>
+            <p className="text-[10px] mt-1" style={{ color: `${k.text}b3` }}>{o.nights} noche{o.nights === 1 ? '' : 's'}{o.needed > 1 ? ` · ${o.needed} hab.` : ''} · {fmtMoney(o.nightly_avg)}/noche</p>
           </div>
           {blocked ? (
             <span className="text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#f87171' }}>
@@ -482,7 +482,7 @@ const RoomCard: React.FC<{ room: HotelRoom; onClick: () => void }> = ({ room: r,
       </div>
       <div className="p-3.5">
         <p className="cnx-product-text text-white font-semibold text-[13px] truncate">{r.name}</p>
-        <div className="flex items-center gap-3 mt-2 pt-2 border-t text-[10px]" style={{ color: `${k.text}77`, borderColor: `${k.text}10` }}>
+        <div className="flex items-center gap-3 mt-2 pt-2 border-t text-[10px]" style={{ color: `${k.text}b3`, borderColor: `${k.text}10` }}>
           <span className="flex items-center gap-1"><FaUsers size={10} /> {r.max_adults + r.max_children}</span>
           {r.beds && <span className="flex items-center gap-1 truncate"><FaBed size={10} /> {r.beds}</span>}
         </div>
@@ -524,7 +524,7 @@ const RoomDetailModal: React.FC<{ room: HotelRoom; onClose: () => void; onReserv
         <div className="p-6 overflow-y-auto">
           {r.category && <p className="text-[10px] uppercase tracking-[0.3em] font-semibold" style={{ color: k.accentLight }}>{r.category}</p>}
           <h3 className="text-xl font-bold text-white mt-0.5" style={{ fontFamily: k.titleFont }}>{r.name}</h3>
-          <p className="text-[26px] font-bold mt-2 text-white" style={{ fontFamily: k.titleFont }}>{fmtMoney(r.base_price)}<span className="text-xs font-normal ml-1.5" style={{ color: `${k.text}88` }}>por noche</span></p>
+          <p className="text-[26px] font-bold mt-2 text-white" style={{ fontFamily: k.titleFont }}>{fmtMoney(r.base_price)}<span className="text-xs font-normal ml-1.5" style={{ color: `${k.text}b3` }}>por noche</span></p>
           <div className="grid grid-cols-3 gap-2 mt-4">
             {[
               { icon: <FaUsers />, val: `${r.max_adults}${r.max_children ? ` + ${r.max_children}` : ''}`, label: r.max_children ? 'Adultos + niños' : 'Adultos' },
@@ -534,7 +534,7 @@ const RoomDetailModal: React.FC<{ room: HotelRoom; onClose: () => void; onReserv
               <div key={i} className="rounded-xl p-2.5 text-center border" style={{ background: 'rgba(255,255,255,0.025)', borderColor: `${k.text}12` }}>
                 <div className="flex justify-center" style={{ color: k.accentLight }}>{x.icon}</div>
                 <p className="text-white font-semibold text-[12px] mt-1.5 leading-tight">{x.val}</p>
-                <p className="text-[9px] uppercase tracking-[0.15em] mt-0.5" style={{ color: `${k.text}55` }}>{x.label}</p>
+                <p className="text-[9px] uppercase tracking-[0.15em] mt-0.5" style={{ color: `${k.text}b3` }}>{x.label}</p>
               </div>
             ))}
           </div>
@@ -549,7 +549,7 @@ const RoomDetailModal: React.FC<{ room: HotelRoom; onClose: () => void; onReserv
               </div>
             </div>
           )}
-          {r.min_nights > 1 && <p className="text-[11px] mt-4" style={{ color: `${k.text}77` }}>Estancia mínima: {r.min_nights} noches.</p>}
+          {r.min_nights > 1 && <p className="text-[11px] mt-4" style={{ color: `${k.text}b3` }}>Estancia mínima: {r.min_nights} noches.</p>}
           {canBook && <PrimaryButton type="button" onClick={onReserve} className="mt-5 flex items-center justify-center gap-2"><FaCalendarCheck size={12} /> Ver disponibilidad y reservar</PrimaryButton>}
         </div>
       </div>
@@ -630,13 +630,13 @@ const BookingModal: React.FC<{
           <FaClipboardCheck className="mx-auto text-4xl mb-3" style={{ color: k.accentLight }} />
           <p className="text-white font-bold" style={{ fontFamily: k.titleFont }}>{done.room_name}</p>
           <p className="text-sm mt-1" style={{ color: `${k.text}99` }}>{prettyDate(done.check_in, { day: 'numeric', month: 'long' })} → {prettyDate(done.check_out, { day: 'numeric', month: 'long', year: 'numeric' })} · {done.nights} noche{done.nights === 1 ? '' : 's'}</p>
-          <p className="text-sm mt-3" style={{ color: `${k.text}88` }}>Tu código de reserva:</p>
+          <p className="text-sm mt-3" style={{ color: `${k.text}b3` }}>Tu código de reserva:</p>
           <CodeBox code={done.confirmation_code} />
           <div className="rounded-xl p-3.5 border text-left space-y-1.5 mb-3" style={{ background: 'rgba(255,255,255,0.03)', borderColor: `${k.accent}33` }}>
             {row('Total', fmtMoney(done.total), true)}
             {done.deposit_required > 0 && row('Depósito para garantizar', fmtMoney(done.deposit_required))}
           </div>
-          <p className="text-[12px] mb-3" style={{ color: `${k.text}88` }}>El hotel confirmará tu reserva en breve{done.deposit_required > 0 ? ' y te indicará cómo enviar el depósito' : ''}. Guarda tu código para consultar el estado.</p>
+          <p className="text-[12px] mb-3" style={{ color: `${k.text}b3` }}>El hotel confirmará tu reserva en breve{done.deposit_required > 0 ? ' y te indicará cómo enviar el depósito' : ''}. Guarda tu código para consultar el estado.</p>
           <div className="mb-3">
             <PaymentOptions profile={profile} ownerId={userId} reference={done.confirmation_code}
               amount={Number(done.deposit_required) > 0 ? Number(done.deposit_required) : Number(done.total)}
@@ -654,7 +654,7 @@ const BookingModal: React.FC<{
             <div className="min-w-0">
               <p className="text-white font-bold truncate" style={{ fontFamily: k.titleFont }}>{room.name}{needed > 1 ? ` × ${needed}` : ''}</p>
               <p className="text-[12px] mt-0.5" style={{ color: `${k.text}99` }}>{prettyDate(checkIn)} → {prettyDate(checkOut)} · {nights} noche{nights === 1 ? '' : 's'}</p>
-              <p className="text-[12px]" style={{ color: `${k.text}77` }}>{adults} adulto{adults === 1 ? '' : 's'}{children ? ` · ${children} niño${children === 1 ? '' : 's'}` : ''}</p>
+              <p className="text-[12px]" style={{ color: `${k.text}b3` }}>{adults} adulto{adults === 1 ? '' : 's'}{children ? ` · ${children} niño${children === 1 ? '' : 's'}` : ''}</p>
             </div>
           </div>
 
@@ -673,7 +673,7 @@ const BookingModal: React.FC<{
                       </button>
                       <div className="min-w-0 flex-1">
                         <p className="text-[13px] font-semibold text-white truncate">{s.name}</p>
-                        <p className="text-[10px]" style={{ color: `${k.text}77` }}>{s.price > 0 ? `${fmtMoney(s.price)} ${MODE_LABEL[s.price_mode]}` : 'Incluido'}</p>
+                        <p className="text-[10px]" style={{ color: `${k.text}b3` }}>{s.price > 0 ? `${fmtMoney(s.price)} ${MODE_LABEL[s.price_mode]}` : 'Incluido'}</p>
                       </div>
                       {on && stepped && (
                         <div className="flex items-center gap-2 shrink-0">
@@ -715,12 +715,12 @@ const BookingModal: React.FC<{
             <div className="h-px my-1" style={{ background: `${k.text}14` }} />
             {row('Total estimado', fmtMoney(total), true)}
             {deposit > 0 && row(`Depósito (${settings.depositPercent}%)`, fmtMoney(deposit))}
-            <p className="text-[10px] pt-1" style={{ color: `${k.text}66` }}>El hotel confirma el monto exacto al recibir tu reserva.</p>
+            <p className="text-[10px] pt-1" style={{ color: `${k.text}b3` }}>El hotel confirma el monto exacto al recibir tu reserva.</p>
           </div>
 
           {error && <p className="text-red-400 text-xs">{error}</p>}
           <PrimaryButton type="submit" disabled={busy}>{busy ? 'Enviando…' : 'Enviar reserva'}</PrimaryButton>
-          <p className="text-[10px] text-center" style={{ color: `${k.text}66` }}>No se cobra nada ahora. El hotel confirmará tu reserva.</p>
+          <p className="text-[10px] text-center" style={{ color: `${k.text}b3` }}>No se cobra nada ahora. El hotel confirmará tu reserva.</p>
         </form>
       )}
     </ModalShell>
@@ -770,11 +770,11 @@ const TrackerModal: React.FC<{ profile: any; userId?: string | null; initialCode
           <div className="rounded-2xl p-4 border" style={{ background: `linear-gradient(160deg, ${k.accent}18, rgba(255,255,255,0.02))`, borderColor: `${k.accent}44` }}>
             <div className="flex items-center justify-between">
               <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: k.accentLight }}>{res.guest_name}</p>
-              <span className="font-mono text-xs" style={{ color: `${k.text}88` }}>{res.code}</span>
+              <span className="font-mono text-xs" style={{ color: `${k.text}b3` }}>{res.code}</span>
             </div>
             <p className="text-white font-bold text-lg mt-1" style={{ fontFamily: k.titleFont }}>{res.room_name}{res.rooms_count > 1 ? ` × ${res.rooms_count}` : ''}</p>
             <p className="text-sm mt-1" style={{ color: `${k.text}cc` }}>{prettyDate(res.check_in, { weekday: 'short', day: 'numeric', month: 'short' })} → {prettyDate(res.check_out, { weekday: 'short', day: 'numeric', month: 'short' })} · {res.nights} noche{res.nights === 1 ? '' : 's'}</p>
-            <p className="text-xs mt-0.5" style={{ color: `${k.text}88` }}>{res.adults} adulto{res.adults === 1 ? '' : 's'}{res.children ? ` · ${res.children} niño${res.children === 1 ? '' : 's'}` : ''}{res.check_in_time ? ` · Check-in ${res.check_in_time}` : ''}{res.check_out_time ? ` · Check-out ${res.check_out_time}` : ''}</p>
+            <p className="text-xs mt-0.5" style={{ color: `${k.text}b3` }}>{res.adults} adulto{res.adults === 1 ? '' : 's'}{res.children ? ` · ${res.children} niño${res.children === 1 ? '' : 's'}` : ''}{res.check_in_time ? ` · Check-in ${res.check_in_time}` : ''}{res.check_out_time ? ` · Check-out ${res.check_out_time}` : ''}</p>
           </div>
           {cancelled
             ? <div className="rounded-xl p-4 text-center border" style={{ background: 'rgba(248,113,113,0.1)', borderColor: 'rgba(248,113,113,0.3)', color: '#f87171' }}>{STATUS_LABEL[res.status]}</div>
@@ -784,7 +784,7 @@ const TrackerModal: React.FC<{ profile: any; userId?: string | null; initialCode
               <div key={i} className="flex justify-between text-[12px]" style={{ color: `${k.text}aa` }}><span>{s.name}{s.qty > 1 ? ` × ${s.qty}` : ''}</span><span>{fmtMoney(s.total)}</span></div>
             ))}
             <div className="flex justify-between text-sm font-bold text-white"><span>Total</span><span>{fmtMoney(res.total)}</span></div>
-            <div className="flex justify-between text-[11px]" style={{ color: `${k.text}88` }}>
+            <div className="flex justify-between text-[11px]" style={{ color: `${k.text}b3` }}>
               <span>{PAY_LABEL[res.payment_status] || res.payment_status}</span>
               {res.deposit_required > 0 && res.payment_status === 'pendiente' && <span>Depósito: {fmtMoney(res.deposit_required)}</span>}
             </div>
@@ -837,7 +837,7 @@ const ClubModal: React.FC<{ userId?: string | null; clubName: string; clubTaglin
           <FaCrown className="mx-auto text-4xl mb-3" style={{ color: k.accentLight }} />
           <p className="text-white font-bold">Tu código de huésped:</p>
           <CodeBox code={code} />
-          <p className="text-sm" style={{ color: `${k.text}88` }}>Úsalo al reservar para aplicar tus beneficios.</p>
+          <p className="text-sm" style={{ color: `${k.text}b3` }}>Úsalo al reservar para aplicar tus beneficios.</p>
         </div>
       ) : (
         <form onSubmit={submit} className="space-y-3">
@@ -879,7 +879,7 @@ const MemberModal: React.FC<{ userId?: string | null; initialId: string; onClose
             <div className="grid grid-cols-3 gap-2 mt-1">
               {[{ v: member.stays_count || 0, l: 'Estancias' }, { v: member.nights_total || 0, l: 'Noches' }, { v: member.discount_percent > 0 ? `${member.discount_percent}%` : '—', l: 'Descuento' }].map(x => (
                 <div key={x.l} className="rounded-lg py-2" style={{ background: 'rgba(0,0,0,0.25)' }}>
-                  <p className="text-white font-bold" style={{ fontFamily: k.titleFont }}>{x.v}</p><p className="text-[9px] uppercase tracking-widest" style={{ color: `${k.text}66` }}>{x.l}</p>
+                  <p className="text-white font-bold" style={{ fontFamily: k.titleFont }}>{x.v}</p><p className="text-[9px] uppercase tracking-widest" style={{ color: `${k.text}b3` }}>{x.l}</p>
                 </div>
               ))}
             </div>

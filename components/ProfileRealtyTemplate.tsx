@@ -48,11 +48,12 @@ const BUDGET_RANGES: { label: string; min: number; max: number }[] = [
   { label: 'Más de $350.000', min: 350000, max: Infinity },
 ];
 
-const STATUS_META: Record<string, { label: string; color: string }> = {
-  pre_venta:  { label: 'Pre-venta',  color: '#8b5cf6' },
-  disponible: { label: 'Disponible', color: '#16a34a' },
-  reservado:  { label: 'Reservado',  color: ORANGE_LIGHT },
-  vendido:    { label: 'Vendido',    color: '#6b7280' },
+// `text` = color del rótulo sobre el fondo de cada estado (contraste >= 4.5; el dorado claro pide texto oscuro).
+const STATUS_META: Record<string, { label: string; color: string; text: string }> = {
+  pre_venta:  { label: 'Pre-venta',  color: '#7c3aed', text: '#fff' },
+  disponible: { label: 'Disponible', color: '#15803d', text: '#fff' },
+  reservado:  { label: 'Reservado',  color: ORANGE_LIGHT, text: BG_DARK },
+  vendido:    { label: 'Vendido',    color: '#6b7280', text: '#fff' },
 };
 
 // Pipeline de rastreo (procesos): recibido → contactado → en_proceso → cerrado.
@@ -357,7 +358,7 @@ export const ProfileRealtyTemplate: React.FC<ProfileRealtyTemplateProps> = ({
             <a key={l.id} href={l.url} target="_blank" rel="noopener noreferrer" onClick={() => onLinkClick?.(l.id)}
               className="flex items-center justify-center gap-2 w-full rounded-2xl py-4 px-4 text-[13px] font-semibold tracking-wide transition hover:-translate-y-0.5"
               style={{ background: MODAL_BG, border: `1px solid ${OFF_WHITE}12`, color: OFF_WHITE }}>
-              <FaLink size={12} style={{ color: `${OFF_WHITE}66` }} /> {l.title}
+              <FaLink size={12} style={{ color: `${OFF_WHITE}b3` }} /> {l.title}
             </a>
           ))}
         </div>
@@ -385,14 +386,14 @@ export const ProfileRealtyTemplate: React.FC<ProfileRealtyTemplateProps> = ({
               </div>
             ) : properties.length === 0 ? (
               <div className="text-center py-10 rounded-2xl border" style={{ borderColor: `${ORANGE}22`, background: 'rgba(255,255,255,0.02)' }}>
-                <FaBuilding className="mx-auto text-3xl mb-2" style={{ color: `${OFF_WHITE}33` }} />
-                <p className="text-sm" style={{ color: `${OFF_WHITE}66` }}>Pronto publicaremos nuevas propiedades.</p>
+                <FaBuilding className="mx-auto text-3xl mb-2" style={{ color: `${OFF_WHITE}b3` }} />
+                <p className="text-sm" style={{ color: `${OFF_WHITE}b3` }}>Pronto publicaremos nuevas propiedades.</p>
               </div>
             ) : (
               <>
                 {/* Buscador por zona / título */}
                 <div className="flex items-center gap-2.5 rounded-full px-4 py-3 mb-3.5 border" style={{ background: 'rgba(0,0,0,0.2)', borderColor: `${OFF_WHITE}1a` }}>
-                  <FaSearch size={12} style={{ color: `${OFF_WHITE}55` }} />
+                  <FaSearch size={12} style={{ color: `${OFF_WHITE}b3` }} />
                   <input value={locationQuery} onChange={e => setLocationQuery(e.target.value)}
                     placeholder="Buscar por zona o nombre…"
                     className="bg-transparent text-white text-sm focus:outline-none w-full placeholder-white/30" style={{ color: OFF_WHITE }} />
@@ -409,7 +410,7 @@ export const ProfileRealtyTemplate: React.FC<ProfileRealtyTemplateProps> = ({
                 )}
 
                 {filteredProps.length === 0 ? (
-                  <p className="text-center text-sm py-8" style={{ color: `${OFF_WHITE}66` }}>No hay propiedades que coincidan con tu búsqueda.</p>
+                  <p className="text-center text-sm py-8" style={{ color: `${OFF_WHITE}b3` }}>No hay propiedades que coincidan con tu búsqueda.</p>
                 ) : (
                   <div className="space-y-3">
                     {/* Propiedad destacada */}
@@ -438,7 +439,7 @@ export const ProfileRealtyTemplate: React.FC<ProfileRealtyTemplateProps> = ({
 
           <footer className="text-center pt-6">
             <a href="https://connexo.app" target="_blank" rel="noopener noreferrer"
-              className="text-[10px] uppercase tracking-[0.3em] transition" style={{ color: `${OFF_WHITE}33` }}>
+              className="text-[10px] uppercase tracking-[0.3em] transition" style={{ color: `${OFF_WHITE}b3` }}>
               Powered by Connexo
             </a>
           </footer>
@@ -524,7 +525,7 @@ const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; desc: string
     </div>
     <div className="min-w-0 flex-1">
       <p className="text-white font-semibold text-[15px] tracking-[0.01em]" style={{ fontFamily: TITLE_FONT }}>{title}</p>
-      <p className="text-[12px] leading-snug mt-0.5" style={{ color: `${OFF_WHITE}88` }}>{desc}</p>
+      <p className="text-[12px] leading-snug mt-0.5" style={{ color: `${OFF_WHITE}b3` }}>{desc}</p>
     </div>
     <FaArrowRight size={13} className="shrink-0 transition group-hover:translate-x-0.5" style={{ color: ORANGE_LIGHT }} />
   </button>
@@ -567,7 +568,7 @@ const FilterChip: React.FC<{ active: boolean; onClick: () => void; label: string
       : { background: 'transparent', color: `${OFF_WHITE}cc`, borderColor: `${OFF_WHITE}22` }}>
     <span className="w-1.5 h-1.5 rounded-full" style={{ background: active ? '#160600' : color }} />
     {label}
-    <span className="text-[9px] font-semibold opacity-60">{count}</span>
+    <span className="text-[9px] font-semibold opacity-80">{count}</span>
   </button>
 );
 
@@ -586,7 +587,7 @@ const PropertyCard: React.FC<{ property: RealtyProperty; onClick: () => void }> 
           : <div className="w-full h-full flex items-center justify-center"><FaBuilding className="text-3xl" style={{ color: `${OFF_WHITE}22` }} /></div>}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,3,0,0.85), transparent 60%)' }} />
         <span className="absolute top-2.5 left-2.5 text-[8px] font-semibold uppercase tracking-[0.15em] px-2 py-1 rounded-full backdrop-blur-sm"
-          style={{ background: `${st.color}dd`, color: '#fff' }}>{st.label}</span>
+          style={{ background: `${st.color}f2`, color: st.text }}>{st.label}</span>
         {photoCount > 1 && (
           <span className="absolute top-2.5 right-2.5 text-[9px] font-semibold px-1.5 py-1 rounded-md flex items-center gap-1 backdrop-blur-sm"
             style={{ background: 'rgba(0,0,0,0.45)', color: '#fff' }}><FaCamera size={8} /> {photoCount}</span>
@@ -600,7 +601,7 @@ const PropertyCard: React.FC<{ property: RealtyProperty; onClick: () => void }> 
             <FaMapMarkerAlt size={9} style={{ color: ORANGE_LIGHT }} /> {p.location}
           </p>
         )}
-        <div className="flex items-center gap-3 mt-2.5 pt-2.5 border-t text-[10px]" style={{ color: `${OFF_WHITE}66`, borderColor: `${OFF_WHITE}10` }}>
+        <div className="flex items-center gap-3 mt-2.5 pt-2.5 border-t text-[10px]" style={{ color: `${OFF_WHITE}b3`, borderColor: `${OFF_WHITE}10` }}>
           {f.bedrooms != null && <span className="flex items-center gap-1"><FaBed size={10} /> {f.bedrooms}</span>}
           {f.bathrooms != null && <span className="flex items-center gap-1"><FaBath size={10} /> {f.bathrooms}</span>}
           {f.area_m2 != null && <span className="flex items-center gap-1"><FaRulerCombined size={10} /> {f.area_m2}m²</span>}
@@ -627,8 +628,8 @@ const FeaturedCard: React.FC<{ property: RealtyProperty; onClick: () => void; on
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,3,0,0.94) 6%, rgba(10,3,0,0.2) 55%, transparent)' }} />
           <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
             <span className="text-[9px] font-semibold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full flex items-center gap-1.5"
-              style={{ background: ORANGE, color: '#fff', fontFamily: TITLE_FONT }}><FaRegStar size={9} /> Destacada</span>
-            <span className="text-[9px] font-semibold uppercase tracking-[0.15em] px-2.5 py-1.5 rounded-full backdrop-blur-sm" style={{ background: `${st.color}dd`, color: '#fff' }}>{st.label}</span>
+              style={{ background: ORANGE, color: BG_DARK, fontFamily: TITLE_FONT }}><FaRegStar size={9} /> Destacada</span>
+            <span className="text-[9px] font-semibold uppercase tracking-[0.15em] px-2.5 py-1.5 rounded-full backdrop-blur-sm" style={{ background: `${st.color}f2`, color: st.text }}>{st.label}</span>
           </div>
           {photoCount > 1 && (
             <span className="absolute top-3.5 right-3.5 text-[10px] font-semibold px-2 py-1 rounded-md flex items-center gap-1 backdrop-blur-sm" style={{ background: 'rgba(0,0,0,0.45)', color: '#fff' }}><FaCamera size={9} /> {photoCount}</span>
@@ -701,7 +702,7 @@ const PropertyDetailModal: React.FC<{
             <div className="w-full h-full flex items-center justify-center"><FaBuilding className="text-5xl" style={{ color: `${OFF_WHITE}22` }} /></div>
           )}
           <span className="absolute top-3 left-3 text-[9px] font-semibold uppercase tracking-[0.15em] px-2.5 py-1.5 rounded-full backdrop-blur-sm"
-            style={{ background: `${st.color}dd`, color: '#fff' }}>{st.label}</span>
+            style={{ background: `${st.color}f2`, color: st.text }}>{st.label}</span>
           {images.length > 1 && (
             <>
               <button onClick={() => go(-1)} className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition"><FaChevronLeft /></button>
@@ -743,7 +744,7 @@ const PropertyDetailModal: React.FC<{
                 <div key={i} className="rounded-xl p-2.5 text-center border" style={{ background: 'rgba(255,255,255,0.025)', borderColor: `${OFF_WHITE}12` }}>
                   <div className="flex justify-center text-base" style={{ color: ORANGE_LIGHT }}>{x.icon}</div>
                   <p className="text-white font-semibold text-sm mt-1.5" style={{ fontFamily: TITLE_FONT }}>{x.val as any}</p>
-                  <p className="text-[9px] uppercase tracking-[0.15em] mt-0.5" style={{ color: `${OFF_WHITE}55` }}>{x.label}</p>
+                  <p className="text-[9px] uppercase tracking-[0.15em] mt-0.5" style={{ color: `${OFF_WHITE}b3` }}>{x.label}</p>
                 </div>
               ))}
             </div>
@@ -796,7 +797,7 @@ const ModalShell: React.FC<{ title: string; onClose: () => void; children: React
       onClick={e => e.stopPropagation()}>
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-white tracking-[0.02em]" style={{ fontFamily: TITLE_FONT }}>{title}</h3>
-        <button onClick={onClose} className="text-white/40 hover:text-white"><FaTimes /></button>
+        <button onClick={onClose} className="text-white/60 hover:text-white"><FaTimes /></button>
       </div>
       {children}
     </div>
@@ -896,7 +897,7 @@ const RequestModal: React.FC<{
         <div className="py-4 text-center">
           <FaClipboardCheck className="mx-auto text-4xl mb-3" style={{ color: ORANGE_LIGHT }} />
           <p className="text-white font-bold">Tu {REQUEST_LABEL[mode].toLowerCase()} fue registrada.</p>
-          <p className="text-sm mt-2" style={{ color: `${OFF_WHITE}88` }}>Guarda tu código de rastreo:</p>
+          <p className="text-sm mt-2" style={{ color: `${OFF_WHITE}b3` }}>Guarda tu código de rastreo:</p>
           <div className="my-3 mx-auto inline-block px-6 py-3 rounded-xl border font-mono text-2xl font-black tracking-[0.3em]"
             style={{ background: 'rgba(255,255,255,0.04)', borderColor: `${ORANGE}44`, color: ORANGE_LIGHT }}>
             {result}
@@ -1037,7 +1038,7 @@ const ClubModal: React.FC<{ userId?: string | null; clubName: string; clubTaglin
           <p className="text-white font-bold">Tu tarjeta de miembro:</p>
           <div className="my-3 mx-auto inline-block px-6 py-3 rounded-xl border font-mono text-2xl font-black tracking-[0.25em]"
             style={{ background: 'rgba(255,255,255,0.04)', borderColor: `${ORANGE}44`, color: ORANGE_LIGHT }}>{code}</div>
-          <p className="text-sm mt-1" style={{ color: `${OFF_WHITE}88` }}>Guárdalo: úsalo al cotizar o consultar tu membresía.</p>
+          <p className="text-sm mt-1" style={{ color: `${OFF_WHITE}b3` }}>Guárdalo: úsalo al cotizar o consultar tu membresía.</p>
         </div>
       ) : (
         <form onSubmit={submit} className="space-y-3">
@@ -1093,7 +1094,7 @@ const MembershipModal: React.FC<{ userId?: string | null; clubName: string; init
             <div className="flex items-center justify-center gap-4 mt-2 text-sm">
               {member.is_vip && <span className="flex items-center gap-1 font-bold" style={{ color: ORANGE_LIGHT }}><FaCrown size={12} /> VIP</span>}
               {member.discount_percent > 0 && <span className="text-white font-bold">{member.discount_percent}% dcto.</span>}
-              <span style={{ color: `${OFF_WHITE}88` }}>{member.visits || 0} interacciones</span>
+              <span style={{ color: `${OFF_WHITE}b3` }}>{member.visits || 0} interacciones</span>
             </div>
           </div>
           {member.benefits && (
@@ -1170,7 +1171,7 @@ const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; onC
         <div className="mt-4 space-y-4">
           <div className="flex items-center justify-between text-sm">
             <span className="font-bold" style={{ color: ORANGE_LIGHT }}>{REQUEST_LABEL[status.request_type] || 'Proceso'}</span>
-            <span className="font-mono text-xs" style={{ color: `${OFF_WHITE}88` }}>{status.code}</span>
+            <span className="font-mono text-xs" style={{ color: `${OFF_WHITE}b3` }}>{status.code}</span>
           </div>
           {status.property_title && (
             <p className="text-sm" style={{ color: `${OFF_WHITE}cc` }}><span style={{ color: ORANGE_LIGHT }} className="font-bold">Propiedad:</span> {status.property_title}</p>
@@ -1188,7 +1189,7 @@ const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; onC
                 return (
                   <div key={s} className="flex items-center gap-3">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 transition"
-                      style={done ? { background: ORANGE, color: '#fff' } : { background: 'rgba(255,255,255,0.06)', color: `${OFF_WHITE}55` }}>
+                      style={done ? { background: ORANGE, color: '#fff' } : { background: 'rgba(255,255,255,0.06)', color: `${OFF_WHITE}b3` }}>
                       {done ? <FaCheckCircle size={12} /> : i + 1}
                     </div>
                     <span className="text-sm font-bold" style={{ color: current ? '#fff' : done ? OFF_WHITE : `${OFF_WHITE}55` }}>
@@ -1207,7 +1208,7 @@ const TrackerModal: React.FC<{ userId?: string | null; initialCode?: string; onC
             </div>
           )}
           {status.preferred_date && (
-            <p className="text-xs" style={{ color: `${OFF_WHITE}77` }}>📅 Fecha solicitada: {status.preferred_date}</p>
+            <p className="text-xs" style={{ color: `${OFF_WHITE}b3` }}>📅 Fecha solicitada: {status.preferred_date}</p>
           )}
         </div>
       )}

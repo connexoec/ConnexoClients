@@ -153,7 +153,7 @@ export const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; desc:
         style={{ background: `${k.accent}1a`, border: `1px solid ${k.accent}33`, color: k.accentLight }}>{icon}</div>
       <div className="min-w-0 flex-1">
         <p className="text-white font-semibold text-[15px] tracking-[0.01em]" style={{ fontFamily: k.titleFont }}>{title}</p>
-        <p className="text-[12px] leading-snug mt-0.5" style={{ color: `${k.text}88` }}>{desc}</p>
+        <p className="text-[12px] leading-snug mt-0.5" style={{ color: `${k.text}b3` }}>{desc}</p>
       </div>
       {badge && <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.15em] px-2 py-1 rounded-full" style={{ background: k.accent, color: k.onAccent }}>{badge}</span>}
       <FaArrowRight size={13} className="shrink-0 transition group-hover:translate-x-0.5" style={{ color: k.accentLight }} />
@@ -185,7 +185,7 @@ export const ModalShell: React.FC<{ title: string; onClose: () => void; children
         onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold text-white tracking-[0.02em]" style={{ fontFamily: k.titleFont }}>{title}</h3>
-          <button type="button" onClick={onClose} aria-label="Cerrar" className="text-white/40 hover:text-white shrink-0"><FaTimes /></button>
+          <button type="button" onClick={onClose} aria-label="Cerrar" className="text-white/60 hover:text-white shrink-0"><FaTimes /></button>
         </div>
         {children}
       </div>
@@ -240,7 +240,7 @@ export const TrackerSteps: React.FC<{ steps: string[]; labels: Record<string, st
         return (
           <div key={s} className="flex items-center gap-3">
             <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 transition"
-              style={done ? { background: k.accent, color: k.onAccent } : { background: 'rgba(255,255,255,0.06)', color: `${k.text}55` }}>
+              style={done ? { background: k.accent, color: k.onAccent } : { background: 'rgba(255,255,255,0.06)', color: `${k.text}b3` }}>
               {done ? <FaCheckCircle size={12} /> : i + 1}
             </div>
             <span className="text-sm font-bold" style={{ color: now ? '#fff' : done ? k.text : `${k.text}55` }}>
@@ -292,7 +292,7 @@ export const HoursSection: React.FC<{ profile: any; title?: string }> = ({ profi
             <span className="text-sm font-semibold text-white/80 flex items-center gap-2"><FaRegClock size={11} style={{ color: k.accentLight }} /> {day.day}</span>
             {day.isOpen
               ? <span className="text-sm font-semibold" style={{ color: k.accentLight }}>{day.openTime} – {day.closeTime}</span>
-              : <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: `${k.text}44` }}>Cerrado</span>}
+              : <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: `${k.text}b3` }}>Cerrado</span>}
           </div>
         ))}
       </div>
@@ -319,12 +319,12 @@ export const ReviewsSection: React.FC<{ profile: any; onLeave?: () => void; isMo
               {t.authorImageURL && <img src={t.authorImageURL} alt={t.author} className="w-7 h-7 rounded-full object-cover" style={{ border: `1px solid ${k.accent}55` }} />}
               <div className="min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wider truncate" style={{ color: k.accentLight }}>{t.author}</p>
-                {t.authorTitle && <p className="text-[10px] truncate" style={{ color: `${k.text}66` }}>{t.authorTitle}</p>}
+                {t.authorTitle && <p className="text-[10px] truncate" style={{ color: `${k.text}b3` }}>{t.authorTitle}</p>}
               </div>
             </div>
           </div>
         ))}
-        {list.length === 0 && <p className="text-xs italic text-center py-3" style={{ color: `${k.text}66` }}>Aún no hay opiniones. ¡Sé el primero en dejar una!</p>}
+        {list.length === 0 && <p className="text-xs italic text-center py-3" style={{ color: `${k.text}b3` }}>Aún no hay opiniones. ¡Sé el primero en dejar una!</p>}
       </div>
       {canLeave && (
         <div className="mt-4 text-center">

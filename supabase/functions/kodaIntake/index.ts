@@ -184,11 +184,68 @@ function sustituir(valor: unknown, vars: Vars): unknown {
   return valor;
 }
 
-/** Logo provisional con las iniciales del negocio (mismo estilo que las cuentas demo). */
+// ── Contraste (WCAG 2.x). Copia de supabase/koda-recursos/paleta.mjs: si cambias una regla, cámbiala en los dos. ──
+const ACENTO_MIN = 6.5;   // el acento se usa también como TEXTO sobre el fondo oscuro y sobre superficies teñidas
+const BOTON_MIN = 4.5;    // texto de botón sobre el acento
+const TEXTO_MIN = 7;      // texto de la página sobre el fondo
+const esHex = (s: unknown): s is string => typeof s === "string" && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s.trim());
+function aRgb(hex: string): number[] {
+  let h = hex.trim().slice(1);
+  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+}
+const aHex = (rgb: number[]) => "#" + rgb.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+function luminancia(hex: string): number {
+  const [r, g, b] = aRgb(hex).map((v) => { const c = v / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+function razon(a: string, b: string): number {
+  const x = luminancia(a), y = luminancia(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
+function mezclar(a: string, b: string, t: number): string {
+  const x = aRgb(a), y = aRgb(b);
+  return aHex(x.map((v, i) => v + (y[i] - v) * t));
+}
+/** Aclara `hex` (hacia blanco, mismo tono) hasta que contraste >= minimo con `fondo`. */
+function aclarar(hex: string, fondo: string, minimo: number): string {
+  if (razon(hex, fondo) >= minimo) return hex.toLowerCase();
+  for (let t = 0.02; t <= 1.0001; t += 0.02) {
+    const c = mezclar(hex, "#ffffff", t);
+    if (razon(c, fondo) >= minimo) return c;
+  }
+  return "#ffffff";
+}
+/** Primer candidato con contraste suficiente sobre `fondo`; si ninguno llega, el mejor entre ellos, negro y blanco. */
+function textoSobre(fondo: string, candidatos: unknown[], minimo = BOTON_MIN): string {
+  const lista = candidatos.filter(esHex).map((c) => c.toLowerCase());
+  for (const c of lista) if (razon(c, fondo) >= minimo) return c;
+  return [...lista, "#000000", "#ffffff"].reduce((m, c) => (razon(c, fondo) > razon(m, fondo) ? c : m));
+}
+/** Devuelve solo lo que hay que cambiar en la paleta del paquete para que se lea (acento, texto de botón, texto). */
+function sanearPaleta(p: Json): Json {
+  const fondo = p.backgroundColor;
+  if (!esHex(fondo)) return {};
+  const salida: Json = {};
+  if (esHex(p.buttonColor)) {
+    const acento = aclarar(p.buttonColor, fondo, ACENTO_MIN);
+    if (acento !== p.buttonColor.toLowerCase()) salida.buttonColor = acento;
+    const bt = textoSobre(acento, [p.buttonTextColor, fondo, "#0b0b0b"]);
+    if (bt !== String(p.buttonTextColor ?? "").toLowerCase()) salida.buttonTextColor = bt;
+  }
+  if (esHex(p.textColor) && razon(p.textColor, fondo) < TEXTO_MIN) salida.textColor = textoSobre(fondo, ["#ffffff"], TEXTO_MIN);
+  return salida;
+}
+
+/** Logo provisional con las iniciales del negocio: degradado OSCURO y texto/rótulo con contraste suficiente. */
 function logoSvg(nombre: string, etiqueta: string, fondo?: string, acento?: string, texto?: string): string {
   const f = fondo && HEX_RE.test(fondo) ? fondo : "#111111";
-  const a = acento && HEX_RE.test(acento) ? acento : "#ff6b35";
-  const t = texto && HEX_RE.test(texto) ? texto : "#f5f5f5";
+  const a0 = acento && HEX_RE.test(acento) ? acento : "#ff6b35";
+  const extremo = mezclar(f, a0, 0.2);                  // el degradado termina en fondo + 20 % de acento
+  const a = aclarar(a0, f, 4.5);                        // el rótulo va en el acento
+  const peorRazon = (c: string) => Math.min(razon(c, f), razon(c, extremo));
+  const candidatos = [texto, "#ffffff", "#000000"].filter(esHex).map((c) => c.toLowerCase());
+  const t = candidatos.find((c) => peorRazon(c) >= 7) ?? candidatos.reduce((m, c) => (peorRazon(c) > peorRazon(m) ? c : m));
   const palabras = nombre.split(/[\s&\-_/.,]+/)
     .map((w) => w.replace(/[^\p{L}\p{N}]/gu, ""))
     .filter((w) => w && !PALABRAS_VACIAS.has(sinAcentos(w).toLowerCase()));
@@ -199,7 +256,7 @@ function logoSvg(nombre: string, etiqueta: string, fondo?: string, acento?: stri
     ? `<text x="256" y="370" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="700" fill="${a}" letter-spacing="7">${xml(etiqueta.slice(0, 14))}</text>`
     : "";
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
-    `<stop offset="0" stop-color="${f}"/><stop offset="1" stop-color="${a}" stop-opacity=".55"/></linearGradient></defs>` +
+    `<stop offset="0" stop-color="${f}"/><stop offset="1" stop-color="${a}" stop-opacity=".2"/></linearGradient></defs>` +
     `<rect width="512" height="512" rx="256" fill="url(#g)"/>` +
     `<rect x="26" y="26" width="460" height="460" rx="230" fill="none" stroke="${a}" stroke-width="7" opacity=".9"/>` +
     `<text x="256" y="${etiqueta ? 292 : 310}" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="${iniciales.length > 2 ? 118 : 150}" font-weight="700" fill="${t}" letter-spacing="2">${xml(iniciales)}</text>` +
@@ -282,6 +339,7 @@ async function rellenarPerfil(
     wa593: waKoda && WHATSAPP_RE.test(waKoda) ? waKoda.slice(1) : "",
   };
   const banco = (paquete?.perfil ? sustituir(paquete.perfil, vars) : {}) as Json;
+  Object.assign(banco, sanearPaleta(banco));   // contraste: aunque el paquete guardado sea antiguo, la paleta que se aplica se lee
   const copy = (paquete?.copy ? sustituir(paquete.copy, vars) : {}) as Json;
 
   const cols: Json = {};
