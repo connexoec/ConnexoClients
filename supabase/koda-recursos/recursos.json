@@ -184,8 +184,241 @@
           "available": true
         }
       ],
+      "barber_products": [
+        {
+          "id": "prd_pomada",
+          "name": "Pomada Mate Fijación Fuerte",
+          "category": "Peinado",
+          "price": "$14.00",
+          "shortDescription": "Acabado mate y fijación de 10 horas. Se enjuaga fácil.",
+          "imageURL": "https://images.unsplash.com/photo-1581003250595-604583fe9afa?auto=format&fit=crop&w=700&q=75",
+          "available": true,
+          "stock": 24
+        },
+        {
+          "id": "prd_arcilla",
+          "name": "Arcilla Texturizante",
+          "category": "Peinado",
+          "price": "$13.50",
+          "shortDescription": "Volumen y textura natural sin brillo.",
+          "imageURL": "https://images.unsplash.com/photo-1577467014911-2c66a5c1995a?auto=format&fit=crop&w=700&q=75",
+          "available": true,
+          "stock": 18
+        },
+        {
+          "id": "prd_aceite",
+          "name": "Aceite para Barba",
+          "category": "Barba",
+          "price": "$16.00",
+          "shortDescription": "Suaviza, hidrata y deja un aroma amaderado discreto.",
+          "imageURL": "https://images.unsplash.com/photo-1673350963924-cb4267d9b6eb?auto=format&fit=crop&w=700&q=75",
+          "available": true,
+          "stock": 30
+        },
+        {
+          "id": "prd_balsamo",
+          "name": "Bálsamo After Shave",
+          "category": "Afeitado",
+          "price": "$13.00",
+          "shortDescription": "Calma la piel tras la navaja. Sin alcohol.",
+          "imageURL": "https://images.unsplash.com/photo-1698172827784-a6e59243bfd8?auto=format&fit=crop&w=700&q=75",
+          "available": true,
+          "stock": 12
+        },
+        {
+          "id": "prd_cera",
+          "name": "Cera Clásica Brillo Medio",
+          "category": "Peinado",
+          "price": "$12.50",
+          "shortDescription": "El look de barbería de siempre, con brillo moderado.",
+          "imageURL": "https://images.unsplash.com/photo-1578933573057-fecdbcbfd9ed?auto=format&fit=crop&w=700&q=75",
+          "available": true,
+          "stock": 0
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo una cita?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
       "galleryTitle": "Galería"
-    }
+    },
+    "tablas": [
+      {
+        "tabla": "barber_staff",
+        "propietario": "barber_id",
+        "filas": [
+          {
+            "id": "seed-bs1",
+            "name": "Barbero 1",
+            "role": "Barbero Master",
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          },
+          {
+            "id": "seed-bs2",
+            "name": "Barbero 2",
+            "role": "Especialista en Fade",
+            "sort_order": 2,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          },
+          {
+            "id": "seed-bs3",
+            "name": "Barbero 3",
+            "role": "Barbero & Barba",
+            "sort_order": 3,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
   },
   {
     "clave": "belleza",
@@ -251,8 +484,204 @@
           "openTime": "",
           "closeTime": ""
         }
+      ],
+      "products": [
+        {
+          "id": "bel_1",
+          "name": "Corte de cabello",
+          "category": "Cabello",
+          "price": "$12.00",
+          "shortDescription": "Corte y peinado final a tu estilo.",
+          "available": true
+        },
+        {
+          "id": "bel_2",
+          "name": "Peinado",
+          "category": "Cabello",
+          "price": "$15.00",
+          "shortDescription": "Peinado para el día a día o para tu evento.",
+          "available": true
+        },
+        {
+          "id": "bel_3",
+          "name": "Tinte",
+          "category": "Cabello",
+          "price": "$35.00",
+          "shortDescription": "Color completo con productos de calidad.",
+          "available": true
+        },
+        {
+          "id": "bel_4",
+          "name": "Tratamiento capilar",
+          "category": "Cabello",
+          "price": "$25.00",
+          "shortDescription": "Hidratación profunda para un cabello sano y brillante.",
+          "available": true
+        },
+        {
+          "id": "bel_5",
+          "name": "Manicure",
+          "category": "Uñas",
+          "price": "$10.00",
+          "shortDescription": "Limpieza, limado y esmaltado.",
+          "available": true
+        },
+        {
+          "id": "bel_6",
+          "name": "Pedicure",
+          "category": "Uñas",
+          "price": "$12.00",
+          "shortDescription": "Cuidado completo para tus pies.",
+          "available": true
+        },
+        {
+          "id": "bel_7",
+          "name": "Limpieza facial",
+          "category": "Cuidado",
+          "price": "$20.00",
+          "shortDescription": "Limpieza profunda e hidratación.",
+          "available": true
+        },
+        {
+          "id": "bel_8",
+          "name": "Masaje relajante",
+          "category": "Cuidado",
+          "price": "$30.00",
+          "shortDescription": "Un respiro para tu cuerpo, 60 minutos.",
+          "available": true
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo una cita?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
       ]
-    }
+    },
+    "tablas": [
+      {
+        "tabla": "barber_staff",
+        "propietario": "barber_id",
+        "filas": [
+          {
+            "id": "seed-bs1",
+            "name": "Estilista 1",
+            "role": "Estilista",
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          },
+          {
+            "id": "seed-bs2",
+            "name": "Estilista 2",
+            "role": "Estilista",
+            "sort_order": 2,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
   },
   {
     "clave": "restaurantes",
@@ -603,6 +1032,26 @@
           "available": true
         }
       ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo una mesa?",
+          "answer": "Desde este perfil: elige el día, la hora y el número de personas. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
       "galleryTitle": "Galería"
     }
   },
@@ -811,6 +1260,26 @@
           "available": true
         }
       ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo una mesa?",
+          "answer": "Desde este perfil: elige el día, la hora y el número de personas. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
       "galleryTitle": "Galería"
     }
   },
@@ -939,25 +1408,151 @@
       "products": [
         {
           "id": "med_consulta",
-          "name": "Consulta general",
+          "name": "Consulta de Medicina General",
           "category": "Consultas",
           "price": "$25.00",
-          "shortDescription": "Evaluación, diagnóstico y plan de tratamiento.",
+          "shortDescription": "Evaluación clínica completa, diagnóstico y plan de tratamiento.",
           "imageURL": "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=700&q=75",
           "available": true
         },
         {
-          "id": "med_control",
-          "name": "Consulta de control",
+          "id": "med_pediatria",
+          "name": "Control Pediátrico",
           "category": "Consultas",
+          "price": "$30.00",
+          "shortDescription": "Seguimiento del crecimiento y desarrollo, vacunas y consejos para padres.",
+          "imageURL": "https://images.unsplash.com/photo-1632053002928-1919605ee6f7?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_ginecologia",
+          "name": "Consulta de Ginecología",
+          "category": "Consultas",
+          "price": "$35.00",
+          "shortDescription": "Control ginecológico, Papanicolaou y planificación familiar.",
+          "imageURL": "https://images.unsplash.com/photo-1758691461935-202e2ef6b69f?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_cardiologia",
+          "name": "Cardiología — consulta y electrocardiograma",
+          "category": "Consultas",
+          "price": "$55.00",
+          "shortDescription": "Evaluación del corazón con ECG incluido.",
+          "imageURL": "https://images.unsplash.com/photo-1758691462123-8a17ae95d203?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_ecg",
+          "name": "Electrocardiograma",
+          "category": "Exámenes",
           "price": "$20.00",
-          "shortDescription": "Seguimiento de tu tratamiento o resultados.",
+          "shortDescription": "Registro de la actividad eléctrica del corazón. Resultado inmediato.",
+          "imageURL": "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_ecografia",
+          "name": "Ecografía abdominal",
+          "category": "Exámenes",
+          "price": "$40.00",
+          "shortDescription": "Ultrasonido de abdomen superior e inferior. Ayuno de 6 horas.",
+          "imageURL": "https://images.unsplash.com/photo-1758691462743-f9fc9e430d39?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_biometria",
+          "name": "Biometría hemática",
+          "category": "Exámenes",
+          "price": "$8.00",
+          "shortDescription": "Conteo completo de células sanguíneas. Resultados en 24 horas.",
+          "imageURL": "https://images.unsplash.com/photo-1606206591513-adbfbdd7a177?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_lipidos",
+          "name": "Perfil lipídico",
+          "category": "Exámenes",
+          "price": "$18.00",
+          "shortDescription": "Colesterol total, HDL, LDL y triglicéridos. Ayuno de 12 horas.",
+          "imageURL": "https://images.unsplash.com/photo-1639772823849-6efbd173043c?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_glucosa",
+          "name": "Glucosa en ayunas",
+          "category": "Exámenes",
+          "price": "$4.00",
+          "shortDescription": "Prueba rápida de glucosa. Resultado en minutos.",
+          "imageURL": "https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_chequeo",
+          "name": "Chequeo Ejecutivo Integral",
+          "category": "Paquetes",
+          "price": "$95.00",
+          "shortDescription": "Consulta + biometría + perfil lipídico + glucosa + ECG. Resultados en 48 h.",
+          "imageURL": "https://images.unsplash.com/photo-1758691462858-f1286e5daf40?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_influenza",
+          "name": "Vacuna contra la Influenza",
+          "category": "Procedimientos",
+          "price": "$22.00",
+          "shortDescription": "Dosis estacional. Protección durante todo el año.",
+          "imageURL": "https://images.unsplash.com/photo-1576766125535-b04e15fd0273?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_curacion",
+          "name": "Curación y sutura menor",
+          "category": "Procedimientos",
+          "price": "$25.00",
+          "shortDescription": "Limpieza de heridas, sutura y control de cicatrización.",
+          "imageURL": "https://images.unsplash.com/photo-1542884841-9f546e727bca?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_certificado",
+          "name": "Certificado médico",
+          "category": "Trámites",
+          "price": "$10.00",
+          "shortDescription": "Para trabajo, estudio, deporte o conducción. Entrega inmediata.",
+          "imageURL": "https://images.unsplash.com/photo-1631217871099-88310a909a32?auto=format&fit=crop&w=700&q=75",
           "available": true
         }
       ],
       "clinicServices": [
         "Consulta general",
-        "Consulta de control"
+        "Pediatría",
+        "Ginecología",
+        "Cardiología",
+        "Exámenes de laboratorio",
+        "Ecografía",
+        "Vacunación",
+        "Chequeo ejecutivo"
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo una cita?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
       ],
       "galleryTitle": "Galería"
     }
@@ -974,8 +1569,8 @@
     },
     "copy": {
       "jobTitle": "Salud y bienestar",
-      "bio": "Salud y bienestar en {{ciudad}}. Escríbenos por WhatsApp y te ayudamos.",
-      "aboutMe": "En {{nombre}} estamos para ayudarte con tu salud y bienestar. Escríbenos desde este perfil y te atendemos."
+      "bio": "Salud y bienestar en {{ciudad}}. Agenda desde este perfil o escríbenos por WhatsApp.",
+      "aboutMe": "En {{nombre}} estamos para ayudarte con tu salud y bienestar. Conoce nuestros servicios y agenda desde este perfil."
     },
     "perfil": {
       "backgroundColor": "#020813",
@@ -1026,7 +1621,214 @@
           "openTime": "",
           "closeTime": ""
         }
-      ]
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1769698678497-c41f0ab47c3e?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1629909614456-6b1c5c94cecc?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1777269749032-d8d458ae594d?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1758691462848-ba1e929da259?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1758691461990-03b49d969495?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1631815590016-ebce183022ce?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1659353888633-bc0db91345df?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "14:00"
+        },
+        "sunday": {
+          "isActive": false,
+          "start": "09:00",
+          "end": "18:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 1,
+        "openTime": "07:30",
+        "closeTime": "18:30",
+        "daysAhead": 45,
+        "autoConfirm": false
+      },
+      "tableCount": 4,
+      "products": [
+        {
+          "id": "med_consulta",
+          "name": "Consulta de Medicina General",
+          "category": "Consultas",
+          "price": "$25.00",
+          "shortDescription": "Evaluación clínica completa, diagnóstico y plan de tratamiento.",
+          "imageURL": "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_pediatria",
+          "name": "Control Pediátrico",
+          "category": "Consultas",
+          "price": "$30.00",
+          "shortDescription": "Seguimiento del crecimiento y desarrollo, vacunas y consejos para padres.",
+          "imageURL": "https://images.unsplash.com/photo-1632053002928-1919605ee6f7?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_ginecologia",
+          "name": "Consulta de Ginecología",
+          "category": "Consultas",
+          "price": "$35.00",
+          "shortDescription": "Control ginecológico, Papanicolaou y planificación familiar.",
+          "imageURL": "https://images.unsplash.com/photo-1758691461935-202e2ef6b69f?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_cardiologia",
+          "name": "Cardiología — consulta y electrocardiograma",
+          "category": "Consultas",
+          "price": "$55.00",
+          "shortDescription": "Evaluación del corazón con ECG incluido.",
+          "imageURL": "https://images.unsplash.com/photo-1758691462123-8a17ae95d203?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_ecg",
+          "name": "Electrocardiograma",
+          "category": "Exámenes",
+          "price": "$20.00",
+          "shortDescription": "Registro de la actividad eléctrica del corazón. Resultado inmediato.",
+          "imageURL": "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_ecografia",
+          "name": "Ecografía abdominal",
+          "category": "Exámenes",
+          "price": "$40.00",
+          "shortDescription": "Ultrasonido de abdomen superior e inferior. Ayuno de 6 horas.",
+          "imageURL": "https://images.unsplash.com/photo-1758691462743-f9fc9e430d39?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_biometria",
+          "name": "Biometría hemática",
+          "category": "Exámenes",
+          "price": "$8.00",
+          "shortDescription": "Conteo completo de células sanguíneas. Resultados en 24 horas.",
+          "imageURL": "https://images.unsplash.com/photo-1606206591513-adbfbdd7a177?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_lipidos",
+          "name": "Perfil lipídico",
+          "category": "Exámenes",
+          "price": "$18.00",
+          "shortDescription": "Colesterol total, HDL, LDL y triglicéridos. Ayuno de 12 horas.",
+          "imageURL": "https://images.unsplash.com/photo-1639772823849-6efbd173043c?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_glucosa",
+          "name": "Glucosa en ayunas",
+          "category": "Exámenes",
+          "price": "$4.00",
+          "shortDescription": "Prueba rápida de glucosa. Resultado en minutos.",
+          "imageURL": "https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_chequeo",
+          "name": "Chequeo Ejecutivo Integral",
+          "category": "Paquetes",
+          "price": "$95.00",
+          "shortDescription": "Consulta + biometría + perfil lipídico + glucosa + ECG. Resultados en 48 h.",
+          "imageURL": "https://images.unsplash.com/photo-1758691462858-f1286e5daf40?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_influenza",
+          "name": "Vacuna contra la Influenza",
+          "category": "Procedimientos",
+          "price": "$22.00",
+          "shortDescription": "Dosis estacional. Protección durante todo el año.",
+          "imageURL": "https://images.unsplash.com/photo-1576766125535-b04e15fd0273?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_curacion",
+          "name": "Curación y sutura menor",
+          "category": "Procedimientos",
+          "price": "$25.00",
+          "shortDescription": "Limpieza de heridas, sutura y control de cicatrización.",
+          "imageURL": "https://images.unsplash.com/photo-1542884841-9f546e727bca?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_certificado",
+          "name": "Certificado médico",
+          "category": "Trámites",
+          "price": "$10.00",
+          "shortDescription": "Para trabajo, estudio, deporte o conducción. Entrega inmediata.",
+          "imageURL": "https://images.unsplash.com/photo-1631217871099-88310a909a32?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        }
+      ],
+      "clinicServices": [
+        "Consulta general",
+        "Pediatría",
+        "Ginecología",
+        "Cardiología",
+        "Exámenes de laboratorio",
+        "Ecografía",
+        "Vacunación",
+        "Chequeo ejecutivo"
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo una cita?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
     }
   },
   {
@@ -1153,6 +1955,33 @@
       "tableCount": 4,
       "products": [
         {
+          "id": "pet_collar",
+          "name": "Collar ajustable reflectivo",
+          "category": "Accesorios",
+          "price": "$9.00",
+          "shortDescription": "Nailon resistente con hebilla de seguridad. Tallas S, M y L.",
+          "imageURL": "https://images.unsplash.com/photo-1789477024462-de4555754ee5?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_correa",
+          "name": "Correa retráctil 5 m",
+          "category": "Accesorios",
+          "price": "$13.00",
+          "shortDescription": "Agarre ergonómico y freno de seguridad.",
+          "imageURL": "https://images.unsplash.com/photo-1521417611542-86967c2ab11f?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_juguetes",
+          "name": "Set de juguetes mordedores (5 piezas)",
+          "category": "Accesorios",
+          "price": "$7.50",
+          "shortDescription": "Caucho resistente y no tóxico. Ideal para cachorros.",
+          "imageURL": "https://images.unsplash.com/photo-1652755729972-02b96abc6426?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
           "id": "pet_s_consulta",
           "name": "Consulta general",
           "category": "Servicios",
@@ -1180,6 +2009,15 @@
           "available": true
         },
         {
+          "id": "pet_s_dental",
+          "name": "Limpieza dental con ultrasonido",
+          "category": "Servicios",
+          "price": "$45.00",
+          "shortDescription": "Con anestesia segura. Incluye pulido y control.",
+          "imageURL": "https://images.unsplash.com/photo-1770836037816-4445dbd449fd?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
           "id": "pet_s_desparasitacion",
           "name": "Desparasitación",
           "category": "Servicios",
@@ -1187,13 +2025,45 @@
           "shortDescription": "Desparasitación interna según peso. Incluye registro.",
           "imageURL": "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=700&q=75",
           "available": true
+        },
+        {
+          "id": "pet_s_cirugia",
+          "name": "Cirugía menor / esterilización",
+          "category": "Servicios",
+          "price": "$90.00",
+          "shortDescription": "Quirófano equipado, anestesia, control postoperatorio.",
+          "imageURL": "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=700&q=75",
+          "available": true
         }
       ],
       "clinicServices": [
         "Consulta general",
         "Vacunación",
+        "Desparasitación",
         "Baño y peluquería",
-        "Desparasitación"
+        "Limpieza dental",
+        "Cirugía menor",
+        "Control post-operatorio"
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo una cita?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
       ],
       "galleryTitle": "Galería"
     }
@@ -1274,6 +2144,87 @@
         "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=75"
       ],
       "albums": [],
+      "products": [
+        {
+          "id": "mas_1",
+          "name": "Alimento para perro adulto (3 kg)",
+          "category": "Alimento",
+          "price": "$38.00",
+          "shortDescription": "Nutrición balanceada para perros adultos.",
+          "available": true
+        },
+        {
+          "id": "mas_2",
+          "name": "Alimento para gato adulto (2 kg)",
+          "category": "Alimento",
+          "price": "$26.50",
+          "shortDescription": "Nutrición balanceada para gatos adultos.",
+          "available": true
+        },
+        {
+          "id": "mas_3",
+          "name": "Snacks y premios",
+          "category": "Alimento",
+          "price": "$5.50",
+          "shortDescription": "Para recompensar a tu mascota.",
+          "available": true
+        },
+        {
+          "id": "mas_4",
+          "name": "Arena sanitaria (5 kg)",
+          "category": "Higiene",
+          "price": "$9.00",
+          "shortDescription": "Control de olores y fácil limpieza.",
+          "available": true
+        },
+        {
+          "id": "pet_collar",
+          "name": "Collar ajustable reflectivo",
+          "category": "Accesorios",
+          "price": "$9.00",
+          "shortDescription": "Nailon resistente con hebilla de seguridad. Tallas S, M y L.",
+          "imageURL": "https://images.unsplash.com/photo-1789477024462-de4555754ee5?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_correa",
+          "name": "Correa retráctil 5 m",
+          "category": "Accesorios",
+          "price": "$13.00",
+          "shortDescription": "Agarre ergonómico y freno de seguridad.",
+          "imageURL": "https://images.unsplash.com/photo-1521417611542-86967c2ab11f?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_juguetes",
+          "name": "Set de juguetes mordedores (5 piezas)",
+          "category": "Accesorios",
+          "price": "$7.50",
+          "shortDescription": "Caucho resistente y no tóxico. Ideal para cachorros.",
+          "imageURL": "https://images.unsplash.com/photo-1652755729972-02b96abc6426?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
       "galleryTitle": "Galería"
     }
   },
@@ -1342,8 +2293,244 @@
           "closeTime": ""
         }
       ],
-      "coverImageURL": "https://images.unsplash.com/photo-1782392429107-fd725ad8d10a?auto=format&fit=crop&w=1400&q=75"
-    }
+      "coverImageURL": "https://images.unsplash.com/photo-1782392429107-fd725ad8d10a?auto=format&fit=crop&w=1400&q=75",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ]
+    },
+    "tablas": [
+      {
+        "tabla": "realty_agents",
+        "propietario": "agency_profile_id",
+        "filas": [
+          {
+            "id": "seed-ra1",
+            "agent_username": "{{username}}-asesor-1",
+            "name": "Asesor 1",
+            "phone_whatsapp": "{{wa593}}",
+            "is_active": true
+          },
+          {
+            "id": "seed-ra2",
+            "agent_username": "{{username}}-asesor-2",
+            "name": "Asesor 2",
+            "phone_whatsapp": "{{wa593}}",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "tabla": "realty_properties",
+        "propietario": "agency_profile_id",
+        "filas": [
+          {
+            "id": "5d4ff491-e4b2-43f5-a3aa-cccf99d2e8a3",
+            "title": "Casa moderna con piscina",
+            "price": 385000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Casa de diseño contemporáneo en conjunto cerrado con seguridad 24/7. Amplios ambientes con ventanales, cocina abierta, piscina privada, jardín y terraza. A 10 minutos de colegios y centros comerciales.",
+            "images": [
+              "https://images.unsplash.com/photo-1706808849780-7a04fbac83ef?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1759147960461-b74a7e9a75d4?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 320,
+              "bedrooms": 4,
+              "bathrooms": 3.5,
+              "parking": 3
+            }
+          },
+          {
+            "id": "1db50c65-a820-4d67-a855-17d19a54e7bd",
+            "title": "Departamento de 2 dormitorios",
+            "price": 148000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Departamento luminoso frente al parque, con balcón, cocina equipada, bodega y 1 parqueadero. Edificio con gimnasio, sala comunal y guardianía.",
+            "images": [
+              "https://images.unsplash.com/photo-1628592102751-ba83b0314276?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1665249934445-1de680641f50?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1617098900591-3f90928e8c54?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 86,
+              "bedrooms": 2,
+              "bathrooms": 2,
+              "parking": 1
+            }
+          },
+          {
+            "id": "478df1eb-875b-4ae7-a3bd-0cff6d99b28c",
+            "title": "Suite de inversión",
+            "price": 72000,
+            "location": "{{ubicacion}}",
+            "status": "pre_venta",
+            "description": "Suite amoblada ideal para renta corta (alta ocupación). Entrega estimada en 8 meses. Facilidades de pago durante la construcción.",
+            "images": [
+              "https://images.unsplash.com/photo-1738168246881-40f35f8aba0a?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1654506012740-09321c969dc2?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 42,
+              "bedrooms": 1,
+              "bathrooms": 1,
+              "parking": 0
+            }
+          },
+          {
+            "id": "709428f0-20fe-4848-a626-0f20569636b4",
+            "title": "Casa familiar de tres plantas",
+            "price": 210000,
+            "location": "{{ubicacion}}",
+            "status": "reservado",
+            "description": "Casa de tres plantas con patio, sala de estar, estudio y cocina con isla. Conjunto con áreas verdes y casa club.",
+            "images": [
+              "https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1737233459465-8eaf6c7d8856?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1512916194211-3f2b7f5f7de3?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 180,
+              "bedrooms": 3,
+              "bathrooms": 2.5,
+              "parking": 2
+            }
+          },
+          {
+            "id": "43b0645b-b24b-407e-aedc-0bada7017f00",
+            "title": "Penthouse con vista panorámica",
+            "price": 465000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Penthouse de 210 m² con terraza de 60 m² y vista a la ciudad. Acabados de lujo, cocina italiana, domótica y 2 parqueaderos.",
+            "images": [
+              "https://images.unsplash.com/photo-1707250441420-89c9b7a5b945?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1772797583328-f83bc3f94f80?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1784653549288-07343300a44f?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1759147960461-b74a7e9a75d4?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 210,
+              "bedrooms": 3,
+              "bathrooms": 3,
+              "parking": 2
+            }
+          },
+          {
+            "id": "6edc48a3-f4fc-4848-a74d-4b0cb2b06c04",
+            "title": "Oficina corporativa",
+            "price": 138000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Oficina de 95 m² lista para ocupar, divisiones de vidrio, sala de reuniones y 2 parqueaderos. Edificio inteligente con recepción.",
+            "images": [
+              "https://images.unsplash.com/photo-1700809888987-cf2b29ecbd2c?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1785599954475-01ea848f97c8?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1770993151205-f9534b48eb8b?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 95,
+              "bedrooms": 0,
+              "bathrooms": 2,
+              "parking": 2
+            }
+          },
+          {
+            "id": "314c98c4-2985-4181-a694-935d5c209458",
+            "title": "Residencia con piscina",
+            "price": 540000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Residencia de 480 m² en urbanización privada con acceso a club, canchas y malecón. Cinco dormitorios, cuarto de servicio, jardín y piscina.",
+            "images": [
+              "https://images.unsplash.com/photo-1783125127243-49158bb610a5?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1762811054950-b74e0a055c80?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1786051385612-5fac26efaf88?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1783125127094-ea962d41ba42?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 480,
+              "bedrooms": 5,
+              "bathrooms": 4.5,
+              "parking": 4
+            }
+          },
+          {
+            "id": "354af5b1-300c-4167-a29e-07d1c53ccc14",
+            "title": "Casa de descanso",
+            "price": 230000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Casa de descanso totalmente amoblada, con terraza, parrillero y acceso a playa privada del conjunto. Excelente para renta vacacional.",
+            "images": [
+              "https://images.unsplash.com/photo-1768590149180-fb8b111db951?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1710046385385-a37df445b619?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1635111300299-e6e677daf7b7?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 160,
+              "bedrooms": 3,
+              "bathrooms": 2,
+              "parking": 2
+            }
+          },
+          {
+            "id": "2826521c-47b0-498f-aec5-3431e37d7f04",
+            "title": "Departamento familiar",
+            "price": 119000,
+            "location": "{{ubicacion}}",
+            "status": "vendido",
+            "description": "Departamento de tres dormitorios en sector residencial, con balcón y bodega. ¡Vendido en 21 días!",
+            "images": [
+              "https://images.unsplash.com/photo-1613575831056-0acd5da8f085?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1725257928373-dc6d2ac7b145?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 110,
+              "bedrooms": 3,
+              "bathrooms": 2,
+              "parking": 1
+            }
+          },
+          {
+            "id": "15d63cb0-5de1-4b9b-a550-7536ccaff48c",
+            "title": "Terreno de 1.200 m²",
+            "price": 96000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Terreno plano y esquinero, con escrituras al día, servicios básicos y acceso asfaltado. Ideal para vivienda campestre.",
+            "images": [
+              "https://images.unsplash.com/photo-1761784891269-9c6cc40956d2?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 1200
+            }
+          }
+        ]
+      }
+    ]
   },
   {
     "clave": "gimnasios",
@@ -1427,8 +2614,582 @@
         "membersOnly": false,
         "timezone": "America/Guayaquil"
       },
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo mi clase?",
+          "answer": "En la sección Horario elige la clase y la fecha. Recibirás un código para consultar o cancelar tu reserva.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
       "galleryTitle": "Galería"
-    }
+    },
+    "tablas": [
+      {
+        "tabla": "gym_coaches",
+        "propietario": "gym_profile_id",
+        "filas": [
+          {
+            "name": "Entrenador 1",
+            "specialty": "Funcional · CrossFit",
+            "id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "is_active": true,
+            "sort_order": 0
+          },
+          {
+            "name": "Entrenador 2",
+            "specialty": "Spinning · HIIT · Zumba",
+            "id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "is_active": true,
+            "sort_order": 1
+          },
+          {
+            "name": "Entrenador 3",
+            "specialty": "Fuerza · Hipertrofia",
+            "id": "dac36088-3f5c-4df7-ae26-1b7f0628e16a",
+            "is_active": true,
+            "sort_order": 2
+          }
+        ]
+      },
+      {
+        "tabla": "gym_plans",
+        "propietario": "gym_profile_id",
+        "filas": [
+          {
+            "name": "Pase libre",
+            "description": "Acceso total a sala y todas las clases",
+            "price": 29.9,
+            "compare_price": 39.9,
+            "billing_period": "mes",
+            "duration_days": 30,
+            "enrollment_fee": 10,
+            "sessions_limit": null,
+            "features": [
+              "Sala de máquinas y peso libre",
+              "Todas las clases grupales",
+              "Evaluación física inicial",
+              "Casillero personal"
+            ],
+            "is_popular": true,
+            "sort_order": 0,
+            "id": "ce5c7505-6257-4341-a6f7-1b05384530ab",
+            "is_available": true
+          },
+          {
+            "name": "Trimestral",
+            "description": "Tres meses con descuento",
+            "price": 79,
+            "compare_price": 89.7,
+            "billing_period": "trimestre",
+            "duration_days": 90,
+            "enrollment_fee": 0,
+            "sessions_limit": null,
+            "features": [
+              "Todo lo del Pase libre",
+              "1 sesión con nutricionista",
+              "1 invitado al mes"
+            ],
+            "is_popular": false,
+            "sort_order": 1,
+            "id": "da2e3aed-b9fe-439d-af06-d927dc022fad",
+            "is_available": true
+          },
+          {
+            "name": "Funcional 8",
+            "description": "Ideal para empezar",
+            "price": 22,
+            "compare_price": null,
+            "billing_period": "mes",
+            "duration_days": 30,
+            "enrollment_fee": 0,
+            "sessions_limit": 8,
+            "features": [
+              "8 clases funcionales o de spinning al mes"
+            ],
+            "is_popular": false,
+            "sort_order": 2,
+            "id": "8447afad-fed5-479f-a488-be6d201a4321",
+            "is_available": true
+          },
+          {
+            "name": "Anual Élite",
+            "description": "Para quienes van en serio",
+            "price": 290,
+            "compare_price": 358.8,
+            "billing_period": "anio",
+            "duration_days": 365,
+            "enrollment_fee": 0,
+            "sessions_limit": null,
+            "features": [
+              "Todo incluido",
+              "2 invitados al mes",
+              "Camiseta oficial {{nombre}}",
+              "Prioridad en reservas"
+            ],
+            "is_popular": false,
+            "sort_order": 3,
+            "id": "ccf7f2ac-cf74-47ca-a2bb-9389ac3a7d02",
+            "is_available": true
+          },
+          {
+            "name": "Pase diario",
+            "description": "Entrena un día sin compromiso",
+            "price": 5,
+            "compare_price": null,
+            "billing_period": "dia",
+            "duration_days": 1,
+            "enrollment_fee": 0,
+            "sessions_limit": null,
+            "features": [
+              "Acceso a sala por el día"
+            ],
+            "is_popular": false,
+            "sort_order": 4,
+            "id": "7d970aa3-3b2f-4f14-a80b-f9f6c9ff80f7",
+            "is_available": true
+          }
+        ]
+      },
+      {
+        "tabla": "gym_classes",
+        "propietario": "gym_profile_id",
+        "filas": [
+          {
+            "id": "61d1adf9-c807-4c72-a9fe-af9f4b0e1e95",
+            "name": "Yoga Flow",
+            "description": null,
+            "day_of_week": 0,
+            "start_time": "09:00",
+            "end_time": "10:00",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 12,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "d8fd2d28-3e47-496f-ad2a-266ef8138034",
+            "name": "Funcional",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "06:00",
+            "end_time": "07:00",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 16,
+            "level": "intermedio",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "bffcd422-c24f-43ee-ac6c-33f2b0e1d32e",
+            "name": "Spinning",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "07:30",
+            "end_time": "08:15",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 14,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "deddc68f-7224-4093-a21c-c64f94ac46e6",
+            "name": "Yoga Flow",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 12,
+            "level": "principiante",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "675cf3b7-5bde-46ea-ae17-7e024da49587",
+            "name": "HIIT 45",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "18:00",
+            "end_time": "18:45",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 18,
+            "level": "avanzado",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "c7b0e7af-7423-452b-a53c-b060f6029e40",
+            "name": "Fuerza",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "19:00",
+            "end_time": "20:00",
+            "coach_id": "dac36088-3f5c-4df7-ae26-1b7f0628e16a",
+            "coach_name": "Entrenador 3",
+            "capacity": 10,
+            "level": "intermedio",
+            "room": "Zona de pesas",
+            "is_active": true
+          },
+          {
+            "id": "ca485cfd-83ed-4c72-a6b1-3bb9d8acab5e",
+            "name": "Zumba",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "20:00",
+            "end_time": "21:00",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 20,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "3724ba3d-27a7-4292-a2cc-361d7b5187ed",
+            "name": "Funcional",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "06:00",
+            "end_time": "07:00",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 16,
+            "level": "intermedio",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "462e51f9-c832-47c6-ae2d-86afaf634152",
+            "name": "Boxeo fitness",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "07:30",
+            "end_time": "08:30",
+            "coach_id": "dac36088-3f5c-4df7-ae26-1b7f0628e16a",
+            "coach_name": "Entrenador 3",
+            "capacity": 12,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "d7a57f8d-f72e-4948-a3da-050c52745095",
+            "name": "Pilates",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 12,
+            "level": "principiante",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "72f5e2c9-d238-4870-a870-deab78ee1d28",
+            "name": "Spinning",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "18:00",
+            "end_time": "18:45",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 14,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "aec172b3-03a4-449e-a040-f49832e6f8b8",
+            "name": "CrossFit",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "19:00",
+            "end_time": "20:00",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 14,
+            "level": "avanzado",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "b47e636c-c4dd-4720-ade1-ab04e3210699",
+            "name": "Funcional",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "06:00",
+            "end_time": "07:00",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 16,
+            "level": "intermedio",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "08d54095-815a-46bb-a217-a25638200002",
+            "name": "Spinning",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "07:30",
+            "end_time": "08:15",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 14,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "362f0eb8-f41f-4a25-ae00-bfca72ec3987",
+            "name": "Yoga Flow",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 12,
+            "level": "principiante",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "032388ce-e140-4d3b-a0a0-62adaa121436",
+            "name": "HIIT 45",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "18:00",
+            "end_time": "18:45",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 18,
+            "level": "avanzado",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "38bbfa99-41eb-4174-ae59-112782c87013",
+            "name": "Fuerza",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "19:00",
+            "end_time": "20:00",
+            "coach_id": "dac36088-3f5c-4df7-ae26-1b7f0628e16a",
+            "coach_name": "Entrenador 3",
+            "capacity": 10,
+            "level": "intermedio",
+            "room": "Zona de pesas",
+            "is_active": true
+          },
+          {
+            "id": "f39614f0-2965-420e-acc8-f55f51368dd7",
+            "name": "Zumba",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "20:00",
+            "end_time": "21:00",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 20,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "712283ac-ffd9-41c9-aeb5-da07567d10d6",
+            "name": "Funcional",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "06:00",
+            "end_time": "07:00",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 16,
+            "level": "intermedio",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "028633a1-f744-4948-a778-6652cc37cc19",
+            "name": "Boxeo fitness",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "07:30",
+            "end_time": "08:30",
+            "coach_id": "dac36088-3f5c-4df7-ae26-1b7f0628e16a",
+            "coach_name": "Entrenador 3",
+            "capacity": 12,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "5ad0bd97-d20d-45e5-a503-e972f32d4bda",
+            "name": "Pilates",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 12,
+            "level": "principiante",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "7855a9bf-c908-40dd-a3f0-9965cccd391b",
+            "name": "Spinning",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "18:00",
+            "end_time": "18:45",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 14,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "ca9a12b9-8b54-4abd-aa7a-f55288cd98a0",
+            "name": "CrossFit",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "19:00",
+            "end_time": "20:00",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 14,
+            "level": "avanzado",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "30baed37-f352-4db9-a4c1-c29a3baaee77",
+            "name": "Funcional",
+            "description": null,
+            "day_of_week": 5,
+            "start_time": "06:00",
+            "end_time": "07:00",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 16,
+            "level": "intermedio",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "f1f37d9f-af2d-4721-a60a-ca0839273e4a",
+            "name": "Spinning",
+            "description": null,
+            "day_of_week": 5,
+            "start_time": "07:30",
+            "end_time": "08:15",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 14,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "87da3c4f-a601-4092-a4a1-4ce9e1f16d6f",
+            "name": "HIIT 45",
+            "description": null,
+            "day_of_week": 5,
+            "start_time": "18:00",
+            "end_time": "18:45",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 18,
+            "level": "avanzado",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "12be456d-9f32-47aa-ae7d-51ce75a0ddc8",
+            "name": "Zumba",
+            "description": null,
+            "day_of_week": 5,
+            "start_time": "19:30",
+            "end_time": "20:30",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 20,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "8824b01d-b281-46e7-a27b-6ab025a5b2fb",
+            "name": "Funcional",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "08:00",
+            "end_time": "09:00",
+            "coach_id": "b2a7f28c-a182-4cfa-a377-81f90c426e0d",
+            "coach_name": "Entrenador 1",
+            "capacity": 16,
+            "level": "todos",
+            "room": "Sala principal",
+            "is_active": true
+          },
+          {
+            "id": "41e94c6e-478d-4c4d-ad20-d7457aa2c999",
+            "name": "Spinning",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "09:30",
+            "end_time": "10:15",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 14,
+            "level": "todos",
+            "room": "Sala 2",
+            "is_active": true
+          },
+          {
+            "id": "aba030df-6ac4-4415-a3af-865ee9864ecc",
+            "name": "Yoga Flow",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "11:00",
+            "end_time": "12:00",
+            "coach_id": "4ac85f91-94fa-4747-aa3f-ba7a54636dce",
+            "coach_name": "Entrenador 2",
+            "capacity": 12,
+            "level": "principiante",
+            "room": "Sala 2",
+            "is_active": true
+          }
+        ]
+      }
+    ]
   },
   {
     "clave": "hoteles",
@@ -1510,8 +3271,231 @@
         "bookingEnabled": true,
         "timezone": "America/Guayaquil"
       },
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo?",
+          "answer": "Elige tus fechas en «Reserva tu estadía», selecciona la habitación y envía tus datos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
       "galleryTitle": "Galería"
-    }
+    },
+    "tablas": [
+      {
+        "tabla": "hotel_rooms",
+        "propietario": "hotel_profile_id",
+        "filas": [
+          {
+            "name": "Suite",
+            "category": "Suite",
+            "description": "Suite amplia con sala de estar, jacuzzi y balcón privado. Perfecta para escapadas en pareja y celebraciones especiales.",
+            "base_price": 185,
+            "max_adults": 2,
+            "max_children": 1,
+            "beds": "1 cama king",
+            "size_m2": 42,
+            "amenities": [
+              "Wi-Fi",
+              "Aire acondicionado",
+              "Jacuzzi",
+              "Minibar",
+              "Desayuno incluido",
+              "Balcón",
+              "TV por cable",
+              "Caja fuerte"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 3,
+            "min_nights": 1,
+            "id": "dc2c33cc-77ac-4607-aaac-f87dc34e71b4",
+            "is_available": true,
+            "sort_order": 0
+          },
+          {
+            "name": "Doble Superior",
+            "category": "Superior",
+            "description": "Habitación luminosa con dos camas dobles, escritorio y baño completo. Ideal para amigos o familias pequeñas.",
+            "base_price": 95,
+            "max_adults": 3,
+            "max_children": 1,
+            "beds": "2 camas dobles",
+            "size_m2": 28,
+            "amenities": [
+              "Wi-Fi",
+              "Aire acondicionado",
+              "TV por cable",
+              "Baño privado",
+              "Escritorio",
+              "Secador de pelo"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 6,
+            "min_nights": 1,
+            "id": "dd15168a-59ef-4706-abdd-8b6d254b5968",
+            "is_available": true,
+            "sort_order": 1
+          },
+          {
+            "name": "Habitación Familiar",
+            "category": "Familiar",
+            "description": "Dos ambientes y cocina equipada para que toda la familia disfrute sin apuros.",
+            "base_price": 140,
+            "max_adults": 4,
+            "max_children": 2,
+            "beds": "1 cama king + 2 individuales",
+            "size_m2": 55,
+            "amenities": [
+              "Wi-Fi",
+              "Aire acondicionado",
+              "Cocina equipada",
+              "Piscina",
+              "Parqueadero",
+              "TV por cable"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 2,
+            "min_nights": 2,
+            "id": "07181763-2a10-4e8f-af27-81817bda996b",
+            "is_available": true,
+            "sort_order": 2
+          },
+          {
+            "name": "Habitación Estándar",
+            "category": "Estándar",
+            "description": "Sencilla y cómoda, con todo lo necesario para descansar. La opción más económica.",
+            "base_price": 70,
+            "max_adults": 2,
+            "max_children": 0,
+            "beds": "1 cama queen",
+            "size_m2": 22,
+            "amenities": [
+              "Wi-Fi",
+              "Ventilador",
+              "Baño privado",
+              "Agua caliente"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 5,
+            "min_nights": 1,
+            "id": "9e05a26a-6aee-43ab-aba3-a45e6ffbcf60",
+            "is_available": true,
+            "sort_order": 3
+          },
+          {
+            "name": "Cabaña",
+            "category": "Cabaña",
+            "description": "Cabaña independiente con terraza y hamaca. Para quienes buscan privacidad y tranquilidad.",
+            "base_price": 120,
+            "max_adults": 2,
+            "max_children": 2,
+            "beds": "1 cama king",
+            "size_m2": 36,
+            "amenities": [
+              "Wi-Fi",
+              "Aire acondicionado",
+              "Balcón",
+              "Desayuno incluido",
+              "Piscina"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 2,
+            "min_nights": 2,
+            "id": "f99d10bd-7017-42af-a690-c68dc4624ca0",
+            "is_available": true,
+            "sort_order": 4
+          }
+        ]
+      },
+      {
+        "tabla": "hotel_services",
+        "propietario": "hotel_profile_id",
+        "filas": [
+          {
+            "name": "Desayuno buffet",
+            "category": "Desayuno",
+            "description": "Frutas, panadería y platos calientes.",
+            "image_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=700&q=75",
+            "price": 8,
+            "price_mode": "por_persona_noche",
+            "id": "ce3ed1b1-8e23-4969-af25-51c44ab27a11",
+            "is_available": true,
+            "sort_order": 0
+          },
+          {
+            "name": "Traslado aeropuerto",
+            "category": "Transporte",
+            "description": "Recogida y entrega con conductor privado.",
+            "image_url": null,
+            "price": 25,
+            "price_mode": "por_reserva",
+            "id": "bb3316a7-f48d-4c9e-a4f7-48ec1e1183b9",
+            "is_available": true,
+            "sort_order": 1
+          },
+          {
+            "name": "Masaje relajante",
+            "category": "Spa",
+            "description": "60 minutos de masaje relajante.",
+            "image_url": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=700&q=75",
+            "price": 40,
+            "price_mode": "por_reserva",
+            "id": "2c680b60-c590-4f73-aa69-2a9a0da39459",
+            "is_available": true,
+            "sort_order": 2
+          },
+          {
+            "name": "Cena romántica",
+            "category": "Restaurante",
+            "description": "Mesa privada con menú de tres tiempos.",
+            "image_url": "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=700&q=75",
+            "price": 60,
+            "price_mode": "por_reserva",
+            "id": "c00d7d70-81a5-4cac-a4fc-b767598f05e3",
+            "is_available": true,
+            "sort_order": 4
+          },
+          {
+            "name": "Lavandería",
+            "category": "Lavandería",
+            "description": "Servicio por noche de estancia.",
+            "image_url": null,
+            "price": 3,
+            "price_mode": "por_noche",
+            "id": "9f5981b6-ef51-4af1-a295-c691123b2031",
+            "is_available": true,
+            "sort_order": 5
+          }
+        ]
+      }
+    ]
   },
   {
     "clave": "tiendas",
@@ -1577,8 +3561,161 @@
           "openTime": "",
           "closeTime": ""
         }
+      ],
+      "products": [
+        {
+          "id": "tie_1",
+          "name": "Producto más vendido",
+          "category": "Destacados",
+          "price": "$9.90",
+          "shortDescription": "El favorito de nuestros clientes.",
+          "available": true
+        },
+        {
+          "id": "tie_2",
+          "name": "Combo familiar",
+          "category": "Destacados",
+          "price": "$19.90",
+          "shortDescription": "Varios productos juntos a mejor precio.",
+          "available": true
+        },
+        {
+          "id": "tie_3",
+          "name": "Kit de regalo",
+          "category": "Destacados",
+          "price": "$24.90",
+          "shortDescription": "Listo para regalar, con envoltura incluida.",
+          "available": true
+        },
+        {
+          "id": "tie_4",
+          "name": "Pack ahorro x3",
+          "category": "Ofertas",
+          "price": "$14.50",
+          "shortDescription": "Lleva tres y ahorra.",
+          "available": true
+        },
+        {
+          "id": "tie_5",
+          "name": "Oferta de la semana",
+          "category": "Ofertas",
+          "price": "$7.90",
+          "shortDescription": "Por tiempo limitado.",
+          "available": true
+        },
+        {
+          "id": "tie_6",
+          "name": "Edición limitada",
+          "category": "Novedades",
+          "price": "$39.90",
+          "shortDescription": "Disponible hasta agotar stock.",
+          "available": true
+        }
+      ],
+      "ecom_booking_form": [
+        {
+          "id": "f_nombre",
+          "label": "Nombre y apellido",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ej. María Pérez"
+        },
+        {
+          "id": "f_tel",
+          "label": "WhatsApp",
+          "type": "tel",
+          "required": true,
+          "placeholder": "09XXXXXXXX"
+        },
+        {
+          "id": "f_notas",
+          "label": "¿En qué podemos ayudarte?",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Cuéntanos lo que necesitas"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
       ]
-    }
+    },
+    "tablas": [
+      {
+        "tabla": "ecom_staff",
+        "propietario": "seller_id",
+        "filas": [
+          {
+            "id": "seed-es1",
+            "name": "Atención al cliente",
+            "role": "Atención",
+            "slot_minutes": 60,
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
   },
   {
     "clave": "talleres",
@@ -1644,8 +3781,169 @@
           "openTime": "",
           "closeTime": ""
         }
+      ],
+      "products": [
+        {
+          "id": "tal_1",
+          "name": "Cambio de aceite y filtro",
+          "category": "Mantenimiento",
+          "price": "$35.00",
+          "shortDescription": "Aceite y filtro nuevos, con revisión de niveles.",
+          "available": true
+        },
+        {
+          "id": "tal_2",
+          "name": "Mantenimiento preventivo",
+          "category": "Mantenimiento",
+          "price": "$60.00",
+          "shortDescription": "Revisión de los puntos clave para evitar daños mayores.",
+          "available": true
+        },
+        {
+          "id": "tal_3",
+          "name": "Revisión general",
+          "category": "Mantenimiento",
+          "price": "$40.00",
+          "shortDescription": "Chequeo completo de tu vehículo.",
+          "available": true
+        },
+        {
+          "id": "tal_4",
+          "name": "Revisión de frenos",
+          "category": "Frenos y suspensión",
+          "price": "$25.00",
+          "shortDescription": "Pastillas, discos y líquido.",
+          "available": true
+        },
+        {
+          "id": "tal_5",
+          "name": "Alineación y balanceo",
+          "category": "Frenos y suspensión",
+          "price": "$30.00",
+          "shortDescription": "Para que tu vehículo ruede recto y sin vibraciones.",
+          "available": true
+        },
+        {
+          "id": "tal_6",
+          "name": "Diagnóstico con scanner",
+          "category": "Diagnóstico",
+          "price": "$20.00",
+          "shortDescription": "Lectura de códigos de falla y reporte.",
+          "available": true
+        },
+        {
+          "id": "tal_7",
+          "name": "Cambio de batería",
+          "category": "Diagnóstico",
+          "price": "$15.00",
+          "shortDescription": "Mano de obra de instalación y prueba de carga.",
+          "available": true
+        }
+      ],
+      "ecom_booking_form": [
+        {
+          "id": "f_nombre",
+          "label": "Nombre y apellido",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ej. María Pérez"
+        },
+        {
+          "id": "f_tel",
+          "label": "WhatsApp",
+          "type": "tel",
+          "required": true,
+          "placeholder": "09XXXXXXXX"
+        },
+        {
+          "id": "f_notas",
+          "label": "¿En qué podemos ayudarte?",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Cuéntanos lo que necesitas"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
       ]
-    }
+    },
+    "tablas": [
+      {
+        "tabla": "ecom_staff",
+        "propietario": "seller_id",
+        "filas": [
+          {
+            "id": "seed-es1",
+            "name": "Atención al cliente",
+            "role": "Atención",
+            "slot_minutes": 60,
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
   },
   {
     "clave": "oficinas",
@@ -1711,7 +4009,160 @@
           "openTime": "",
           "closeTime": ""
         }
+      ],
+      "products": [
+        {
+          "id": "ofi_1",
+          "name": "Primera consulta",
+          "category": "Asesoría",
+          "price": "$30.00",
+          "shortDescription": "Conversamos tu caso y te orientamos.",
+          "available": true
+        },
+        {
+          "id": "ofi_2",
+          "name": "Asesoría mensual",
+          "category": "Asesoría",
+          "price": "$120.00",
+          "shortDescription": "Acompañamiento continuo durante el mes.",
+          "available": true
+        },
+        {
+          "id": "ofi_3",
+          "name": "Revisión de documentos",
+          "category": "Trámites",
+          "price": "$45.00",
+          "shortDescription": "Revisamos tus documentos antes de que los presentes.",
+          "available": true
+        },
+        {
+          "id": "ofi_4",
+          "name": "Elaboración de contratos",
+          "category": "Trámites",
+          "price": "$90.00",
+          "shortDescription": "Contratos a la medida de tu necesidad.",
+          "available": true
+        },
+        {
+          "id": "ofi_5",
+          "name": "Gestión de trámites",
+          "category": "Trámites",
+          "price": "$60.00",
+          "shortDescription": "Nos encargamos del papeleo por ti.",
+          "available": true
+        },
+        {
+          "id": "ofi_6",
+          "name": "Capacitación para equipos",
+          "category": "Capacitación",
+          "price": "$150.00",
+          "shortDescription": "Sesión práctica para tu equipo de trabajo.",
+          "available": true
+        }
+      ],
+      "ecom_booking_form": [
+        {
+          "id": "f_nombre",
+          "label": "Nombre y apellido",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ej. María Pérez"
+        },
+        {
+          "id": "f_tel",
+          "label": "WhatsApp",
+          "type": "tel",
+          "required": true,
+          "placeholder": "09XXXXXXXX"
+        },
+        {
+          "id": "f_notas",
+          "label": "¿En qué podemos ayudarte?",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Cuéntanos lo que necesitas"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
       ]
-    }
+    },
+    "tablas": [
+      {
+        "tabla": "ecom_staff",
+        "propietario": "seller_id",
+        "filas": [
+          {
+            "id": "seed-es1",
+            "name": "Atención al cliente",
+            "role": "Atención",
+            "slot_minutes": 60,
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
   }
 ]
