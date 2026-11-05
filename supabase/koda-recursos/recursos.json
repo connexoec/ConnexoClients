@@ -1,0 +1,1717 @@
+[
+  {
+    "clave": "barberia",
+    "theme": "barber",
+    "fuente": "setup_demo_02",
+    "logo": {
+      "etiqueta": "BARBERÍA",
+      "fondo": "#0c0907",
+      "acento": "#ff6b35",
+      "texto": "#f5e6d3"
+    },
+    "copy": {
+      "jobTitle": "Barbería · Cortes y cuidado de barba",
+      "bio": "Cortes, barba y cuidado masculino en {{ciudad}}. Reserva tu cita desde este perfil.",
+      "aboutMe": "En {{nombre}} cuidamos tu imagen con oficio y buen trato: cortes clásicos y modernos, arreglo de barba y atención sin prisa. Agenda tu cita desde este perfil y llega a la hora que más te acomode."
+    },
+    "perfil": {
+      "backgroundColor": "#0c0907",
+      "buttonColor": "#ff6b35",
+      "buttonTextColor": "#ffffff",
+      "textColor": "#f5e6d3",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "albums",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1759134248487-e8baaf31e33e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1781768526571-ef9c333279c7?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1761064039763-0d9aa5124510?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1790009419892-f6f3fd516fb2?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1536520002442-39764a41e987?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1621645582931-d1d3e6564943?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1593702275687-f8b402bf1fb5?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [
+        {
+          "id": "alb_local",
+          "title": "El local",
+          "coverImage": "https://images.unsplash.com/photo-1759134248487-e8baaf31e33e?auto=format&fit=crop&w=700&q=75",
+          "images": [
+            "https://images.unsplash.com/photo-1759134248487-e8baaf31e33e?auto=format&fit=crop&w=1000&q=75",
+            "https://images.unsplash.com/photo-1781768526571-ef9c333279c7?auto=format&fit=crop&w=1000&q=75",
+            "https://images.unsplash.com/photo-1761064039763-0d9aa5124510?auto=format&fit=crop&w=1000&q=75",
+            "https://images.unsplash.com/photo-1536520002442-39764a41e987?auto=format&fit=crop&w=1000&q=75"
+          ]
+        },
+        {
+          "id": "alb_trabajos",
+          "title": "Trabajos",
+          "coverImage": "https://images.unsplash.com/photo-1593702275687-f8b402bf1fb5?auto=format&fit=crop&w=700&q=75",
+          "images": [
+            "https://images.unsplash.com/photo-1593702275687-f8b402bf1fb5?auto=format&fit=crop&w=1000&q=75",
+            "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=1000&q=75",
+            "https://images.unsplash.com/photo-1647140655214-e4a2d914971f?auto=format&fit=crop&w=1000&q=75",
+            "https://images.unsplash.com/photo-1599011176306-4a96f1516d4d?auto=format&fit=crop&w=1000&q=75"
+          ]
+        },
+        {
+          "id": "alb_detalles",
+          "title": "Detalles",
+          "coverImage": "https://images.unsplash.com/photo-1790009419892-f6f3fd516fb2?auto=format&fit=crop&w=700&q=75",
+          "images": [
+            "https://images.unsplash.com/photo-1790009419892-f6f3fd516fb2?auto=format&fit=crop&w=1000&q=75",
+            "https://images.unsplash.com/photo-1621645582931-d1d3e6564943?auto=format&fit=crop&w=1000&q=75",
+            "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=1000&q=75"
+          ]
+        }
+      ],
+      "products": [
+        {
+          "id": "svc_corte_clasico",
+          "name": "Corte Clásico",
+          "category": "Cortes",
+          "price": "$10.00",
+          "shortDescription": "Tijera y máquina, lavado y peinado final con producto.",
+          "imageURL": "https://images.unsplash.com/photo-1647140655214-e4a2d914971f?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "svc_fade",
+          "name": "Fade / Degradado",
+          "category": "Cortes",
+          "price": "$12.00",
+          "shortDescription": "Degradado limpio a navaja: low, mid o high fade a tu gusto.",
+          "imageURL": "https://images.unsplash.com/photo-1657105052497-f996284ffff8?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "svc_corte_nino",
+          "name": "Corte Niño (hasta 12 años)",
+          "category": "Cortes",
+          "price": "$8.00",
+          "shortDescription": "Paciencia, buen trato y un corte que a mamá le va a encantar.",
+          "imageURL": "https://images.unsplash.com/photo-1635273051937-a0ddef9573b6?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "svc_barba",
+          "name": "Arreglo de Barba",
+          "category": "Barba",
+          "price": "$8.00",
+          "shortDescription": "Perfilado, recorte y toalla caliente para una barba impecable.",
+          "imageURL": "https://images.unsplash.com/photo-1599011176306-4a96f1516d4d?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "svc_afeitado",
+          "name": "Afeitado Clásico con Navaja",
+          "category": "Barba",
+          "price": "$12.00",
+          "shortDescription": "Toalla caliente, espuma artesanal y navaja de filo recto.",
+          "imageURL": "https://images.unsplash.com/photo-1532710093739-9470acff878f?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "svc_combo",
+          "name": "Corte + Barba (Combo)",
+          "category": "Combos",
+          "price": "$18.00",
+          "shortDescription": "El favorito de la casa: corte a elección y arreglo de barba.",
+          "imageURL": "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "svc_blackmask",
+          "name": "Limpieza Facial Black Mask",
+          "category": "Cuidado",
+          "price": "$10.00",
+          "shortDescription": "Vapor, exfoliación y mascarilla de carbón activado.",
+          "imageURL": "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "svc_vip",
+          "name": "Experiencia Completa",
+          "category": "Combos",
+          "price": "$30.00",
+          "shortDescription": "Corte, barba, limpieza facial y masaje de cuello.",
+          "imageURL": "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "belleza",
+    "theme": "barber",
+    "fuente": "setup_demo_02",
+    "logo": {
+      "etiqueta": "BELLEZA",
+      "fondo": "#0c0907",
+      "acento": "#ff6b35",
+      "texto": "#f5e6d3"
+    },
+    "copy": {
+      "jobTitle": "Belleza y cuidado personal",
+      "bio": "Belleza y cuidado personal en {{ciudad}}. Reserva tu cita desde este perfil.",
+      "aboutMe": "En {{nombre}} nos dedicamos a tu cuidado personal. Conoce nuestros servicios y agenda tu cita desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#0c0907",
+      "buttonColor": "#ff6b35",
+      "buttonTextColor": "#ffffff",
+      "textColor": "#f5e6d3",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ]
+    }
+  },
+  {
+    "clave": "restaurantes",
+    "theme": "gastro",
+    "fuente": "setup_demo_03",
+    "logo": {
+      "etiqueta": "RESTAURANTE",
+      "fondo": "#0b0502",
+      "acento": "#ff6b35",
+      "texto": "#fde8d3"
+    },
+    "copy": {
+      "jobTitle": "Restaurante",
+      "bio": "Disfruta de la buena mesa en {{ciudad}}. Mira el menú y reserva tu mesa desde este perfil.",
+      "aboutMe": "En {{nombre}} nos importa que disfrutes cada plato. Conoce nuestro menú, reserva tu mesa y pide fácil desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#0b0502",
+      "buttonColor": "#ff6b35",
+      "buttonTextColor": "#ffffff",
+      "textColor": "#fde8d3",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "23:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "23:30"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "18:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1709548145082-04d0cde481d4?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1526069631228-723c945bea6b?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1709548145082-04d0cde481d4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1667388969250-1c7220bf3f37?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1764408182167-043042cb086e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1775497950071-965cf9e20b2f?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1761314036709-f6f68a3d7cf1?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "22:00"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "22:00"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "22:00"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "22:00"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "23:30"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "23:30"
+        },
+        "sunday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "18:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 10,
+        "openTime": "12:00",
+        "closeTime": "22:00",
+        "daysAhead": 30,
+        "autoConfirm": false
+      },
+      "tableCount": 14,
+      "products": [
+        {
+          "id": "dish_empanadas",
+          "name": "Empanadas de Viento (4 uds)",
+          "category": "Entradas",
+          "price": "$5.50",
+          "shortDescription": "Masa crujiente rellena de queso, espolvoreada con azúcar glass.",
+          "imageURL": "https://images.unsplash.com/photo-1774971343509-d575ec6bd3af?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_camaron_ajillo",
+          "name": "Camarones al Ajillo",
+          "category": "Entradas",
+          "price": "$9.50",
+          "shortDescription": "Camarones salteados en mantequilla de ajo con un toque de ají.",
+          "imageURL": "https://images.unsplash.com/photo-1554502078-ef0fc409efce?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_mejillones",
+          "name": "Mejillones al Vapor",
+          "category": "Entradas",
+          "price": "$12.00",
+          "shortDescription": "En caldo de vino blanco y hierbas, con pan tostado.",
+          "imageURL": "https://images.unsplash.com/photo-1785031728396-c88b166a9517?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_ceviche_mixto",
+          "name": "Ceviche Mixto",
+          "category": "Ceviches",
+          "price": "$11.00",
+          "shortDescription": "Camarón, pescado y calamar en leche de tigre, con chifles y maíz tostado.",
+          "imageURL": "https://images.unsplash.com/photo-1761314036709-f6f68a3d7cf1?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_ceviche_camaron",
+          "name": "Ceviche de Camarón",
+          "category": "Ceviches",
+          "price": "$10.00",
+          "shortDescription": "El clásico costeño: camarón fresco, limón sutil y cebolla encurtida.",
+          "imageURL": "https://images.unsplash.com/photo-1761314037289-a9d6760eb37d?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_ceviche_pescado",
+          "name": "Ceviche de Corvina",
+          "category": "Ceviches",
+          "price": "$9.00",
+          "shortDescription": "Corvina fresca marinada al momento, con camote y cancha.",
+          "imageURL": "https://images.unsplash.com/photo-1761314037195-1508e44c6bd2?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_parrillada",
+          "name": "Parrillada para Dos",
+          "category": "Parrilla",
+          "price": "$32.00",
+          "shortDescription": "Lomo, costilla y chorizo a la brasa con papas, ensalada y chimichurri.",
+          "imageURL": "https://images.unsplash.com/photo-1678684277852-f63a7e359435?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_churrasco",
+          "name": "Churrasco a la Brasa",
+          "category": "Parrilla",
+          "price": "$16.50",
+          "shortDescription": "Corte de res de 300 g, arroz, papas y ensalada fresca.",
+          "imageURL": "https://images.unsplash.com/photo-1678684279246-96e6afb970f2?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_lomo_fino",
+          "name": "Lomo Fino con Papas",
+          "category": "Parrilla",
+          "price": "$18.00",
+          "shortDescription": "Lomo fino sellado al punto, papas rústicas y brócoli al vapor.",
+          "imageURL": "https://images.unsplash.com/photo-1676300185579-ed2b14891d82?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_brochetas",
+          "name": "Brochetas Mixtas",
+          "category": "Parrilla",
+          "price": "$13.50",
+          "shortDescription": "Res, pollo y vegetales asados, servidos con salsa criolla.",
+          "imageURL": "https://images.unsplash.com/photo-1676300184761-92585b329535?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_chorizo",
+          "name": "Chorizo Parrillero con Arroz",
+          "category": "Parrilla",
+          "price": "$11.50",
+          "shortDescription": "Chorizo artesanal a la parrilla con arroz y salsa de ají.",
+          "imageURL": "https://images.unsplash.com/photo-1777199160034-565d154d41e9?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_costillas",
+          "name": "Costillas BBQ",
+          "category": "Parrilla",
+          "price": "$15.00",
+          "shortDescription": "Costillas de cerdo glaseadas, cocción lenta, con papas fritas.",
+          "imageURL": "https://images.unsplash.com/photo-1576511053046-7e445c5b95af?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_pulpo",
+          "name": "Pulpo a la Parrilla",
+          "category": "Mariscos",
+          "price": "$17.00",
+          "shortDescription": "Pulpo tierno con papas al ajillo y aceite de pimentón.",
+          "imageURL": "https://images.unsplash.com/photo-1764397514739-57a0ac81330d?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_arroz_camaron",
+          "name": "Arroz con Camarones",
+          "category": "Mariscos",
+          "price": "$12.50",
+          "shortDescription": "Arroz marinero con camarones, pimientos y sofrito de la casa.",
+          "imageURL": "https://images.unsplash.com/photo-1761314025611-957a20e3e8a3?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_paella",
+          "name": "Paella de Mariscos (2 personas)",
+          "category": "Mariscos",
+          "price": "$28.00",
+          "shortDescription": "Camarón, calamar y pescado sobre arroz al azafrán. 35 min.",
+          "imageURL": "https://images.unsplash.com/photo-1775201651117-2e8aa549f04c?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_cazuela",
+          "name": "Cazuela de Mariscos",
+          "category": "Sopas",
+          "price": "$13.00",
+          "shortDescription": "Caldo cremoso de mariscos con plátano verde y cilantro.",
+          "imageURL": "https://images.unsplash.com/photo-1571167366136-b57e07761625?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_sopa_camaron",
+          "name": "Sopa de Camarón",
+          "category": "Sopas",
+          "price": "$9.50",
+          "shortDescription": "Sopa especiada con camarones, arroz y toque de maní.",
+          "imageURL": "https://images.unsplash.com/photo-1761037994516-502ed10932b0?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_tres_leches",
+          "name": "Torta Tres Leches",
+          "category": "Postres",
+          "price": "$5.50",
+          "shortDescription": "Bizcocho empapado en tres leches con merengue suave.",
+          "imageURL": "https://images.unsplash.com/photo-1559620192-032c4bc4674e?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_brownie",
+          "name": "Brownie con Helado",
+          "category": "Postres",
+          "price": "$6.00",
+          "shortDescription": "Brownie tibio de chocolate con helado de vainilla.",
+          "imageURL": "https://images.unsplash.com/photo-1606884285898-277317a7bf12?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_volcan",
+          "name": "Volcán de Chocolate",
+          "category": "Postres",
+          "price": "$6.50",
+          "shortDescription": "Corazón de chocolate fundido. Tarda 12 minutos, vale cada uno.",
+          "imageURL": "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_tiramisu",
+          "name": "Tiramisú",
+          "category": "Postres",
+          "price": "$6.00",
+          "shortDescription": "Capas de bizcocho al café y crema de mascarpone.",
+          "imageURL": "https://images.unsplash.com/photo-1763585055859-a1fffe9cb8f0?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_limonada",
+          "name": "Limonada Frozen",
+          "category": "Bebidas",
+          "price": "$3.50",
+          "shortDescription": "Limón, hielo y un toque de menta. Sin alcohol.",
+          "imageURL": "https://images.unsplash.com/photo-1622597467821-df79dcb4f94d?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_naranja",
+          "name": "Jugo de Naranja Natural",
+          "category": "Bebidas",
+          "price": "$3.00",
+          "shortDescription": "Exprimido al momento. Sin azúcar añadida.",
+          "imageURL": "https://images.unsplash.com/photo-1625321643320-5321f48312b2?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_maracuya",
+          "name": "Cóctel de Maracuyá",
+          "category": "Bebidas",
+          "price": "$6.00",
+          "shortDescription": "Maracuyá, ron blanco y hielo. Prohibido para menores.",
+          "imageURL": "https://images.unsplash.com/photo-1775204341635-6c234f843a4b?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_jugos",
+          "name": "Jugos Naturales (jarra)",
+          "category": "Bebidas",
+          "price": "$7.50",
+          "shortDescription": "Jarra de 1 litro: mora, naranjilla, maracuyá o tomate de árbol.",
+          "imageURL": "https://images.unsplash.com/photo-1603569283847-aa295f0d016a?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "cafe_bar",
+    "theme": "gastro",
+    "fuente": "setup_demo_03",
+    "logo": {
+      "etiqueta": "CAFÉ · BAR",
+      "fondo": "#0b0502",
+      "acento": "#ff6b35",
+      "texto": "#fde8d3"
+    },
+    "copy": {
+      "jobTitle": "Café y bar",
+      "bio": "Tu lugar para tomar algo en {{ciudad}}. Mira la carta y reserva tu mesa desde este perfil.",
+      "aboutMe": "En {{nombre}} te esperamos con buen ambiente y una carta pensada para compartir. Conoce lo que ofrecemos y reserva tu mesa desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#0b0502",
+      "buttonColor": "#ff6b35",
+      "buttonTextColor": "#ffffff",
+      "textColor": "#fde8d3",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "23:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "23:30"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "12:00",
+          "closeTime": "18:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1709548145082-04d0cde481d4?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1526069631228-723c945bea6b?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1709548145082-04d0cde481d4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1667388969250-1c7220bf3f37?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1764408182167-043042cb086e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1775497950071-965cf9e20b2f?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1761314036709-f6f68a3d7cf1?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "22:00"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "22:00"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "22:00"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "22:00"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "23:30"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "23:30"
+        },
+        "sunday": {
+          "isActive": true,
+          "start": "12:00",
+          "end": "18:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 10,
+        "openTime": "12:00",
+        "closeTime": "22:00",
+        "daysAhead": 30,
+        "autoConfirm": false
+      },
+      "tableCount": 14,
+      "products": [
+        {
+          "id": "dish_empanadas",
+          "name": "Empanadas de Viento (4 uds)",
+          "category": "Entradas",
+          "price": "$5.50",
+          "shortDescription": "Masa crujiente rellena de queso, espolvoreada con azúcar glass.",
+          "imageURL": "https://images.unsplash.com/photo-1774971343509-d575ec6bd3af?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_tres_leches",
+          "name": "Torta Tres Leches",
+          "category": "Postres",
+          "price": "$5.50",
+          "shortDescription": "Bizcocho empapado en tres leches con merengue suave.",
+          "imageURL": "https://images.unsplash.com/photo-1559620192-032c4bc4674e?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_brownie",
+          "name": "Brownie con Helado",
+          "category": "Postres",
+          "price": "$6.00",
+          "shortDescription": "Brownie tibio de chocolate con helado de vainilla.",
+          "imageURL": "https://images.unsplash.com/photo-1606884285898-277317a7bf12?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_volcan",
+          "name": "Volcán de Chocolate",
+          "category": "Postres",
+          "price": "$6.50",
+          "shortDescription": "Corazón de chocolate fundido. Tarda 12 minutos, vale cada uno.",
+          "imageURL": "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_tiramisu",
+          "name": "Tiramisú",
+          "category": "Postres",
+          "price": "$6.00",
+          "shortDescription": "Capas de bizcocho al café y crema de mascarpone.",
+          "imageURL": "https://images.unsplash.com/photo-1763585055859-a1fffe9cb8f0?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_limonada",
+          "name": "Limonada Frozen",
+          "category": "Bebidas",
+          "price": "$3.50",
+          "shortDescription": "Limón, hielo y un toque de menta. Sin alcohol.",
+          "imageURL": "https://images.unsplash.com/photo-1622597467821-df79dcb4f94d?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_naranja",
+          "name": "Jugo de Naranja Natural",
+          "category": "Bebidas",
+          "price": "$3.00",
+          "shortDescription": "Exprimido al momento. Sin azúcar añadida.",
+          "imageURL": "https://images.unsplash.com/photo-1625321643320-5321f48312b2?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_maracuya",
+          "name": "Cóctel de Maracuyá",
+          "category": "Bebidas",
+          "price": "$6.00",
+          "shortDescription": "Maracuyá, ron blanco y hielo. Prohibido para menores.",
+          "imageURL": "https://images.unsplash.com/photo-1775204341635-6c234f843a4b?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "dish_jugos",
+          "name": "Jugos Naturales (jarra)",
+          "category": "Bebidas",
+          "price": "$7.50",
+          "shortDescription": "Jarra de 1 litro: mora, naranjilla, maracuyá o tomate de árbol.",
+          "imageURL": "https://images.unsplash.com/photo-1603569283847-aa295f0d016a?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "clinica",
+    "theme": "medical",
+    "fuente": "setup_demo_07",
+    "logo": {
+      "etiqueta": "SALUD",
+      "fondo": "#020813",
+      "acento": "#2563eb",
+      "texto": "#eaf2ff"
+    },
+    "copy": {
+      "jobTitle": "Atención médica y salud",
+      "bio": "Cuidamos tu salud en {{ciudad}}. Agenda tu cita desde este perfil.",
+      "aboutMe": "En {{nombre}} nos dedicamos a cuidar tu salud y la de tu familia. Conoce nuestros servicios y agenda tu cita desde este perfil, sin llamadas ni esperas."
+    },
+    "perfil": {
+      "backgroundColor": "#020813",
+      "buttonColor": "#2563eb",
+      "buttonTextColor": "#ffffff",
+      "textColor": "#eaf2ff",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1769698678497-c41f0ab47c3e?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1629909614456-6b1c5c94cecc?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1777269749032-d8d458ae594d?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1758691462848-ba1e929da259?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1758691461990-03b49d969495?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1631815590016-ebce183022ce?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1659353888633-bc0db91345df?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "07:30",
+          "end": "19:00"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "14:00"
+        },
+        "sunday": {
+          "isActive": false,
+          "start": "09:00",
+          "end": "18:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 1,
+        "openTime": "07:30",
+        "closeTime": "18:30",
+        "daysAhead": 45,
+        "autoConfirm": false
+      },
+      "tableCount": 4,
+      "products": [
+        {
+          "id": "med_consulta",
+          "name": "Consulta general",
+          "category": "Consultas",
+          "price": "$25.00",
+          "shortDescription": "Evaluación, diagnóstico y plan de tratamiento.",
+          "imageURL": "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "med_control",
+          "name": "Consulta de control",
+          "category": "Consultas",
+          "price": "$20.00",
+          "shortDescription": "Seguimiento de tu tratamiento o resultados.",
+          "available": true
+        }
+      ],
+      "clinicServices": [
+        "Consulta general",
+        "Consulta de control"
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "salud",
+    "theme": "medical",
+    "fuente": "setup_demo_07",
+    "logo": {
+      "etiqueta": "SALUD",
+      "fondo": "#020813",
+      "acento": "#2563eb",
+      "texto": "#eaf2ff"
+    },
+    "copy": {
+      "jobTitle": "Salud y bienestar",
+      "bio": "Salud y bienestar en {{ciudad}}. Escríbenos por WhatsApp y te ayudamos.",
+      "aboutMe": "En {{nombre}} estamos para ayudarte con tu salud y bienestar. Escríbenos desde este perfil y te atendemos."
+    },
+    "perfil": {
+      "backgroundColor": "#020813",
+      "buttonColor": "#2563eb",
+      "buttonTextColor": "#ffffff",
+      "textColor": "#eaf2ff",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "07:30",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ]
+    }
+  },
+  {
+    "clave": "veterinaria",
+    "theme": "petcare",
+    "fuente": "setup_demo_06",
+    "logo": {
+      "etiqueta": "VETERINARIA",
+      "fondo": "#04100f",
+      "acento": "#0ea5a4",
+      "texto": "#e6fffd"
+    },
+    "copy": {
+      "jobTitle": "Veterinaria · Cuidado de mascotas",
+      "bio": "Cuidamos a tu mejor amigo en {{ciudad}}. Agenda su cita desde este perfil.",
+      "aboutMe": "En {{nombre}} cuidamos la salud y el bienestar de tu mascota. Conoce nuestros servicios y agenda su cita desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#04100f",
+      "buttonColor": "#0ea5a4",
+      "buttonTextColor": "#ffffff",
+      "textColor": "#e6fffd",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "16:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "10:00",
+          "closeTime": "14:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1602979677071-1781b7f40023?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1757553532952-401e0b0e9386?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "19:00"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "19:00"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "19:00"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "19:00"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "19:00"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "16:00"
+        },
+        "sunday": {
+          "isActive": true,
+          "start": "10:00",
+          "end": "14:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 1,
+        "openTime": "08:00",
+        "closeTime": "18:00",
+        "daysAhead": 30,
+        "autoConfirm": false
+      },
+      "tableCount": 4,
+      "products": [
+        {
+          "id": "pet_s_consulta",
+          "name": "Consulta general",
+          "category": "Servicios",
+          "price": "$15.00",
+          "shortDescription": "Examen clínico completo con diagnóstico y plan de tratamiento.",
+          "imageURL": "https://images.unsplash.com/photo-1770836037289-e00e5f351d11?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_s_vacuna",
+          "name": "Vacunación",
+          "category": "Servicios",
+          "price": "$22.00",
+          "shortDescription": "Esquema completo con carné de vacunación sellado.",
+          "imageURL": "https://images.unsplash.com/photo-1770836037275-38b44e4b101f?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_s_bano",
+          "name": "Baño medicado y peluquería",
+          "category": "Servicios",
+          "price": "$18.00",
+          "shortDescription": "Baño, corte de pelo, limpieza de oídos y corte de uñas.",
+          "imageURL": "https://images.unsplash.com/photo-1719464454959-9cf304ef4774?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_s_desparasitacion",
+          "name": "Desparasitación",
+          "category": "Servicios",
+          "price": "$8.00",
+          "shortDescription": "Desparasitación interna según peso. Incluye registro.",
+          "imageURL": "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        }
+      ],
+      "clinicServices": [
+        "Consulta general",
+        "Vacunación",
+        "Baño y peluquería",
+        "Desparasitación"
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "mascotas",
+    "theme": "petcare",
+    "fuente": "setup_demo_06",
+    "logo": {
+      "etiqueta": "MASCOTAS",
+      "fondo": "#04100f",
+      "acento": "#0ea5a4",
+      "texto": "#e6fffd"
+    },
+    "copy": {
+      "jobTitle": "Tienda de mascotas",
+      "bio": "Todo para tu mascota en {{ciudad}}. Escríbenos por WhatsApp y te atendemos.",
+      "aboutMe": "En {{nombre}} encuentras lo que tu mascota necesita. Escríbenos desde este perfil y te ayudamos."
+    },
+    "perfil": {
+      "backgroundColor": "#04100f",
+      "buttonColor": "#0ea5a4",
+      "buttonTextColor": "#ffffff",
+      "textColor": "#e6fffd",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "16:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "10:00",
+          "closeTime": "14:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1602979677071-1781b7f40023?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1757553532952-401e0b0e9386?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "inmobiliaria",
+    "theme": "realty",
+    "fuente": "setup_demo_08",
+    "logo": {
+      "etiqueta": "INMOBILIARIA",
+      "fondo": "#141210",
+      "acento": "#c9a86a",
+      "texto": "#f2ece1"
+    },
+    "copy": {
+      "jobTitle": "Inmobiliaria · Compra, venta y arriendo",
+      "bio": "Te acompañamos a encontrar el inmueble ideal en {{ciudad}}. Conversemos por WhatsApp.",
+      "aboutMe": "En {{nombre}} te asesoramos en la compra, venta y arriendo de inmuebles. Cuéntanos qué buscas y te ayudamos a encontrarlo."
+    },
+    "perfil": {
+      "backgroundColor": "#141210",
+      "buttonColor": "#c9a86a",
+      "buttonTextColor": "#141210",
+      "textColor": "#f2ece1",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "10:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1782392429107-fd725ad8d10a?auto=format&fit=crop&w=1400&q=75"
+    }
+  },
+  {
+    "clave": "gimnasios",
+    "theme": "gym",
+    "fuente": "setup_demo_10",
+    "logo": {
+      "etiqueta": "GIMNASIO",
+      "fondo": "#0a0c09",
+      "acento": "#c6f432",
+      "texto": "#f1f5e9"
+    },
+    "copy": {
+      "jobTitle": "Gimnasio · Entrenamiento y clases",
+      "bio": "Entrena con nosotros en {{ciudad}}. Conoce nuestros planes y horarios desde este perfil.",
+      "aboutMe": "En {{nombre}} te acompañamos a alcanzar tus metas con entrenamiento constante y buen ambiente. Conoce nuestros planes y reserva tu clase desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#0a0c09",
+      "buttonColor": "#c6f432",
+      "buttonTextColor": "#0a0c09",
+      "textColor": "#f1f5e9",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "05:30",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "05:30",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "05:30",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "05:30",
+          "closeTime": "22:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "05:30",
+          "closeTime": "21:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "07:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "12:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "gym_settings": {
+        "bookingEnabled": true,
+        "bookingDaysAhead": 14,
+        "membersOnly": false,
+        "timezone": "America/Guayaquil"
+      },
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "hoteles",
+    "theme": "hotel",
+    "fuente": "setup_demo_11",
+    "logo": {
+      "etiqueta": "HOTEL",
+      "fondo": "#130b0e",
+      "acento": "#d9958b",
+      "texto": "#f6ece6"
+    },
+    "copy": {
+      "jobTitle": "Hotel · Hospedaje",
+      "bio": "Descansa en {{ciudad}}. Conoce nuestras habitaciones y reserva desde este perfil.",
+      "aboutMe": "En {{nombre}} queremos que tu estadía sea cómoda y tranquila. Conoce nuestras habitaciones y reserva directo desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#130b0e",
+      "buttonColor": "#d9958b",
+      "buttonTextColor": "#1a0d10",
+      "textColor": "#f6ece6",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "hotel_settings": {
+        "bookingEnabled": true,
+        "timezone": "America/Guayaquil"
+      },
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "tiendas",
+    "theme": "ecom",
+    "fuente": "setup_demo_04",
+    "logo": {
+      "etiqueta": "TIENDA",
+      "fondo": "#100a06",
+      "acento": "#d9a066",
+      "texto": "#f3e2cc"
+    },
+    "copy": {
+      "jobTitle": "Tienda",
+      "bio": "Conoce lo que tenemos para ti en {{ciudad}}. Escríbenos por WhatsApp y te atendemos.",
+      "aboutMe": "En {{nombre}} te esperamos con lo que necesitas. Escríbenos desde este perfil y te ayudamos con tu compra."
+    },
+    "perfil": {
+      "backgroundColor": "#100a06",
+      "buttonColor": "#d9a066",
+      "buttonTextColor": "#1a0f08",
+      "textColor": "#f3e2cc",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ]
+    }
+  },
+  {
+    "clave": "talleres",
+    "theme": "ecom",
+    "fuente": "setup_demo_04",
+    "logo": {
+      "etiqueta": "TALLER",
+      "fondo": "#100a06",
+      "acento": "#d9a066",
+      "texto": "#f3e2cc"
+    },
+    "copy": {
+      "jobTitle": "Taller · Servicios",
+      "bio": "Servicio de confianza en {{ciudad}}. Escríbenos por WhatsApp y coordinamos tu cita.",
+      "aboutMe": "En {{nombre}} nos encargamos de tu trabajo con responsabilidad. Cuéntanos qué necesitas desde este perfil y coordinamos."
+    },
+    "perfil": {
+      "backgroundColor": "#100a06",
+      "buttonColor": "#d9a066",
+      "buttonTextColor": "#1a0f08",
+      "textColor": "#f3e2cc",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ]
+    }
+  },
+  {
+    "clave": "oficinas",
+    "theme": "ecom",
+    "fuente": "setup_demo_04",
+    "logo": {
+      "etiqueta": "SERVICIOS",
+      "fondo": "#100a06",
+      "acento": "#d9a066",
+      "texto": "#f3e2cc"
+    },
+    "copy": {
+      "jobTitle": "Servicios profesionales",
+      "bio": "Servicios profesionales en {{ciudad}}. Escríbenos por WhatsApp y conversemos.",
+      "aboutMe": "En {{nombre}} te asesoramos con atención personalizada. Cuéntanos tu caso desde este perfil y te respondemos."
+    },
+    "perfil": {
+      "backgroundColor": "#100a06",
+      "buttonColor": "#d9a066",
+      "buttonTextColor": "#1a0f08",
+      "textColor": "#f3e2cc",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ]
+    }
+  }
+]
