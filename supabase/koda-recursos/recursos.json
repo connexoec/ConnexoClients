@@ -4666,7 +4666,7 @@
             "id": "dc511509-d59e-4c39-a857-7c9e118997f7",
             "name": "Estampado DTF por pedido (lote especial)",
             "category": "Estampados",
-            "description": "Transferencia DTF para pedidos con múltiples diseños. Próximamente de nuevo en stock de película.",
+            "description": "Transferencia DTF para pedidos con múltiples diseños.",
             "images": [
               "https://images.unsplash.com/photo-1634713157685-676e35324215?auto=format&fit=crop&w=900&q=75",
               "https://images.unsplash.com/photo-1663433567177-9f94be0bff4c?auto=format&fit=crop&w=900&q=75"
@@ -4686,7 +4686,7 @@
             "techniques": [
               "DTF"
             ],
-            "is_available": false
+            "is_available": true
           }
         ]
       }
