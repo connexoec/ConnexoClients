@@ -561,6 +561,52 @@ async function webhook(db: Admin, body: Json): Promise<Response> {
   return json({ ok: true, hechos, eventos });
 }
 
+// ── Acción: suscribir (la app de Meta recibe los avisos de esa cuenta de WhatsApp) ──
+// Sin esto Meta no entrega los toques de botones ni las respuestas, aunque la app esté publicada y suscrita al campo
+// `messages`: la CUENTA de WhatsApp (WABA) también debe tener suscrita la app. Es lo que hace «Conectar activos» en el
+// panel; si el panel no deja, se hace con la API: GET lista las apps suscritas, POST suscribe la app del token.
+async function graph(c: Config, metodo: "GET" | "POST", ruta: string): Promise<{ ok: boolean; data: Json }> {
+  try {
+    const res = await fetch(`https://graph.facebook.com/${c.version}/${ruta}`, {
+      method: metodo,
+      headers: { Authorization: `Bearer ${c.token}` },
+      signal: AbortSignal.timeout(TIMEOUT_META_MS),
+    });
+    const data: Json = await res.json().catch(() => ({}));
+    return { ok: res.ok && !data?.error, data };
+  } catch (e) {
+    return { ok: false, data: { error: { message: e instanceof Error ? e.message : String(e) } } };
+  }
+}
+
+async function suscribir(body: Json): Promise<Response> {
+  const c = config();
+  if (!configurado(c)) return json({ error: "Falta WHATSAPP_TOKEN / WHATSAPP_PHONE_NUMBER_ID." }, 503);
+  const ids = (Array.isArray(body.waba_ids) ? body.waba_ids : []).filter((x: unknown): x is string => typeof x === "string" && /^\d{8,20}$/.test(x)).slice(0, 5);
+  if (!ids.length) return json({ error: "Pasa waba_ids: identificadores numéricos de cuentas de WhatsApp Business." }, 400);
+  const aplicar = body.aplicar === true;
+
+  const resultados: Json[] = [];
+  for (const id of ids) {
+    const info = await graph(c, "GET", `${id}?fields=id,name`);
+    const r: Json = { waba_id: id, nombre: info.data?.name ?? null, acceso: info.ok };
+    if (!info.ok) r.error = String(info.data?.error?.message ?? "sin acceso").slice(0, 300);
+    else {
+      const antes = await graph(c, "GET", `${id}/subscribed_apps`);
+      r.apps_antes = antes.ok ? (antes.data?.data ?? []).map((a: Json) => a?.whatsapp_business_api_data?.name ?? a?.name ?? a?.whatsapp_business_api_data?.id ?? "?") : "no se pudo leer";
+      if (aplicar) {
+        const post = await graph(c, "POST", `${id}/subscribed_apps`);
+        r.suscrito = post.ok && post.data?.success === true;
+        if (!r.suscrito) r.error = String(post.data?.error?.message ?? JSON.stringify(post.data)).slice(0, 300);
+        const despues = await graph(c, "GET", `${id}/subscribed_apps`);
+        r.apps_despues = despues.ok ? (despues.data?.data ?? []).map((a: Json) => a?.whatsapp_business_api_data?.name ?? a?.name ?? a?.whatsapp_business_api_data?.id ?? "?") : "no se pudo leer";
+      }
+    }
+    resultados.push(r);
+  }
+  return json({ ok: true, aplicado: aplicar, resultados });
+}
+
 // ── Entrada ─────────────────────────────────────────────────────────────────
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -578,6 +624,7 @@ Deno.serve(async (req: Request) => {
     if (body.action === "cupo") return json({ ok: true, ...(await cupo(db, config())) });
     if (body.action === "enviar") return await enviar(db, body);
     if (body.action === "webhook") return await webhook(db, body);
+    if (body.action === "suscribir") return await suscribir(body);
     return json({ error: "Acción desconocida." }, 400);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);
