@@ -38,8 +38,20 @@ const VERSION_CONTRATO = 1;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const WHATSAPP_RE = /^\+5939\d{8}$/;
-// Dominio propio para los correos sintéticos (nadie lee ese buzón; no se envía nada ahí).
-const DOMINIO_SINTETICO = "prospectos.connexoapp.com";
+// Correo interno de acceso cuando KODA no trae uno real: <usuario>@connexoapp.com (corto y con el nombre del negocio, para que
+// se vea confiable). No es un buzón real: nunca se envía nada ahí. Los borradores viejos (p-xxxx@prospectos.connexoapp.com)
+// se renombran a este formato cuando el negocio acepta (ver kodaWhatsApp).
+const DOMINIO_SINTETICO = "connexoapp.com";
+// Buzones de rol que podrían existir de verdad en connexoapp.com: un negocio con ese nombre recibe «-perfil».
+const BUZONES_RESERVADOS = new Set([
+  "admin", "administrador", "info", "hola", "hello", "contacto", "contact", "ventas", "sales", "soporte", "support", "ayuda",
+  "help", "noreply", "no-reply", "postmaster", "abuse", "webmaster", "root", "security", "seguridad", "billing", "pagos",
+  "facturacion", "marketing", "prensa", "rrhh", "empleo", "trabajo", "connexo", "connexoec", "koda",
+]);
+const correoInterno = (username: string): string => {
+  const base = username.slice(0, 40);
+  return `${BUZONES_RESERVADOS.has(base) ? `${base}-perfil` : base}@${DOMINIO_SINTETICO}`;
+};
 // Rutas de la app que un username no puede pisar (`/:username` es el perfil público).
 const USERNAMES_RESERVADOS = new Set([
   "auth", "dashboard", "admin", "api", "login", "registro", "signup", "superadmin", "assets", "public",
@@ -485,7 +497,10 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
   // ── Cuenta borrador ──────────────────────────────────────────────────────
   const username = await usernameLibre(db, nombre, str(n.ciudad, 80));
   const emailKoda = str(n.email, 200)?.toLowerCase() ?? null;
-  const sintetico = () => `p-${textoAleatorio(12, "abcdefghjkmnpqrstuvwxyz23456789")}@${DOMINIO_SINTETICO}`;
+  // Corto y con el nombre del negocio; si ya estuviera tomado, se le agrega un sufijo aleatorio.
+  const sintetico = (conSufijo = false) =>
+    conSufijo ? `${username.slice(0, 34)}-${textoAleatorio(4, "abcdefghjkmnpqrstuvwxyz23456789")}@${DOMINIO_SINTETICO}` : correoInterno(username);
+  const yaExiste = (m: string) => /already|registered|exists/i.test(m);
   let email = emailKoda && EMAIL_RE.test(emailKoda) ? emailKoda : sintetico();
   let emailReal = email === emailKoda;
   let nota: string | null = null;
@@ -494,11 +509,16 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
   const meta = { origen: "koda", koda: true, username, displayName: nombre, full_name: nombre };
 
   let creado = await db.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: meta });
-  if (creado.error && emailReal && /already|registered|exists/i.test(creado.error.message)) {
+  if (creado.error && emailReal && yaExiste(creado.error.message)) {
     // Ese correo ya tiene cuenta en Connexo: no se toca. Se usa uno sintético y se deja aviso.
     nota = `El correo ${email} ya tiene cuenta en Connexo; se creó el borrador con un correo interno.`;
     email = sintetico();
     emailReal = false;
+    creado = await db.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: meta });
+  }
+  if (creado.error && !emailReal && yaExiste(creado.error.message)) {
+    // El correo interno corto ya existe (p. ej. un perfil anterior con el mismo usuario): se prueba con un sufijo.
+    email = sintetico(true);
     creado = await db.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: meta });
   }
   if (creado.error || !creado.data.user) return json({ error: `No se pudo crear la cuenta: ${creado.error?.message ?? "sin detalle"}` }, 500);
