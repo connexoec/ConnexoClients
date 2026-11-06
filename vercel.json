@@ -17,6 +17,9 @@
       ]
     }
   ],
+  "crons": [
+    { "path": "/api/cron/koda-ciclo", "schedule": "0 14 * * *" }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

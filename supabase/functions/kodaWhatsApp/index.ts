@@ -18,6 +18,9 @@
 //   { action: 'enviar', envio_ids: string[] }   → envía la plantilla a los aprobados que quepan hoy
 //                                                  (`sin_variable: true` solo para pruebas internas con la plantilla sin variable; KODA nunca lo manda)
 //   { action: 'webhook', payload: <Meta> }      → procesa respuestas de botones, bajas y fallos de entrega
+//   { action: 'ciclo' }                         → ciclo DIARIO (Fase 5): vence invitaciones, aviso del día 5, suspende pruebas
+//                                                  terminadas y, a los 30 días, borra datos (solo con KODA_WA_PURGA=1). Lo llama el cron de Vercel
+//   { action: 'suscribir', waba_ids, aplicar? } → ver/suscribir la app de Meta a una cuenta de WhatsApp (webhooks)
 //
 // Secretos (supabase secrets set …):
 //   KODA_BRIDGE_SECRET          el mismo de kodaIntake
@@ -31,6 +34,9 @@
 //   KODA_WA_HEADER_IMAGE_URL    imagen del encabezado (por defecto <sitio>/koda-saludo.jpg)
 //   KODA_WA_SITE_URL            https://www.connexoapp.com (¡con www!: sin www no resuelve)
 //   WHATSAPP_GRAPH_VERSION      v23.0
+//   KODA_WA_TPL_RECORDATORIO    plantilla del aviso del día 5 (cuerpo {{1}} nombre, {{2}} fecha; botones «Quiero seguir» / «No, gracias»)
+//   KODA_WA_TPL_FIN             plantilla del aviso de fin de prueba (cuerpo {{1}} nombre, {{2}} fecha; botón «Reactivar»)
+//   KODA_WA_PURGA               «1» activa el BORRADO automático a los 30 días (sin esto solo avisa a Discord)
 //
 // Requiere haber ejecutado setup_koda_bridge.sql y setup_koda_whatsapp.sql.
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -47,7 +53,7 @@ const CONCURRENCIA = 3;
 const TIMEOUT_META_MS = 15_000;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const WHATSAPP_RE = /^\+5939\d{8}$/;
-const PAYLOAD_RE = /^koda:(si|luego):([0-9a-f]{32})$/;
+const PAYLOAD_RE = /^koda:(si|luego|seguir|reactivar):([0-9a-f]{32})$/;
 const ALFABETO_CLAVE = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 // Texto libre que, SI ES TODO EL MENSAJE (ya normalizado, sin tildes), se toma como «no me escriban más».
 // Se exige coincidencia completa: «no sé de qué se trata» NO es una baja.
@@ -336,16 +342,22 @@ function fechaCorta(iso: string): string {
 }
 
 /** Qué quiso decir el negocio con un botón: el token de la invitación y si dijo sí o «más tarde». */
-function leerBoton(m: WaMsg): { accion: "si" | "luego"; token: string | null } | null {
+type AccionBoton = "si" | "luego" | "seguir" | "reactivar";
+function leerBoton(m: WaMsg): { accion: AccionBoton; token: string | null } | null {
   const payload = m.button?.payload ?? m.interactive?.button_reply?.id ?? "";
   const p = PAYLOAD_RE.exec(payload);
-  if (p) return { accion: p[1] as "si" | "luego", token: p[2] };
+  if (p) return { accion: p[1] as AccionBoton, token: p[2] };
   // Sin payload (mensajes viejos): se reconoce por el texto del botón y se ubica por el mensaje citado.
   const t = normalizar(m.button?.text ?? m.interactive?.button_reply?.title ?? "");
   if (/enviar demo|^si\b/.test(t)) return { accion: "si", token: null };
-  if (/mas tarde/.test(t)) return { accion: "luego", token: null };
+  if (/mas tarde|no gracias/.test(t)) return { accion: "luego", token: null };
+  if (/quiero seguir/.test(t)) return { accion: "seguir", token: null };
+  if (/reactivar/.test(t)) return { accion: "reactivar", token: null };
   return null;
 }
+
+const PROPUESTA_VENCIDA =
+  "Esa propuesta ya venció y por privacidad borramos los datos de preparación. Con gusto te preparamos otra: escríbenos por aquí y la armamos. 🙌";
 
 type Fila = Json;
 
@@ -446,8 +458,35 @@ async function procesarRespuesta(db: Admin, c: Config, m: WaMsg, out: Evento[]):
     if (!b) return;
     let f = b.token ? await buscarPorToken(db, b.token) : null;
     if (!f && m.context?.id) f = await buscarPorMensaje(db, m.context.id);
-    if (!f) return;                                    // no es un negocio de KODA (o token inventado)
+    if (!f) {
+      // Con un token bien formado pero sin negocio: su invitación ya se borró (política de 30 días). Se le avisa a quien tocó
+      // el botón (nos escribió él, así que se puede contestar) y no se activa nada.
+      if (b.token) await enviarTexto(c, from, PROPUESTA_VENCIDA).catch(() => {});
+      return;
+    }
     if (f.whatsapp !== `+${from}`) return;             // el botón lo tocó otro número: se ignora
+
+    // «Quiero seguir» (aviso del día 5) / «Reactivar» (aviso de fin de prueba): se le avisa al propietario, que cierra la venta.
+    if (b.accion === "seguir" || b.accion === "reactivar") {
+      const r = await db.rpc("koda_wa_interes", { p_id: f.id, p_tipo: b.accion });
+      if (r.error) {
+        if (!esReglaDeNegocio(r.error)) throw new Error(r.error.message);
+        if (/ya venci/i.test(r.error.message)) await enviarTexto(c, from, PROPUESTA_VENCIDA).catch(() => {});
+        console.error("[kodaWhatsApp] interés:", r.error.message);
+        return;
+      }
+      if ((r.data as Json).cambio) {
+        await enviarTexto(c, from, "¡Genial! 🎉 Te escribimos en breve para activar tu plan y que no pierdas tu perfil.").catch(() => {});
+        const fila = (r.data as Json).prospecto as Fila;
+        out.push({
+          msg_id: msgId, tipo: b.accion, clave: `${b.accion} ${f.id}`,
+          texto: b.accion === "seguir"
+            ? `💰 **${nombreDe(fila)}** quiere seguir con Connexo (su prueba termina ${fila.trial_ends_at ? `el ${fechaCorta(fila.trial_ends_at)}` : "pronto"}). Escríbele para activar su plan.`
+            : `🔁 **${nombreDe(fila)}** pide reactivar su perfil${fila.suspendido_at ? ` (suspendido el ${fechaCorta(fila.suspendido_at)})` : ""}. Escríbele para activarlo.`,
+        });
+      }
+      return;
+    }
 
     if (b.accion === "si") {
       if (f.opt_out) return;
@@ -491,8 +530,14 @@ async function procesarRespuesta(db: Admin, c: Config, m: WaMsg, out: Evento[]):
       return;
     }
     if ((r.data as Json).cambio) {
-      await enviarTexto(c, from, "¡Sin problema! 🙌 Cuando quieras ver cómo quedó tu vista previa, solo escríbenos por aquí.").catch(() => {});
-      out.push({ msg_id: msgId, tipo: "luego", clave: `declinó ${f.id}`, texto: `🕐 **${nombreDe(f)}** respondió «Ver más tarde».` });
+      if (f.estado === "aceptado") {
+        // Ya estaba en su prueba (respondió «No, gracias» al aviso del día 5): no seguirá.
+        await enviarTexto(c, from, "Entendido. Tu perfil se desactivará cuando termine tu prueba. Si cambias de idea, escríbenos por aquí. 🙌").catch(() => {});
+        out.push({ msg_id: msgId, tipo: "no_sigue", clave: `no sigue ${f.id}`, texto: `👋 **${nombreDe(f)}** no seguirá después de su prueba.` });
+      } else {
+        await enviarTexto(c, from, "¡Sin problema! 🙌 Cuando quieras ver cómo quedó tu vista previa, solo escríbenos por aquí.").catch(() => {});
+        out.push({ msg_id: msgId, tipo: "luego", clave: `declinó ${f.id}`, texto: `🕐 **${nombreDe(f)}** respondió «Ver más tarde».` });
+      }
     }
     return;
   }
@@ -561,6 +606,122 @@ async function webhook(db: Admin, body: Json): Promise<Response> {
   return json({ ok: true, hechos, eventos });
 }
 
+// ── Acción: ciclo (se ejecuta UNA vez al día desde el cron de Vercel) ─────────────────────────────────
+// 1) «WhatsApp enviado» sin respuesta a los 7 días → «vencido».   2) Día 5 de la prueba → aviso con botón «Quiero seguir».
+// 3) Prueba de 7 días terminada y sin pagar → se desactiva el perfil (+ aviso «Reactivar»).   4) A los 30 días se borran los datos
+// de quien no aceptó o no contrató (política de privacidad). Todo es idempotente: repetirlo no duplica nada.
+//
+// Los avisos (días 5 y fin) salen FUERA de la ventana de 24 h, así que exigen plantillas aprobadas de Meta; sin ellas (variables
+// KODA_WA_TPL_RECORDATORIO / KODA_WA_TPL_FIN) el ciclo igual vence, suspende y purga, y no manda esos avisos.
+// El BORRADO es irreversible: solo corre con KODA_WA_PURGA=1 (o `purgar:true`); si no, solo avisa cuántos cumplen el plazo.
+async function enviarAviso(c: Config, aNumero: string, plantilla: string, variables: string[], botonPayloads: string[]): Promise<string> {
+  return await llamarMeta(c, {
+    to: aNumero,
+    type: "template",
+    template: {
+      name: plantilla,
+      language: { code: c.idioma },
+      components: [
+        { type: "body", parameters: variables.map((t) => ({ type: "text", text: paraVariable(t) || "-" })) },
+        ...botonPayloads.map((payload, i) => ({ type: "button", sub_type: "quick_reply", index: String(i), parameters: [{ type: "payload", payload }] })),
+      ],
+    },
+  });
+}
+
+async function ciclo(db: Admin, body: Json): Promise<Response> {
+  const c = config();
+  const purgar = body.purgar === true || Deno.env.get("KODA_WA_PURGA") === "1";
+  const tplRecordatorio = Deno.env.get("KODA_WA_TPL_RECORDATORIO") ?? "";
+  const tplFin = Deno.env.get("KODA_WA_TPL_FIN") ?? "";
+  const eventos: Evento[] = [];
+  const resumen: Json = {};
+  const errores: string[] = [];
+  const nota = (paso: string, e: unknown) => errores.push(`${paso}: ${e instanceof Error ? e.message : String(e)}`);
+
+  // 1) Invitaciones sin respuesta
+  const v = await db.rpc("koda_ciclo_vencer_invitaciones");
+  if (v.error) nota("vencer invitaciones", new Error(v.error.message));
+  else {
+    resumen.invitaciones_vencidas = v.data ?? 0;
+    if ((v.data ?? 0) > 0) eventos.push({ msg_id: null, tipo: "vencidas", clave: "vencidas", texto: `⏳ ${v.data} invitación(es) de WhatsApp vencieron sin respuesta (7 días).` });
+  }
+
+  // 2) Aviso del día 5
+  if (tplRecordatorio && configurado(c)) {
+    const r = await db.rpc("koda_ciclo_reclamar_recordatorios");
+    if (r.error) nota("recordatorios", new Error(r.error.message));
+    else {
+      const enviados: string[] = []; const fallos: string[] = [];
+      for (const f of (r.data ?? []) as Json[]) {
+        try {
+          await enviarAviso(c, String(f.whatsapp).slice(1), tplRecordatorio,
+            [String(f.nombre ?? ""), f.trial_ends_at ? fechaCorta(f.trial_ends_at) : "pronto"],
+            [`koda:seguir:${f.wa_token}`, `koda:luego:${f.wa_token}`]);
+          enviados.push(String(f.nombre ?? "Un negocio"));
+        } catch (e) {
+          await db.rpc("koda_ciclo_liberar_recordatorio", { p_id: f.id });      // se reintenta mañana
+          fallos.push(`${f.nombre ?? "Un negocio"} (${e instanceof Error ? e.message : String(e)})`);
+        }
+      }
+      resumen.recordatorios = { enviados: enviados.length, fallidos: fallos.length };
+      if (enviados.length) eventos.push({ msg_id: null, tipo: "recordatorios", clave: "recordatorios", texto: `⏰ Aviso del día 5 enviado a ${enviados.length}: ${enviados.join(", ")}.` });
+      if (fallos.length) eventos.push({ msg_id: null, tipo: "recordatorios_fallo", clave: "recordatorios_fallo", texto: `⚠️ No salió el aviso del día 5 a: ${fallos.join("; ")}. Se reintenta mañana.` });
+    }
+  } else resumen.recordatorios = tplRecordatorio ? "WhatsApp sin configurar" : "sin plantilla configurada (KODA_WA_TPL_RECORDATORIO)";
+
+  // 3) Pruebas terminadas
+  const s = await db.rpc("koda_ciclo_suspender_pruebas");
+  if (s.error) nota("suspender pruebas", new Error(s.error.message));
+  else {
+    const filas = (s.data ?? []) as Json[];
+    resumen.pruebas_suspendidas = filas.length;
+    const avisados: string[] = [];
+    for (const f of filas) {
+      if (!tplFin || !configurado(c) || f.opt_out || !f.whatsapp) continue;
+      try {
+        await enviarAviso(c, String(f.whatsapp).slice(1), tplFin,
+          [String(f.nombre ?? ""), f.conserva_hasta ? fechaCorta(f.conserva_hasta) : "30 días"], [`koda:reactivar:${f.wa_token}`]);
+        await db.from("koda_prospectos").update({ wa_fin_aviso_at: new Date().toISOString() }).eq("id", f.id);
+        avisados.push(String(f.nombre ?? "Un negocio"));
+      } catch (e) { nota(`aviso de fin a ${f.nombre ?? f.id}`, e); }
+    }
+    if (filas.length) {
+      eventos.push({
+        msg_id: null, tipo: "suspendidas", clave: "suspendidas",
+        texto: `🔒 ${filas.length} prueba(s) terminaron y se desactivó el perfil: ${filas.map((f) => String(f.nombre ?? "Un negocio")).join(", ")}.` +
+          ` Sus datos se conservan 30 días.${tplFin ? ` Aviso enviado a ${avisados.length}.` : " (sin aviso: falta la plantilla KODA_WA_TPL_FIN)"}`,
+      });
+    }
+  }
+
+  // 4) Borrado a los 30 días
+  const cand = await db.rpc("koda_ciclo_candidatos_purga");
+  if (cand.error) nota("candidatos de purga", new Error(cand.error.message));
+  else {
+    const lista = (cand.data ?? []) as Json[];
+    resumen.cumplen_30_dias = lista.length;
+    if (lista.length && !purgar) {
+      eventos.push({
+        msg_id: null, tipo: "purga_pendiente", clave: "purga_pendiente",
+        texto: `🧹 ${lista.length} negocio(s) ya cumplieron 30 días (${lista.map((f) => String(f.nombre ?? "?")).slice(0, 8).join(", ")}). Aún NO se borran: falta activar la purga automática (KODA_WA_PURGA=1).`,
+      });
+    } else if (lista.length) {
+      const borrados: string[] = [];
+      for (const f of lista) {
+        const p = await db.rpc("koda_ciclo_purgar", { p_id: f.id });
+        if (p.error) nota(`borrar a ${f.nombre ?? f.id}`, new Error(p.error.message));
+        else if (!(p.data as Json)?.ya) borrados.push(String(f.nombre ?? "Un negocio"));
+      }
+      resumen.datos_eliminados = borrados.length;
+      if (borrados.length) eventos.push({ msg_id: null, tipo: "purgados", clave: "purgados", texto: `🧹 Se eliminaron los datos de ${borrados.length} negocio(s) (30 días): ${borrados.join(", ")}.` });
+    }
+  }
+
+  if (errores.length) eventos.push({ msg_id: null, tipo: "ciclo_error", clave: "ciclo_error", texto: `❗ El ciclo diario tuvo problemas: ${errores.join(" · ")}` });
+  return json({ ok: errores.length === 0, purga_activa: purgar, resumen, errores, eventos, hechos: eventos.map((e) => e.clave) });
+}
+
 // ── Acción: suscribir (la app de Meta recibe los avisos de esa cuenta de WhatsApp) ──
 // Sin esto Meta no entrega los toques de botones ni las respuestas, aunque la app esté publicada y suscrita al campo
 // `messages`: la CUENTA de WhatsApp (WABA) también debe tener suscrita la app. Es lo que hace «Conectar activos» en el
@@ -625,6 +786,7 @@ Deno.serve(async (req: Request) => {
     if (body.action === "enviar") return await enviar(db, body);
     if (body.action === "webhook") return await webhook(db, body);
     if (body.action === "suscribir") return await suscribir(body);
+    if (body.action === "ciclo") return await ciclo(db, body);
     return json({ error: "Acción desconocida." }, 400);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);
