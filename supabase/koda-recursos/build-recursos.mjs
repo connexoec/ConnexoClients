@@ -408,7 +408,11 @@ const paquetes = [
     tablas: (_d, fl) => [{
       // Catálogo de EJEMPLO (productos, técnicas y precios por volumen de la demo). No se copian clientes, pedidos ni el club mayorista.
       tabla: "sublima_products", propietario: "factory_profile_id",
-      filas: fl.sublima_products.map((p) => quitar(p, ["factory_profile_id"])),
+      // El producto «sin stock» de la demo se deja disponible y sin su nota de reposición: en un ejemplo no tiene sentido.
+      filas: fl.sublima_products.map((p) => ({
+        ...quitar(p, ["factory_profile_id"]), is_available: true,
+        description: String(p.description).replace(/ Próximamente de nuevo en stock de película\./, ""),
+      })),
     }],
     copy: {
       jobTitle: "Sublimados, bordados y uniformes",
