@@ -16,6 +16,7 @@
 // Acciones (todas con { v: 1 }):
 //   { action: 'cupo' }                          → { limite, usados, disponibles, configurado }
 //   { action: 'enviar', envio_ids: string[] }   → envía la plantilla a los aprobados que quepan hoy
+//                                                  (`sin_variable: true` solo para pruebas internas con la plantilla sin variable; KODA nunca lo manda)
 //   { action: 'webhook', payload: <Meta> }      → procesa respuestas de botones, bajas y fallos de entrega
 //
 // Secretos (supabase secrets set …):
@@ -98,6 +99,10 @@ class MetaError extends Error {
   constructor(message: string, public code: number | null, public fatal: boolean) { super(message); }
 }
 
+const SIN_VARIABLE =
+  "La plantilla aprobada NO tiene variable en el cuerpo (su texto dice literalmente «{{}}»): enviarla así saludaría «¡Hola {{}}!». " +
+  "Corrígela en Meta o crea una nueva con {{1}} y pon su nombre en KODA_WA_TEMPLATE.";
+
 /** Mensaje en español para los errores de Meta que más se ven; el resto se muestra tal cual. */
 function explicarMeta(code: number | null, titulo: string): { texto: string; fatal: boolean } {
   switch (code) {
@@ -107,9 +112,12 @@ function explicarMeta(code: number | null, titulo: string): { texto: string; fat
     case 131026: return { texto: "Ese número no tiene WhatsApp o no puede recibir el mensaje.", fatal: false };
     case 131049: return { texto: "Meta frenó este mensaje de marketing (límite de frecuencia/calidad para ese número).", fatal: false };
     case 131048: case 130429: case 131056: return { texto: "Meta pide bajar el ritmo de envío (límite de velocidad). Reintenta más tarde.", fatal: false };
-    case 132000: case 132012: case 132005: case 132007: return {
-      texto: `La plantilla no coincide con lo que se envía (${titulo}). Revisa KODA_WA_BODY_PARAM_NAME y KODA_WA_LANG.`, fatal: true,
-    };
+    case 132000: case 132012: case 132005: case 132007:
+      // Meta dice que el cuerpo espera 0 variables: el «{{}}» de la plantilla es texto literal, no una variable.
+      if (/expected number of params \(0\)/i.test(titulo)) {
+        return { texto: SIN_VARIABLE, fatal: true };
+      }
+      return { texto: `La plantilla no coincide con lo que se envía (${titulo}). Revisa KODA_WA_BODY_PARAM_NAME y KODA_WA_LANG.`, fatal: true };
     case 132001: return { texto: "La plantilla no existe con ese nombre o idioma (KODA_WA_TEMPLATE / KODA_WA_LANG).", fatal: true };
     case 132015: case 132016: return { texto: "La plantilla está pausada o deshabilitada en Meta.", fatal: true };
     case 133010: return { texto: "El número emisor no está registrado en WhatsApp Cloud API.", fatal: true };
@@ -150,7 +158,7 @@ async function llamarMeta(c: Config, cuerpo: Json): Promise<string> {
 /** Una variable de plantilla no admite saltos de línea, tabulaciones ni más de 4 espacios seguidos. */
 const paraVariable = (s: string) => s.replace(/[\r\n\t]+/g, " ").replace(/ {2,}/g, " ").trim().slice(0, 60);
 
-function cuerpoPlantilla(c: Config, aNumero: string, nombre: string, token: string, paramNombre: string): Json {
+function cuerpoPlantilla(c: Config, aNumero: string, nombre: string, token: string, paramNombre: string, sinVariable = false): Json {
   const param: Json = { type: "text", text: paraVariable(nombre) || "amigo" };
   if (paramNombre) param.parameter_name = paramNombre;
   return {
@@ -161,7 +169,7 @@ function cuerpoPlantilla(c: Config, aNumero: string, nombre: string, token: stri
       language: { code: c.idioma },
       components: [
         { type: "header", parameters: [{ type: "image", image: { link: c.imagen } }] },
-        { type: "body", parameters: [param] },
+        ...(sinVariable ? [] : [{ type: "body", parameters: [param] }]),
         // El token viaja dentro del botón: así la respuesta se asocia a ESTA invitación, no a un teléfono.
         { type: "button", sub_type: "quick_reply", index: "0", parameters: [{ type: "payload", payload: `koda:si:${token}` }] },
         { type: "button", sub_type: "quick_reply", index: "1", parameters: [{ type: "payload", payload: `koda:luego:${token}` }] },
@@ -177,8 +185,10 @@ const ERRORES_DE_FORMATO = new Set([132000, 132012]);
 const NOMBRES_ALTERNATIVOS = ["", "nombre", "name", "customer_name", "nombre_cliente", "cliente"];
 let formatoQueFunciona: string | null = null;
 
-async function enviarPlantilla(c: Config, aNumero: string, nombre: string, token: string): Promise<string> {
-  const orden = [c.paramNombre || (formatoQueFunciona ?? ""), ...NOMBRES_ALTERNATIVOS].filter((x, i, a) => a.indexOf(x) === i);
+async function enviarPlantilla(c: Config, aNumero: string, nombre: string, token: string, sinVariable = false): Promise<string> {
+  // Solo para pruebas internas (quien llama con el secreto del puente lo pide explícito): la plantilla se manda sin variable.
+  if (sinVariable) return await llamarMeta(c, cuerpoPlantilla(c, aNumero, nombre, token, "", true));
+  const orden =[c.paramNombre || (formatoQueFunciona ?? ""), ...NOMBRES_ALTERNATIVOS].filter((x, i, a) => a.indexOf(x) === i);
   let ultimo: MetaError | null = null;
   for (const paramNombre of orden) {
     try {
@@ -189,6 +199,8 @@ async function enviarPlantilla(c: Config, aNumero: string, nombre: string, token
       }
       return id;
     } catch (e) {
+      // «No tiene variable» no se arregla probando otros formatos: se corta aquí con el mensaje claro.
+      if (e instanceof MetaError && e.message === SIN_VARIABLE) throw e;
       if (e instanceof MetaError && e.code !== null && ERRORES_DE_FORMATO.has(e.code)) { ultimo = e; continue; }
       throw e;
     }
@@ -225,6 +237,7 @@ async function enviar(db: Admin, body: Json): Promise<Response> {
   const ids = [...new Set(pedidos.filter((x): x is string => typeof x === "string" && UUID_RE.test(x)))];
   if (!ids.length) return json({ error: "No elegiste ningún negocio." }, 400);
   if (ids.length > MAX_POR_LLAMADA) return json({ error: `Envía como máximo ${MAX_POR_LLAMADA} por vez.` }, 400);
+  const sinVariable = body.sin_variable === true;
 
   const c = config();
   if (!configurado(c)) {
@@ -277,7 +290,7 @@ async function enviar(db: Admin, body: Json): Promise<Response> {
       return;
     }
     try {
-      const wamid = await enviarPlantilla(c, r.whatsapp.slice(1), r.nombre ?? "", r.wa_token);
+      const wamid = await enviarPlantilla(c, r.whatsapp.slice(1), r.nombre ?? "", r.wa_token, sinVariable);
       // El mensaje YA salió: aunque no se pueda guardar su id, no se revierte (sería un doble envío).
       const g = await db.from("koda_prospectos").update({ wa_message_id: wamid, updated_at: new Date().toISOString() }).eq("id", r.id);
       if (g.error) console.error("[kodaWhatsApp] no se guardó wa_message_id:", g.error.message);
