@@ -37,6 +37,7 @@ interface Res {
 
 // Lo poco que se lee del payload de Meta.
 interface WaMessage {
+  id?: string
   from?: string
   type?: string
   text?: { body?: string }
@@ -143,24 +144,42 @@ function interesaAKoda(payload: WaPayload): boolean {
   return false
 }
 
+/** Lo que pasó con un negocio de KODA, ya redactado por kodaWhatsApp para publicarlo en Discord. */
+interface KodaEvento {
+  msg_id?: string | null
+  texto: string
+}
+
 /**
- * Pasa el payload a la función `kodaWhatsApp`. Falla (lanza) solo si conviene que Meta REINTENTE:
- * red caída, timeout o 5xx. Un 4xx (secreto mal puesto, contrato distinto) se anota y no se reintenta:
- * repetirlo no lo arregla.
+ * Pasa el payload a la función `kodaWhatsApp` y devuelve los eventos que ella redactó (aceptó, «más tarde»,
+ * baja, entrega fallida…). `error` solo se llena si conviene que Meta REINTENTE: red caída, timeout o 5xx.
+ * Un 4xx (secreto mal puesto, contrato distinto) se anota y no se reintenta: repetirlo no lo arregla.
  */
-async function forwardToKoda(payload: WaPayload): Promise<void> {
+async function forwardToKoda(payload: WaPayload): Promise<{ eventos: KodaEvento[]; error: string | null }> {
   const url = process.env.KODA_WA_URL
   const secret = process.env.KODA_BRIDGE_SECRET
-  if (!url || !secret || !interesaAKoda(payload)) return
+  if (!url || !secret || !interesaAKoda(payload)) return { eventos: [], error: null }
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-koda-secret': secret },
-    body: JSON.stringify({ v: 1, action: 'webhook', payload }),
-    signal: AbortSignal.timeout(20000),
-  })
-  if (res.status >= 500) throw new Error(`kodaWhatsApp respondió ${res.status}`)
-  if (!res.ok) console.error(`[whatsapp] kodaWhatsApp rechazó el aviso (${res.status}); no se reintenta`)
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-koda-secret': secret },
+      body: JSON.stringify({ v: 1, action: 'webhook', payload }),
+      signal: AbortSignal.timeout(20000),
+    })
+    const data = (await res.json().catch(() => ({}))) as { eventos?: unknown }
+    const eventos = (Array.isArray(data.eventos) ? data.eventos : []).filter(
+      (e): e is KodaEvento => typeof (e as KodaEvento)?.texto === 'string',
+    )
+    if (res.status >= 500) return { eventos, error: `kodaWhatsApp respondió ${res.status}` }
+    if (!res.ok) {
+      console.error(`[whatsapp] kodaWhatsApp rechazó el aviso (${res.status}); no se reintenta`)
+      return { eventos: [], error: null }
+    }
+    return { eventos, error: null }
+  } catch (err) {
+    return { eventos: [], error: err instanceof Error ? err.message : String(err) }
+  }
 }
 
 function verify(req: Req, res: Res) {
@@ -187,13 +206,9 @@ async function receive(req: Req, res: Res) {
 
   // 1) Puente KODA primero: que un botón tocado («¡Sí, enviar demo!») no dependa de que Discord responda.
   //    Todo lo que hace kodaWhatsApp es idempotente, así que si Meta reintenta por otro motivo no se duplica nada.
-  let kodaError: string | null = null
-  try {
-    await forwardToKoda(payload)
-  } catch (err) {
-    kodaError = err instanceof Error ? err.message : String(err)
-    console.error('[whatsapp] No se pudo avisar a kodaWhatsApp:', kodaError)
-  }
+  const koda = await forwardToKoda(payload)
+  const kodaError = koda.error
+  if (kodaError) console.error('[whatsapp] No se pudo avisar a kodaWhatsApp:', kodaError)
 
   // 2) Discord, como siempre.
   const discordUrl = process.env.DISCORD_WHATSAPP_WEBHOOK_URL
@@ -203,14 +218,25 @@ async function receive(req: Req, res: Res) {
   }
 
   // Los avisos de estado (enviado/entregado/leído) no traen `messages`: se ignoran.
+  // Si kodaWhatsApp ya entendió un mensaje (botón, baja…), se publica SU resumen claro («✅ Brasa & Mar aceptó la
+  // demo…») en lugar de la línea cruda; el resto de mensajes sigue como siempre.
+  const porMensaje = new Map<string, KodaEvento>()
+  for (const e of koda.eventos) if (e.msg_id) porMensaje.set(e.msg_id, e)
   const texts: string[] = []
+  const usados = new Set<KodaEvento>()
   for (const entry of payload.entry ?? []) {
     for (const change of entry.changes ?? []) {
       const value = change.value
       if (!value) continue
-      for (const m of value.messages ?? []) texts.push(formatForDiscord(m, value))
+      for (const m of value.messages ?? []) {
+        const ev = m.id ? porMensaje.get(m.id) : undefined
+        if (ev) usados.add(ev)
+        texts.push(ev ? ev.texto : formatForDiscord(m, value))
+      }
     }
   }
+  // Eventos que no vienen de un mensaje (p. ej. «el saludo no se entregó»).
+  for (const e of koda.eventos) if (!usados.has(e)) texts.push(e.texto)
 
   try {
     for (const text of texts) await sendToDiscord(discordUrl, text)

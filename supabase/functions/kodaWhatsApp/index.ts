@@ -150,10 +150,10 @@ async function llamarMeta(c: Config, cuerpo: Json): Promise<string> {
 /** Una variable de plantilla no admite saltos de línea, tabulaciones ni más de 4 espacios seguidos. */
 const paraVariable = (s: string) => s.replace(/[\r\n\t]+/g, " ").replace(/ {2,}/g, " ").trim().slice(0, 60);
 
-function enviarPlantilla(c: Config, aNumero: string, nombre: string, token: string): Promise<string> {
+function cuerpoPlantilla(c: Config, aNumero: string, nombre: string, token: string, paramNombre: string): Json {
   const param: Json = { type: "text", text: paraVariable(nombre) || "amigo" };
-  if (c.paramNombre) param.parameter_name = c.paramNombre;
-  return llamarMeta(c, {
+  if (paramNombre) param.parameter_name = paramNombre;
+  return {
     to: aNumero,
     type: "template",
     template: {
@@ -167,7 +167,33 @@ function enviarPlantilla(c: Config, aNumero: string, nombre: string, token: stri
         { type: "button", sub_type: "quick_reply", index: "1", parameters: [{ type: "payload", payload: `koda:luego:${token}` }] },
       ],
     },
-  });
+  };
+}
+
+// La variable del saludo puede ser posicional ({{1}}) o con NOMBRE ({{nombre}}), y el editor de Meta no deja ver cuál es.
+// Se prueba primero lo configurado (KODA_WA_BODY_PARAM_NAME; vacío = posicional) y, solo si Meta responde que el formato
+// no coincide (132000 / 132012), las alternativas más comunes. El que funcione se recuerda mientras viva la función.
+const ERRORES_DE_FORMATO = new Set([132000, 132012]);
+const NOMBRES_ALTERNATIVOS = ["", "nombre", "name", "customer_name", "nombre_cliente", "cliente"];
+let formatoQueFunciona: string | null = null;
+
+async function enviarPlantilla(c: Config, aNumero: string, nombre: string, token: string): Promise<string> {
+  const orden = [c.paramNombre || (formatoQueFunciona ?? ""), ...NOMBRES_ALTERNATIVOS].filter((x, i, a) => a.indexOf(x) === i);
+  let ultimo: MetaError | null = null;
+  for (const paramNombre of orden) {
+    try {
+      const id = await llamarMeta(c, cuerpoPlantilla(c, aNumero, nombre, token, paramNombre));
+      if (formatoQueFunciona !== paramNombre) {
+        formatoQueFunciona = paramNombre;
+        console.log(`[kodaWhatsApp] la variable de la plantilla es ${paramNombre ? `con nombre «${paramNombre}»` : "posicional"}`);
+      }
+      return id;
+    } catch (e) {
+      if (e instanceof MetaError && e.code !== null && ERRORES_DE_FORMATO.has(e.code)) { ultimo = e; continue; }
+      throw e;
+    }
+  }
+  throw ultimo ?? new MetaError("No se pudo enviar la plantilla.", null, false);
 }
 
 function enviarTexto(c: Config, aNumero: string, cuerpo: string): Promise<string> {
@@ -310,6 +336,10 @@ function leerBoton(m: WaMsg): { accion: "si" | "luego"; token: string | null } |
 
 type Fila = Json;
 
+/** Lo que pasó con un negocio, ya redactado para Discord (el webhook de Vercel lo publica). */
+interface Evento { msg_id: string | null; tipo: string; clave: string; texto: string }
+const nombreDe = (f: Fila) => String(f.negocio?.nombre ?? f.username ?? "Un negocio").trim() || "Un negocio";
+
 /** Las funciones SQL rechazan con RAISE EXCEPTION (P0001) lo que no procede (descartado, sin cuenta…): eso se ignora.
  *  Cualquier otro error es de la base o de la red: se lanza para que el webhook responda 500 y Meta reintente. */
 const esReglaDeNegocio = (e: { code?: string }) => e.code === "P0001";
@@ -334,11 +364,11 @@ async function marcarError(db: Admin, id: string, msg: string) {
 }
 
 /** Usuario y clave temporal + enlaces. Solo UNA vez por negocio (el reclamo es atómico) y se reintenta si falla. */
-async function entregarCredenciales(db: Admin, c: Config, f: Fila): Promise<void> {
+async function entregarCredenciales(db: Admin, c: Config, f: Fila): Promise<boolean> {
   const ahora = new Date().toISOString();
   const { data: reclamo } = await db.from("koda_prospectos").update({ wa_credenciales_at: ahora })
     .eq("id", f.id).is("wa_credenciales_at", null).select("id").maybeSingle();
-  if (!reclamo) return;                                // ya se entregaron (o las está entregando otra llamada)
+  if (!reclamo) return false;                          // ya se entregaron (o las está entregando otra llamada)
 
   try {
     const u = await db.auth.admin.getUserById(f.user_id);
@@ -360,6 +390,7 @@ async function entregarCredenciales(db: Admin, c: Config, f: Fila): Promise<void
       `Clave temporal: ${clave}\n\n` +
       `Cámbiala apenas entres. Si necesitas ayuda, responde a este mensaje y te escribimos.`;
     await enviarTexto(c, String(f.whatsapp).slice(1), texto);
+    return true;
   } catch (e) {
     // Se libera el reclamo para que el reintento de Meta (o el siguiente toque) lo vuelva a intentar.
     await db.from("koda_prospectos").update({ wa_credenciales_at: null }).eq("id", f.id);
@@ -368,88 +399,110 @@ async function entregarCredenciales(db: Admin, c: Config, f: Fila): Promise<void
   }
 }
 
-async function procesarRespuesta(db: Admin, c: Config, m: WaMsg): Promise<string | null> {
+async function procesarRespuesta(db: Admin, c: Config, m: WaMsg, out: Evento[]): Promise<void> {
   const from = m.from ?? "";
-  if (!/^\d{8,15}$/.test(from)) return null;
+  if (!/^\d{8,15}$/.test(from)) return;
+  const msgId = m.id ?? null;
 
   // 1) Un botón de la plantilla.
   if (m.type === "button" || m.type === "interactive") {
     const b = leerBoton(m);
-    if (!b) return null;
+    if (!b) return;
     let f = b.token ? await buscarPorToken(db, b.token) : null;
     if (!f && m.context?.id) f = await buscarPorMensaje(db, m.context.id);
-    if (!f) return null;                               // no es un negocio de KODA (o token inventado)
-    if (f.whatsapp !== `+${from}`) return null;        // el botón lo tocó otro número: se ignora
+    if (!f) return;                                    // no es un negocio de KODA (o token inventado)
+    if (f.whatsapp !== `+${from}`) return;             // el botón lo tocó otro número: se ignora
 
     if (b.accion === "si") {
-      if (f.opt_out) return null;
+      if (f.opt_out) return;
       const r = await db.rpc("koda_wa_aceptar", { p_id: f.id });
       if (r.error) {
         if (!esReglaDeNegocio(r.error)) throw new Error(r.error.message);
         // Estados que ya no admiten aceptar (p. ej. descartado): no se activa nada ni se reintenta.
         console.error("[kodaWhatsApp] aceptar:", r.error.message);
-        return null;
+        return;
       }
+      const ya = (r.data as Json).ya === true;
       const fila = (r.data as Json).prospecto as Fila;
-      await entregarCredenciales(db, c, fila);
-      return `aceptó ${f.id}`;
+      const hasta = fila.trial_ends_at ? ` Su prueba de 7 días corre hasta el ${fechaCorta(fila.trial_ends_at)}.` : "";
+      // La primera vez se avisa que aceptó (aunque luego falle la entrega de credenciales: queda el aviso de error).
+      if (!ya) {
+        out.push({
+          msg_id: msgId, tipo: "acepto", clave: `aceptó ${f.id}`,
+          texto: `✅ **${nombreDe(fila)}** aceptó la demo.${hasta} Perfil: ${c.sitio}/${fila.username}`,
+        });
+      }
+      let entregadas = false;
+      try {
+        entregadas = await entregarCredenciales(db, c, fila);
+      } catch (e) {
+        out.push({
+          msg_id: ya ? msgId : null, tipo: "error", clave: `credenciales ${f.id}`,
+          texto: `❗ **${nombreDe(fila)}** aceptó, pero NO se pudieron entregar sus credenciales: ${e instanceof Error ? e.message : String(e)}. Meta reintenta solo; si sigue, escríbele a mano.`,
+        });
+        throw e;
+      }
+      if (ya && entregadas) {
+        out.push({ msg_id: msgId, tipo: "credenciales", clave: `credenciales ${f.id}`, texto: `📨 Ya se le entregaron sus credenciales a **${nombreDe(fila)}**.` });
+      }
+      return;
     }
 
     const r = await db.rpc("koda_wa_declinar", { p_id: f.id, p_baja: false });
     if (r.error) {
       if (!esReglaDeNegocio(r.error)) throw new Error(r.error.message);
       console.error("[kodaWhatsApp] declinar:", r.error.message);
-      return null;
+      return;
     }
     if ((r.data as Json).cambio) {
       await enviarTexto(c, from, "¡Sin problema! 🙌 Cuando quieras ver cómo quedó tu vista previa, solo escríbenos por aquí.").catch(() => {});
+      out.push({ msg_id: msgId, tipo: "luego", clave: `declinó ${f.id}`, texto: `🕐 **${nombreDe(f)}** respondió «Ver más tarde».` });
     }
-    return `declinó ${f.id}`;
+    return;
   }
 
   // 2) Texto libre: solo interesa si pide que no le escribamos más.
   if (m.type === "text") {
-    const t = normalizar(m.text?.body ?? "");
-    if (!t || t.length > 40 || !BAJA_RE.test(t)) return null;
+    const crudo = (m.text?.body ?? "").trim();
+    const t = normalizar(crudo);
+    if (!t || t.length > 40 || !BAJA_RE.test(t)) return;
     const f = await buscarPorTelefono(db, from);
-    if (!f) return null;
+    if (!f) return;
     const r = await db.rpc("koda_wa_declinar", { p_id: f.id, p_baja: true });
     if (r.error) {
       if (!esReglaDeNegocio(r.error)) throw new Error(r.error.message);
       console.error("[kodaWhatsApp] baja:", r.error.message);
-      return null;
+      return;
     }
     if ((r.data as Json).cambio) {
       await enviarTexto(c, from, "Listo, no te volveremos a escribir. Gracias por tu tiempo. 🙏").catch(() => {});
+      out.push({ msg_id: msgId, tipo: "baja", clave: `baja ${f.id}`, texto: `🚫 **${nombreDe(f)}** pidió no recibir más mensajes («${crudo.slice(0, 40)}»). Quedó como «no contactar».` });
     }
-    return `baja ${f.id}`;
   }
-  return null;
 }
 
-async function procesarEstado(db: Admin, s: WaStatus): Promise<string | null> {
-  if (s.status !== "failed" || !s.id) return null;
+async function procesarEstado(db: Admin, s: WaStatus, out: Evento[]): Promise<void> {
+  if (s.status !== "failed" || !s.id) return;
   const f = await buscarPorMensaje(db, s.id);
-  if (!f || f.estado !== "wa_enviado") return null;
+  if (!f || f.estado !== "wa_enviado") return;
   const e = s.errors?.[0] ?? {};
   const x = explicarMeta(typeof e.code === "number" ? e.code : null, String(e.error_data?.details ?? e.message ?? e.title ?? "no se entregó"));
   const r = await db.rpc("koda_wa_revertir", { p_id: f.id, p_error: x.texto });
   if (r.error) throw new Error(r.error.message);
-  return `falló ${f.id}`;
+  out.push({ msg_id: null, tipo: "fallo", clave: `falló ${f.id}`, texto: `⚠️ El saludo a **${nombreDe(f)}** no se entregó: ${x.texto} Volvió a «aprobado».` });
 }
 
 async function webhook(db: Admin, body: Json): Promise<Response> {
   const payload = body.payload as { entry?: Array<{ changes?: Array<{ value?: { messages?: WaMsg[]; statuses?: WaStatus[] } }> }> } | undefined;
   const c = config();
-  const hechos: string[] = [];
+  const eventos: Evento[] = [];
   let primerError: unknown = null;
 
   for (const entry of payload?.entry ?? []) {
     for (const ch of entry.changes ?? []) {
       for (const m of ch.value?.messages ?? []) {
         try {
-          const r = await procesarRespuesta(db, c, m);
-          if (r) hechos.push(r);
+          await procesarRespuesta(db, c, m, eventos);
         } catch (e) {
           primerError ??= e;
           console.error("[kodaWhatsApp] respuesta:", e instanceof Error ? e.message : e);
@@ -457,8 +510,7 @@ async function webhook(db: Admin, body: Json): Promise<Response> {
       }
       for (const s of ch.value?.statuses ?? []) {
         try {
-          const r = await procesarEstado(db, s);
-          if (r) hechos.push(r);
+          await procesarEstado(db, s, eventos);
         } catch (e) {
           primerError ??= e;
           console.error("[kodaWhatsApp] estado:", e instanceof Error ? e.message : e);
@@ -466,9 +518,11 @@ async function webhook(db: Admin, body: Json): Promise<Response> {
       }
     }
   }
+  // `eventos` viaja de vuelta para que el webhook de Vercel los publique en Discord en lugar de la línea cruda.
+  const hechos = eventos.map((e) => e.clave);
   // Un fallo transitorio devuelve 500: Meta reintenta y todo lo anterior es idempotente.
-  if (primerError) return json({ error: primerError instanceof Error ? primerError.message : String(primerError), hechos }, 500);
-  return json({ ok: true, hechos });
+  if (primerError) return json({ error: primerError instanceof Error ? primerError.message : String(primerError), hechos, eventos }, 500);
+  return json({ ok: true, hechos, eventos });
 }
 
 // ── Entrada ─────────────────────────────────────────────────────────────────

@@ -376,6 +376,69 @@ const paquetes = [
     }],
     copy: { jobTitle, bio, aboutMe },
   })),
+  // ── Las 3 plantillas que faltaban: Artista, Sublimados y Estándar ──
+  {
+    clave: "musicos", theme: "stage", demo: "05", etiqueta: "MÚSICA",
+    perfil: (d) => ({
+      ...pick(d, [...ESTILO, ...GALERIA, "borderColor"]),
+      // Merch genérico: nada de títulos de discos, giras ni fechas inventadas (serían promesas del artista).
+      products: catalogo("mus", [
+        ["Merch", "Camiseta oficial", "$15.00", "Algodón, con el diseño del proyecto."],
+        ["Merch", "Gorra", "$12.00", "Ajustable, con bordado frontal."],
+        ["Merch", "Póster", "$8.00", "Impresión en papel couché, tamaño A3."],
+        ["Música", "Disco físico", "$10.00", "Edición física de tu música."],
+        ["Música", "Pack de stickers", "$3.00", "Para pegar donde quieras."],
+      ]),
+      releases: [
+        { id: "rel_1", title: "Tu primer sencillo", platform: "Spotify", coverURL: d.releases[0].coverURL },
+        { id: "rel_2", title: "Tu próximo lanzamiento", platform: "YouTube", coverURL: d.releases[1].coverURL },
+      ],
+      bookingLink: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
+      faqs: faq("¿Cómo los contrato para un evento?", "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha y lugar."),
+    }),
+    copy: {
+      jobTitle: "Música · Artista",
+      bio: "Música en vivo en {{ciudad}}. Escúchanos y contáctanos para tu evento.",
+      aboutMe: "En {{nombre}} hacemos música con pasión. Conoce nuestro trabajo, escúchanos y escríbenos desde este perfil para contratarnos o colaborar.",
+    },
+  },
+  {
+    clave: "sublimados", theme: "sublima", demo: "09", etiqueta: "SUBLIMADOS",
+    perfil: (d) => ({ ...pick(d, [...ESTILO, ...GALERIA]), faqs: faq("¿Cómo pido una cotización?", "Escríbenos por WhatsApp desde este perfil con lo que necesitas y la cantidad, y te cotizamos.") }),
+    tablas: (_d, fl) => [{
+      // Catálogo de EJEMPLO (productos, técnicas y precios por volumen de la demo). No se copian clientes, pedidos ni el club mayorista.
+      tabla: "sublima_products", propietario: "factory_profile_id",
+      filas: fl.sublima_products.map((p) => quitar(p, ["factory_profile_id"])),
+    }],
+    copy: {
+      jobTitle: "Sublimados, bordados y uniformes",
+      bio: "Sublimados, bordados y uniformes en {{ciudad}}. Pide tu cotización por WhatsApp.",
+      aboutMe: "En {{nombre}} personalizamos camisetas, uniformes, tazas y más. Conoce lo que hacemos y pide tu cotización desde este perfil.",
+    },
+  },
+  {
+    clave: "profesionales", theme: "default", demo: "01", etiqueta: "PROFESIONAL",
+    perfil: (d) => ({
+      ...pick(d, [...ESTILO, "coverImageURL"]),
+      galleryMode: "grid", galleryImageURLs: structuredClone(d.galleryImageURLs), albums: [],
+      products: catalogo("prf", [
+        ["Servicios", "Primera consulta", "$30.00", "Conversamos tu caso y te orientamos."],
+        ["Servicios", "Sesión de seguimiento", "$45.00", "Revisamos avances y definimos los siguientes pasos."],
+        ["Servicios", "Plan a la medida", "$120.00", "Un plan de trabajo pensado para tu objetivo."],
+        ["Servicios", "Taller o charla", "$150.00", "Sesión práctica para tu equipo o comunidad."],
+      ]),
+      showCalendar: true,
+      calendarServices: ["Primera consulta", "Sesión de seguimiento", "Taller o charla"],
+      bookingLink: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20agendar%20una%20cita",
+      calendarWebhookUrl: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20agendar%20una%20cita",
+      faqs: FAQ_CITA,
+    }),
+    copy: {
+      jobTitle: "Servicios profesionales",
+      bio: "Servicios profesionales en {{ciudad}}. Agenda una cita o escríbenos por WhatsApp.",
+      aboutMe: "En {{nombre}} te acompañamos con atención personalizada. Conoce nuestros servicios y agenda tu cita desde este perfil.",
+    },
+  },
 ];
 
 // ── 4) Armar, limpiar y escribir ─────────────────────────────────────────────
@@ -383,7 +446,7 @@ const salida = [];
 for (const p of paquetes) {
   const d = D[p.demo];
   if (!d) throw new Error(`Falta la demo ${p.demo} (¿están los setup_demo_*.sql en la carpeta del proyecto?)`);
-  const extra = { "02": ["Navaja & Cuero"], "03": ["Brasa & Mar"], "04": ["Cumbre"], "06": ["Huellitas"], "07": ["Vitalis"], "08": ["Cimientos"], "10": ["Titán"], "11": ["Costa Rosa"] };
+  const extra = { "01": ["Villacís Consultores", "Mateo Villacís"], "02": ["Navaja & Cuero"], "03": ["Brasa & Mar"], "04": ["Cumbre"], "05": ["Los Desvelados"], "06": ["Huellitas"], "07": ["Vitalis"], "08": ["Cimientos"], "09": ["Estampa Total", "Club Mayorista Estampa"], "10": ["Titán"], "11": ["Costa Rosa"] };
   const marcas = [d.displayName, d.company, ...(extra[p.demo] ?? [])].filter(Boolean).sort((a, b) => b.length - a.length);
   const perfil = sinMarca(p.perfil(d), marcas);
   Object.assign(perfil, sanearPaleta(perfil));   // contraste (WCAG): acento legible, texto de botón y de página
@@ -400,7 +463,7 @@ for (const p of paquetes) {
 fs.writeFileSync(path.join(aqui, "recursos.json"), JSON.stringify(salida, null, 2) + "\n");
 
 // Revisión automática: restos de las demos que no deben pasar.
-const turbio = /navaja|cuero|brasa|huellitas|vitalis|cimientos|tit[aá]n|costa rosa|cumbre|estampa|quito|guayaquil|cuenca|urdesa|floresta|cumbay|carolina|mariscal|samborond|salinas|tumbaco|chillos|\.test|connexo|club |banco|@|diego|andr[eé]s|valeria|camila|roberto|silvana|andrea|mateo/i;
+const turbio = /navaja|cuero|brasa|huellitas|vitalis|cimientos|tit[aá]n|costa rosa|cumbre|estampa total|desvelados|villac[ií]s|quito|guayaquil|cuenca|urdesa|floresta|cumbay|carolina|mariscal|samborond|salinas|tumbaco|chillos|\.test|connexo|club |banco|@|diego|andr[eé]s|valeria|camila|roberto|silvana|andrea|mateo/i;
 let alertas = 0;
 const revisar = (v, ruta) => {
   if (typeof v === "string") { if (turbio.test(v) && !/^https?:\/\/images\.unsplash\.com/.test(v)) { console.log(`  ⚠ ${ruta}: ${v.slice(0, 100)}`); alertas++; } }
@@ -436,7 +499,7 @@ const sql = `-- ═════════════════════�
 -- ═══════════════════════════════════════════════════════════════════════════
 
 CREATE TABLE IF NOT EXISTS public.koda_recursos_nicho (
-  clave      text PRIMARY KEY,                 -- nicho: barberia, belleza, restaurantes, cafe_bar, clinica, salud, veterinaria, mascotas, inmobiliaria, gimnasios, hoteles, tiendas, talleres, oficinas
+  clave      text PRIMARY KEY,                 -- nicho: barberia, belleza, restaurantes, cafe_bar, clinica, salud, veterinaria, mascotas, inmobiliaria, gimnasios, hoteles, tiendas, talleres, oficinas, musicos, sublimados, profesionales
   theme      text NOT NULL,                    -- profiles.theme al que pertenece
   pack       jsonb NOT NULL,                   -- { logo, copy, perfil, tablas? }
   nota       text,
@@ -453,6 +516,13 @@ ALTER TABLE public.koda_prospectos ADD COLUMN IF NOT EXISTS clave   text;
 ALTER TABLE public.koda_prospectos ADD COLUMN IF NOT EXISTS relleno jsonb;
 
 ${filasSql}
+
+-- Qué plantilla le toca a cada rubro NUEVO de KODA (no pisa lo que ya hayas cambiado a mano).
+INSERT INTO public.koda_rubro_plantilla (rubro, theme, nota) VALUES
+  ('musicos',       'stage',   'Plantilla Artista: músicos, bandas, DJ, estudios y escuelas de música.'),
+  ('sublimados',    'sublima', 'Plantilla Sublimados: sublimación, bordados, serigrafía, imprentas y uniformes.'),
+  ('profesionales', 'default', 'Plantilla Estándar: profesionales independientes (fotógrafos, coaches, psicólogos, consultores).')
+ON CONFLICT (rubro) DO NOTHING;
 
 -- VERIFICACIÓN (opcional)
 -- SELECT clave, theme, jsonb_array_length(coalesce(pack->'perfil'->'products', '[]'::jsonb)) AS productos, jsonb_array_length(coalesce(pack->'tablas', '[]'::jsonb)) AS tablas FROM koda_recursos_nicho ORDER BY clave;
