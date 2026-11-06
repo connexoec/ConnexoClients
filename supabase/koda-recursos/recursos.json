@@ -4164,5 +4164,676 @@
         ]
       }
     ]
+  },
+  {
+    "clave": "musicos",
+    "theme": "stage",
+    "fuente": "setup_demo_05",
+    "logo": {
+      "etiqueta": "MÚSICA",
+      "fondo": "#07060d",
+      "acento": "#b874f8",
+      "texto": "#f0e6ff"
+    },
+    "copy": {
+      "jobTitle": "Música · Artista",
+      "bio": "Música en vivo en {{ciudad}}. Escúchanos y contáctanos para tu evento.",
+      "aboutMe": "En {{nombre}} hacemos música con pasión. Conoce nuestro trabajo, escúchanos y escríbenos desde este perfil para contratarnos o colaborar."
+    },
+    "perfil": {
+      "backgroundColor": "#07060d",
+      "buttonColor": "#b874f8",
+      "buttonTextColor": "#07060d",
+      "textColor": "#f0e6ff",
+      "borderColor": "#a855f7",
+      "coverImageURL": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1603910234616-3b5f4a6be2b4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1768405031181-33bb016e2fbb?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "products": [
+        {
+          "id": "mus_1",
+          "name": "Camiseta oficial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Algodón, con el diseño del proyecto.",
+          "available": true
+        },
+        {
+          "id": "mus_2",
+          "name": "Gorra",
+          "category": "Merch",
+          "price": "$12.00",
+          "shortDescription": "Ajustable, con bordado frontal.",
+          "available": true
+        },
+        {
+          "id": "mus_3",
+          "name": "Póster",
+          "category": "Merch",
+          "price": "$8.00",
+          "shortDescription": "Impresión en papel couché, tamaño A3.",
+          "available": true
+        },
+        {
+          "id": "mus_4",
+          "name": "Disco físico",
+          "category": "Música",
+          "price": "$10.00",
+          "shortDescription": "Edición física de tu música.",
+          "available": true
+        },
+        {
+          "id": "mus_5",
+          "name": "Pack de stickers",
+          "category": "Música",
+          "price": "$3.00",
+          "shortDescription": "Para pegar donde quieras.",
+          "available": true
+        }
+      ],
+      "releases": [
+        {
+          "id": "rel_1",
+          "title": "Tu primer sencillo",
+          "platform": "Spotify",
+          "coverURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=600&q=75"
+        },
+        {
+          "id": "rel_2",
+          "title": "Tu próximo lanzamiento",
+          "platform": "YouTube",
+          "coverURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=600&q=75"
+        }
+      ],
+      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo los contrato para un evento?",
+          "answer": "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha y lugar.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "sublimados",
+    "theme": "sublima",
+    "fuente": "setup_demo_09",
+    "logo": {
+      "etiqueta": "SUBLIMADOS",
+      "fondo": "#141210",
+      "acento": "#c9a86a",
+      "texto": "#f2ece1"
+    },
+    "copy": {
+      "jobTitle": "Sublimados, bordados y uniformes",
+      "bio": "Sublimados, bordados y uniformes en {{ciudad}}. Pide tu cotización por WhatsApp.",
+      "aboutMe": "En {{nombre}} personalizamos camisetas, uniformes, tazas y más. Conoce lo que hacemos y pide tu cotización desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#141210",
+      "buttonColor": "#c9a86a",
+      "buttonTextColor": "#141210",
+      "textColor": "#f2ece1",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "13:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1741176505800-caaa3a52631a?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1741176505800-caaa3a52631a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1675176785803-bffbbb0cd2f4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1783070610671-1cc98dffba42?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1768746350424-ee28a364dcf5?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1716951910901-3f595611cf3d?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido una cotización?",
+          "answer": "Escríbenos por WhatsApp desde este perfil con lo que necesitas y la cantidad, y te cotizamos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "sublima_products",
+        "propietario": "factory_profile_id",
+        "filas": [
+          {
+            "id": "27e683f7-a761-44b4-afaf-181c6ee6007e",
+            "name": "Camiseta sublimada de poliéster",
+            "category": "Camisetas",
+            "description": "Estampado full color que no se desvanece ni se agrieta. Tela dry-fit de 150 g. Tallas XS a XXL. Diseño sin costo.",
+            "images": [
+              "https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1416339698674-4f118dd3388b?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 4.5,
+            "min_qty": 12,
+            "price_tiers": [
+              {
+                "min_qty": 12,
+                "unit_price": 4.5
+              },
+              {
+                "min_qty": 50,
+                "unit_price": 3.9
+              },
+              {
+                "min_qty": 100,
+                "unit_price": 3.4
+              },
+              {
+                "min_qty": 300,
+                "unit_price": 3
+              }
+            ],
+            "techniques": [
+              "Sublimado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "7413c391-b7b6-4eeb-adf0-75f63f440827",
+            "name": "Polo bordado empresarial",
+            "category": "Uniformes",
+            "description": "Polo piqué 190 g con logo bordado en el pecho. Colores corporativos a elección. Cuello y puños reforzados.",
+            "images": [
+              "https://images.unsplash.com/photo-1720514496161-914011a9ee02?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1714317437555-bdaa756ade0b?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1671438118097-479e63198629?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 9.8,
+            "min_qty": 12,
+            "price_tiers": [
+              {
+                "min_qty": 12,
+                "unit_price": 9.8
+              },
+              {
+                "min_qty": 36,
+                "unit_price": 8.9
+              },
+              {
+                "min_qty": 100,
+                "unit_price": 8.1
+              }
+            ],
+            "techniques": [
+              "Bordado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "c4f274f6-d485-4d76-a286-984cf56cc740",
+            "name": "Uniforme deportivo completo (camiseta + short)",
+            "category": "Deportivo",
+            "description": "Sublimación total con nombre y número. Tela transpirable. Ideal para ligas barriales, colegios y torneos de empresa.",
+            "images": [
+              "https://images.unsplash.com/photo-1716541424893-734612ddcabb?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1759572095384-1a7e646d0d4f?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1693443687750-611ad77f3aba?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 8.9,
+            "min_qty": 11,
+            "price_tiers": [
+              {
+                "min_qty": 11,
+                "unit_price": 8.9
+              },
+              {
+                "min_qty": 22,
+                "unit_price": 8.2
+              },
+              {
+                "min_qty": 50,
+                "unit_price": 7.6
+              }
+            ],
+            "techniques": [
+              "Sublimado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "965036fc-32ce-4343-a5bd-bedb572fc1f7",
+            "name": "Gorra bordada",
+            "category": "Gorras",
+            "description": "Gorra de gabardina con cierre ajustable y bordado de alta definición. Ideal para activaciones y personal operativo.",
+            "images": [
+              "https://images.unsplash.com/photo-1691256676359-20e5c6d4bc92?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1523380744952-b7e00e6e2ffa?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 5.2,
+            "min_qty": 24,
+            "price_tiers": [
+              {
+                "min_qty": 24,
+                "unit_price": 5.2
+              },
+              {
+                "min_qty": 72,
+                "unit_price": 4.7
+              },
+              {
+                "min_qty": 200,
+                "unit_price": 4.2
+              }
+            ],
+            "techniques": [
+              "Bordado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "b13a076a-fc26-4f24-aea5-2ba0475b7b7f",
+            "name": "Taza sublimada 11 oz",
+            "category": "Tazas",
+            "description": "Cerámica blanca AAA con impresión a todo color, apta para lavavajillas. Perfecta como obsequio corporativo.",
+            "images": [
+              "https://images.unsplash.com/photo-1616241673347-67fb5dfa3167?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1643946404043-178456b0e3f8?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 2.8,
+            "min_qty": 24,
+            "price_tiers": [
+              {
+                "min_qty": 24,
+                "unit_price": 2.8
+              },
+              {
+                "min_qty": 100,
+                "unit_price": 2.4
+              },
+              {
+                "min_qty": 300,
+                "unit_price": 2.05
+              }
+            ],
+            "techniques": [
+              "Sublimado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "a6c086e3-7e54-4a5b-ab44-2188ce42dac1",
+            "name": "Uniforme escolar completo",
+            "category": "Uniformes",
+            "description": "Camisa, pantalón o falda y chompa con escudo bordado. Telas resistentes y de fácil lavado. Pedidos por unidad educativa.",
+            "images": [
+              "https://images.unsplash.com/photo-1657980012463-15acab973d5e?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1786048271543-693f9b134534?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 18.5,
+            "min_qty": 30,
+            "price_tiers": [
+              {
+                "min_qty": 30,
+                "unit_price": 18.5
+              },
+              {
+                "min_qty": 100,
+                "unit_price": 16.9
+              },
+              {
+                "min_qty": 300,
+                "unit_price": 15.2
+              }
+            ],
+            "techniques": [
+              "Bordado",
+              "Estampado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "4a917a94-a74f-482c-a643-27532ea171b2",
+            "name": "Camiseta de evento (DTF full color)",
+            "category": "Eventos",
+            "description": "Entrega exprés para congresos, ferias y campañas. Estampado DTF en algodón peinado, sin mínimo de colores.",
+            "images": [
+              "https://images.unsplash.com/photo-1716951910901-3f595611cf3d?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1620799139834-6b8f844fbe61?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 5.9,
+            "min_qty": 20,
+            "price_tiers": [
+              {
+                "min_qty": 20,
+                "unit_price": 5.9
+              },
+              {
+                "min_qty": 60,
+                "unit_price": 5.2
+              },
+              {
+                "min_qty": 150,
+                "unit_price": 4.6
+              }
+            ],
+            "techniques": [
+              "DTF",
+              "Estampado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "86f72715-bebd-4dfe-af99-ba07717bed19",
+            "name": "Servicio de bordado de logotipo",
+            "category": "Bordados",
+            "description": "Digitalizamos tu logo y lo bordamos en prendas que tú proporciones. Hasta 8.000 puntadas por prenda.",
+            "images": [
+              "https://images.unsplash.com/photo-1772351721250-58367a2aecba?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1772351720165-d9218e428cf0?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1783070610671-1cc98dffba42?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 1.8,
+            "min_qty": 50,
+            "price_tiers": [
+              {
+                "min_qty": 50,
+                "unit_price": 1.8
+              },
+              {
+                "min_qty": 200,
+                "unit_price": 1.4
+              },
+              {
+                "min_qty": 500,
+                "unit_price": 1.1
+              }
+            ],
+            "techniques": [
+              "Bordado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "ee4b3bb8-cf5f-41a5-ae2c-72fbc0f80f20",
+            "name": "Polo manga larga corporativo",
+            "category": "Uniformes",
+            "description": "Polo de manga larga con protección UV 30+, ideal para personal de campo, seguridad y servicios.",
+            "images": [
+              "https://images.unsplash.com/photo-1714317438040-0e8584215699?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1716951865304-e9567c6649e4?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 12.5,
+            "min_qty": 20,
+            "price_tiers": [
+              {
+                "min_qty": 20,
+                "unit_price": 12.5
+              },
+              {
+                "min_qty": 60,
+                "unit_price": 11.4
+              },
+              {
+                "min_qty": 150,
+                "unit_price": 10.2
+              }
+            ],
+            "techniques": [
+              "Bordado",
+              "Estampado"
+            ],
+            "is_available": true
+          },
+          {
+            "id": "dc511509-d59e-4c39-a857-7c9e118997f7",
+            "name": "Estampado DTF por pedido (lote especial)",
+            "category": "Estampados",
+            "description": "Transferencia DTF para pedidos con múltiples diseños. Próximamente de nuevo en stock de película.",
+            "images": [
+              "https://images.unsplash.com/photo-1634713157685-676e35324215?auto=format&fit=crop&w=900&q=75",
+              "https://images.unsplash.com/photo-1663433567177-9f94be0bff4c?auto=format&fit=crop&w=900&q=75"
+            ],
+            "base_price": 2.5,
+            "min_qty": 30,
+            "price_tiers": [
+              {
+                "min_qty": 30,
+                "unit_price": 2.5
+              },
+              {
+                "min_qty": 100,
+                "unit_price": 2.1
+              }
+            ],
+            "techniques": [
+              "DTF"
+            ],
+            "is_available": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "clave": "profesionales",
+    "theme": "default",
+    "fuente": "setup_demo_01",
+    "logo": {
+      "etiqueta": "PROFESIONAL",
+      "fondo": "#0b0b10",
+      "acento": "#ff6b35",
+      "texto": "#f3f4f6"
+    },
+    "copy": {
+      "jobTitle": "Servicios profesionales",
+      "bio": "Servicios profesionales en {{ciudad}}. Agenda una cita o escríbenos por WhatsApp.",
+      "aboutMe": "En {{nombre}} te acompañamos con atención personalizada. Conoce nuestros servicios y agenda tu cita desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#0b0b10",
+      "buttonColor": "#ff6b35",
+      "buttonTextColor": "#0b0b10",
+      "textColor": "#f3f4f6",
+      "buttonStyle": "rounded",
+      "shadow": "soft",
+      "fontFamily": "Inter, sans-serif",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "16:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1560439513-74b037a25d84?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1688380692117-63178554d76d?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1646579886135-068c73800308?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "products": [
+        {
+          "id": "prf_1",
+          "name": "Primera consulta",
+          "category": "Servicios",
+          "price": "$30.00",
+          "shortDescription": "Conversamos tu caso y te orientamos.",
+          "available": true
+        },
+        {
+          "id": "prf_2",
+          "name": "Sesión de seguimiento",
+          "category": "Servicios",
+          "price": "$45.00",
+          "shortDescription": "Revisamos avances y definimos los siguientes pasos.",
+          "available": true
+        },
+        {
+          "id": "prf_3",
+          "name": "Plan a la medida",
+          "category": "Servicios",
+          "price": "$120.00",
+          "shortDescription": "Un plan de trabajo pensado para tu objetivo.",
+          "available": true
+        },
+        {
+          "id": "prf_4",
+          "name": "Taller o charla",
+          "category": "Servicios",
+          "price": "$150.00",
+          "shortDescription": "Sesión práctica para tu equipo o comunidad.",
+          "available": true
+        }
+      ],
+      "showCalendar": true,
+      "calendarServices": [
+        "Primera consulta",
+        "Sesión de seguimiento",
+        "Taller o charla"
+      ],
+      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20agendar%20una%20cita",
+      "calendarWebhookUrl": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20agendar%20una%20cita",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo una cita?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
   }
 ]
