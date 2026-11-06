@@ -351,6 +351,16 @@ type Fila = Json;
 
 /** Lo que pasó con un negocio, ya redactado para Discord (el webhook de Vercel lo publica). */
 interface Evento { msg_id: string | null; tipo: string; clave: string; texto: string }
+// Mismo formato que kodaIntake (cada función es un solo archivo, por eso se repite): <usuario>@connexoapp.com.
+const BUZONES_RESERVADOS = new Set([
+  "admin", "administrador", "info", "hola", "hello", "contacto", "contact", "ventas", "sales", "soporte", "support", "ayuda",
+  "help", "noreply", "no-reply", "postmaster", "abuse", "webmaster", "root", "security", "seguridad", "billing", "pagos",
+  "facturacion", "marketing", "prensa", "rrhh", "empleo", "trabajo", "connexo", "connexoec", "koda",
+]);
+const correoInterno = (username: string): string => {
+  const base = username.slice(0, 40);
+  return `${BUZONES_RESERVADOS.has(base) ? `${base}-perfil` : base}@connexoapp.com`;
+};
 const nombreDe = (f: Fila) => String(f.negocio?.nombre ?? f.username ?? "Un negocio").trim() || "Un negocio";
 
 /** Las funciones SQL rechazan con RAISE EXCEPTION (P0001) lo que no procede (descartado, sin cuenta…): eso se ignora.
@@ -385,8 +395,21 @@ async function entregarCredenciales(db: Admin, c: Config, f: Fila): Promise<bool
 
   try {
     const u = await db.auth.admin.getUserById(f.user_id);
-    const correo = u.data?.user?.email;
+    let correo = u.data?.user?.email;
     if (u.error || !correo) throw new Error(`No encontré la cuenta del negocio: ${u.error?.message ?? "sin correo"}`);
+
+    // Borradores viejos con correo interno feo (p-xxxx@prospectos.connexoapp.com): se les pone uno corto con el nombre
+    // del negocio (<usuario>@connexoapp.com). Si ese ya existe o falla, se deja el anterior: el acceso nunca se rompe.
+    if (/@prospectos\.connexoapp\.com$/i.test(correo) && f.username) {
+      const nuevo = correoInterno(String(f.username));
+      const cambio = await db.auth.admin.updateUserById(f.user_id, { email: nuevo, email_confirm: true });
+      if (!cambio.error) {
+        correo = nuevo;
+        await db.from("profiles").update({ email: nuevo }).eq("id", f.user_id);   // el perfil guarda una copia del correo
+      } else {
+        console.error("[kodaWhatsApp] no se pudo renombrar el correo interno:", cambio.error.message);
+      }
+    }
 
     const clave = generarClave();
     const upd = await db.auth.admin.updateUserById(f.user_id, { password: clave });
@@ -399,7 +422,7 @@ async function entregarCredenciales(db: Admin, c: Config, f: Fila): Promise<bool
       `🔗 Tu perfil: ${c.sitio}/${f.username}\n\n` +
       `Tu prueba gratis de 7 días ya empezó${hasta}. Para editarlo entra aquí:\n` +
       `👉 ${c.sitio}/auth\n` +
-      `Correo: ${correo}\n` +
+      `Correo de acceso: ${correo}\n` +
       `Clave temporal: ${clave}\n\n` +
       `Cámbiala apenas entres. Si necesitas ayuda, responde a este mensaje y te escribimos.`;
     await enviarTexto(c, String(f.whatsapp).slice(1), texto);
