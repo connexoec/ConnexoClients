@@ -37,13 +37,13 @@ export const ALL_STYLE_FIELDS: StyleField[] = [
 ];
 
 type Theme = 'default' | 'barber' | 'gastro' | 'ecom' | 'stage'
-    | 'petcare' | 'medical' | 'realty' | 'sublima' | 'gym' | 'hotel';
+    | 'petcare' | 'medical' | 'realty' | 'sublima' | 'gym' | 'hotel' | 'books';
 
 const normalize = (theme?: string): Theme => {
     const t = (theme || 'default') as Theme;
     return ([
         'default', 'barber', 'gastro', 'ecom', 'stage',
-        'petcare', 'medical', 'realty', 'sublima', 'gym', 'hotel',
+        'petcare', 'medical', 'realty', 'sublima', 'gym', 'hotel', 'books',
     ] as Theme[]).includes(t) ? t : 'default';
 };
 
@@ -85,6 +85,8 @@ const CAPABILITIES: Record<Theme, StyleField[]> = {
     // elige con `buttonColor` (derivan de él las variantes clara y oscura).
     gym: [...COMUNES, ...CON_TESTIMONIOS, 'showSchedule'],
     hotel: [...COMUNES, ...CON_TESTIMONIOS, 'showSchedule'],
+    // La librería también dibuja reseñas y horario; su acento (latón) sale de `buttonColor`.
+    books: [...COMUNES, ...CON_TESTIMONIOS, 'showSchedule'],
 };
 
 /** ¿Esta plantilla aplica este control? */
@@ -159,6 +161,11 @@ export const THEME_DEFAULT_COLORS: Record<Theme, Partial<Record<StyleField, stri
     hotel: {
         backgroundColor: '#130b0e', buttonColor: '#d9958b', textColor: '#f6ece6',
         buttonTextColor: '#1a0d10',
+        fontFamily: "'Space Grotesk', sans-serif",
+    },
+    books: {
+        backgroundColor: '#0b1512', buttonColor: '#e2a43f', textColor: '#f1e8d6',
+        buttonTextColor: '#1a1206',
         fontFamily: "'Space Grotesk', sans-serif",
     },
 };

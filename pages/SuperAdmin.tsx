@@ -74,6 +74,7 @@ const TEMPLATES = [
   { val: 'sublima', label: 'Sublimados / Textil', desc: 'Fábrica-tienda: catálogo por volumen, pedidos mayoristas y club' },
   { val: 'gym',     label: 'Gimnasio', desc: 'Planes, horario de clases, carnet de socio, vencimientos y reserva de cupos' },
   { val: 'hotel',   label: 'Hotel', desc: 'Habitaciones, motor de reservas con disponibilidad, servicios y club de huéspedes' },
+  { val: 'books',   label: 'Librería', desc: 'Catálogo con stock e ISBN, pedidos con apartado, club de lectores, encargos, listas escolares, eventos y tarjetas de regalo' },
 ];
 
 // Color distintivo por plantilla (para los chips de filtro de CLIENTES)
@@ -90,6 +91,7 @@ const THEME_COLORS: Record<string, string> = {
   sublima: '#a3e635',
   gym:     '#c6f432',
   hotel:   '#d9958b',
+  books:   '#e2a43f',
 };
 
 const COUNTRIES = [
@@ -1627,6 +1629,15 @@ const SuperAdmin: React.FC = () => {
                             fontSize: '9px', fontWeight: 800, letterSpacing: '1px',
                           }}>
                             HOTEL
+                          </span>
+                        )}
+                        {profile.theme === 'books' && (
+                          <span style={{
+                            padding: '3px 9px', borderRadius: '20px',
+                            background: 'rgba(226,164,63,0.16)', color: '#f6cf86',
+                            fontSize: '9px', fontWeight: 800, letterSpacing: '1px',
+                          }}>
+                            LIBRERÍA
                           </span>
                         )}
                       </div>

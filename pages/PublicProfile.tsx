@@ -23,6 +23,7 @@ const ProfileRealtyTemplate = React.lazy(() => import('../components/ProfileReal
 const ProfileSublimaTemplate = React.lazy(() => import('../components/ProfileSublimaTemplate').then(m => ({ default: m.ProfileSublimaTemplate })));
 const ProfileGymTemplate = React.lazy(() => import('../components/ProfileGymTemplate').then(m => ({ default: m.ProfileGymTemplate })));
 const ProfileHotelTemplate = React.lazy(() => import('../components/ProfileHotelTemplate').then(m => ({ default: m.ProfileHotelTemplate })));
+const ProfileBooksTemplate = React.lazy(() => import('../components/ProfileBooksTemplate').then(m => ({ default: m.ProfileBooksTemplate })));
 
 const TemplateFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -1848,10 +1849,10 @@ const PublicProfile: React.FC = () => {
     );
   }
 
-  // Gimnasio y Hotel comparten estructura de rama: botón del dueño, plantilla,
-  // QR y el formulario de reseñas (que ambas ofrecen en su sección de opiniones).
-  if (profile?.theme === 'gym' || profile?.theme === 'hotel') {
-    const TemplateComp = profile.theme === 'gym' ? ProfileGymTemplate : ProfileHotelTemplate;
+  // Gimnasio, Hotel y Librería comparten estructura de rama: botón del dueño, plantilla,
+  // QR y el formulario de reseñas (que las tres ofrecen en su sección de opiniones).
+  if (profile?.theme === 'gym' || profile?.theme === 'hotel' || profile?.theme === 'books') {
+    const TemplateComp = profile.theme === 'gym' ? ProfileGymTemplate : profile.theme === 'books' ? ProfileBooksTemplate : ProfileHotelTemplate;
     return (
       <div className="public-profile-container">
         {currentUser && (
