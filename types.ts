@@ -903,6 +903,209 @@ export interface HotelSettings {
   timezone?: string;
 }
 
+// ─── Librería (motor propio books_*) ──────────────────────────────────────────
+export type BookFormat = 'tapa_blanda' | 'tapa_dura' | 'bolsillo' | 'digital' | 'audiolibro' | 'otro';
+export type BookCondition = 'nuevo' | 'como_nuevo' | 'bueno' | 'aceptable';
+
+export interface BookTitle {
+  id: string;
+  shop_profile_id: string;
+  title: string;
+  subtitle?: string | null;
+  author?: string | null;
+  publisher?: string | null;
+  isbn?: string | null;
+  category?: string | null;
+  book_format: BookFormat;
+  lang: string;
+  pages?: number | null;
+  pub_year?: number | null;
+  release_date?: string | null;       // futura = preventa
+  description?: string | null;
+  cover_url?: string | null;
+  images: string[];
+  price: number;
+  original_price?: number | null;     // precio de lista (tachado)
+  stock?: number | null;              // null = bajo pedido / sin control
+  book_condition: BookCondition;
+  is_featured: boolean;               // «El librero recomienda»
+  staff_note?: string | null;
+  tags: string[];
+  sold_count: number;
+  is_available: boolean;
+  sort_order: number;
+  created_at?: string;
+}
+
+// Ajustes de la librería (columna profiles.books_settings jsonb, lectura pública).
+export interface BooksSettings {
+  ordersEnabled?: boolean;
+  pickupEnabled?: boolean;
+  pickupNote?: string;
+  deliveryEnabled?: boolean;
+  deliveryFee?: number;
+  deliveryNote?: string;
+  freeShippingFrom?: number;          // envío gratis desde este subtotal (0 = nunca)
+  giftWrapFee?: number;
+  holdDays?: number;                  // días que se aparta un pedido
+  timezone?: string;
+}
+
+export type BookOrderStatus = 'recibido' | 'preparando' | 'listo' | 'entregado' | 'cancelado';
+
+export interface BookOrderItem {
+  title_id: string;
+  title: string;
+  author?: string | null;
+  cover?: string | null;
+  qty: number;
+  unit_price: number;
+  total: number;
+}
+
+export interface BookOrder {
+  id: string;
+  shop_profile_id: string;
+  tracking_code: string;
+  customer_name: string;
+  customer_phone?: string | null;
+  customer_email?: string | null;
+  delivery_type: 'retiro' | 'envio';
+  delivery_address?: string | null;
+  items: BookOrderItem[];
+  items_count: number;
+  subtotal: number;
+  discount_percent: number;
+  discount_amount: number;
+  delivery_fee: number;
+  gift_wrap: boolean;
+  gift_wrap_fee: number;
+  gift_message?: string | null;
+  total: number;
+  payment_status: 'pendiente' | 'pagado';
+  status: BookOrderStatus;
+  notes?: string | null;
+  member_code?: string | null;
+  list_name?: string | null;
+  admin_note?: string | null;
+  source_campaign?: string | null;
+  created_at: string;
+}
+
+export interface BookReader {
+  id: string;
+  shop_profile_id: string;
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  member_code: string;
+  is_vip: boolean;
+  discount_percent: number;
+  benefits?: string | null;
+  interests?: string | null;
+  notes?: string | null;
+  source: string;
+  orders_count: number;
+  total_spent: number;
+  created_at: string;
+}
+
+export type BookRequestStatus = 'recibido' | 'buscando' | 'cotizado' | 'conseguido' | 'entregado' | 'no_disponible' | 'cancelado';
+
+export interface BookRequest {
+  id: string;
+  shop_profile_id: string;
+  tracking_code: string;
+  customer_name: string;
+  customer_phone?: string | null;
+  customer_email?: string | null;
+  title_wanted: string;
+  author?: string | null;
+  isbn?: string | null;
+  qty: number;
+  notes?: string | null;
+  status: BookRequestStatus;
+  quoted_price?: number | null;
+  eta_text?: string | null;
+  admin_note?: string | null;
+  member_code?: string | null;
+  created_at: string;
+}
+
+export interface BookWaitlistEntry {
+  id: string;
+  shop_profile_id: string;
+  title_id: string;
+  customer_name?: string | null;
+  customer_phone?: string | null;
+  customer_email?: string | null;
+  notified: boolean;
+  notified_at?: string | null;
+  created_at: string;
+}
+
+export interface BookListItem { title_id: string; qty: number; }
+export interface BookList {
+  id: string;
+  shop_profile_id: string;
+  name: string;
+  school?: string | null;
+  grade?: string | null;
+  description?: string | null;
+  items: BookListItem[];
+  is_active: boolean;
+  sort_order: number;
+}
+
+export type BookEventKind = 'presentacion' | 'firma' | 'club_lectura' | 'taller' | 'infantil' | 'otro';
+export interface BookEvent {
+  id: string;
+  shop_profile_id: string;
+  title: string;
+  description?: string | null;
+  kind: BookEventKind;
+  event_date: string;
+  start_time?: string | null;
+  end_time?: string | null;
+  location?: string | null;
+  capacity?: number | null;
+  price: number;
+  image_url?: string | null;
+  host_name?: string | null;
+  is_published: boolean;
+}
+export interface BookRsvp {
+  id: string;
+  shop_profile_id: string;
+  event_id: string;
+  code: string;
+  name: string;
+  phone?: string | null;
+  email?: string | null;
+  seats: number;
+  total: number;
+  payment_status: 'pendiente' | 'pagado' | 'gratis';
+  status: 'confirmada' | 'asistio' | 'cancelada' | 'no_show';
+  member_code?: string | null;
+  created_at: string;
+}
+
+export interface BookGiftCard {
+  id: string;
+  shop_profile_id: string;
+  code: string;
+  amount: number;
+  balance: number;
+  buyer_name?: string | null;
+  buyer_phone?: string | null;
+  buyer_email?: string | null;
+  recipient_name?: string | null;
+  message?: string | null;
+  status: 'pendiente' | 'activa' | 'agotada' | 'anulada';
+  uses: { at: string; amount: number; note?: string | null }[];
+  created_at: string;
+}
+
 // Ítem del carrito e-commerce
 export interface EcomCartItem {
   product: Product;
@@ -965,6 +1168,7 @@ export interface Profile {
   // --- Gimnasio y Hotel (motores propios gym_* / hotel_*) ---
   gym_settings?: GymSettings;       // columna profiles.gym_settings jsonb
   hotel_settings?: HotelSettings;   // columna profiles.hotel_settings jsonb
+  books_settings?: BooksSettings;   // columna profiles.books_settings jsonb (librería)
 
   clubName?: string;    // Nombre del club de fidelidad (gastro); default "Club Secreto"
   clubTagline?: string; // Eslogan del club de fidelidad (gastro)

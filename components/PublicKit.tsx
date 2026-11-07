@@ -26,10 +26,10 @@ export interface KitTheme {
   onAccent: string;      // texto sobre el acento
   titleFont: string;
   bodyFont: string;
-  /** gym: barra inclinada a la izquierda · hotel: ornamento centrado. */
-  heading: 'slash' | 'ornament';
-  /** Forma del logo: gym cuadrado con corte, hotel redondo. */
-  logo: 'square' | 'round';
+  /** gym: barra inclinada a la izquierda · hotel: ornamento en rombo · librería: florón ❦. */
+  heading: 'slash' | 'ornament' | 'fleuron';
+  /** Forma del logo: gym cuadrado con corte, hotel redondo, librería en arco (ventana de biblioteca). */
+  logo: 'square' | 'round' | 'arch';
 }
 
 const KitContext = createContext<KitTheme | null>(null);
@@ -114,6 +114,19 @@ export const SectionHeading: React.FC<{ children: React.ReactNode; kicker?: stri
         <div className="min-w-0">
           {kicker && <p className="text-[10px] font-semibold uppercase tracking-[0.32em] mb-0.5" style={{ color: k.accentLight }}>{kicker}</p>}
           <h2 className="text-[19px] leading-none font-semibold uppercase tracking-[0.1em] text-white" style={{ fontFamily: k.titleFont }}>{children}</h2>
+        </div>
+      </div>
+    );
+  }
+  if (k.heading === 'fleuron') {
+    return (
+      <div className="text-center mb-6">
+        {kicker && <p className="text-[11px] italic tracking-[0.18em] mb-1.5" style={{ color: k.accentLight, fontFamily: k.titleFont }}>{kicker}</p>}
+        <h2 className="text-[24px] leading-tight font-bold text-white" style={{ fontFamily: k.titleFont }}>{children}</h2>
+        <div className="mt-2.5 flex items-center justify-center gap-3" aria-hidden>
+          <span className="h-px w-12" style={{ background: `linear-gradient(90deg, transparent, ${k.accent})` }} />
+          <span className="text-[15px] leading-none" style={{ color: k.accent, fontFamily: k.titleFont }}>❦</span>
+          <span className="h-px w-12" style={{ background: `linear-gradient(270deg, transparent, ${k.accent})` }} />
         </div>
       </div>
     );
@@ -385,10 +398,10 @@ export const ProfileHero: React.FC<HeroProps> = ({
 
       <div className="px-4 -mt-16 relative space-y-9">
         <header className="text-center">
-          <div className={`inline-block p-1.5 mb-4 ${k.logo === 'round' ? 'rounded-full' : 'rounded-[22px]'}`}
+          <div className={`inline-block p-1.5 mb-4 ${k.logo === 'round' ? 'rounded-full' : k.logo === 'arch' ? 'rounded-t-[56px] rounded-b-[20px]' : 'rounded-[22px]'}`}
             style={{ background: k.surface, border: `1px solid ${k.accent}44`, boxShadow: '0 16px 44px -14px rgba(0,0,0,0.75)' }}>
             <img src={profile?.logoURL || profile?.profilePhotoURL || 'https://via.placeholder.com/150'} alt={profile?.displayName}
-              className={`w-24 h-24 object-cover ${k.logo === 'round' ? 'rounded-full' : 'rounded-2xl'}`} />
+              className={`w-24 h-24 object-cover ${k.logo === 'round' ? 'rounded-full' : k.logo === 'arch' ? 'rounded-t-[50px] rounded-b-[14px]' : 'rounded-2xl'}`} />
           </div>
           <h1 className="text-[26px] leading-tight font-semibold tracking-[0.04em]" style={{ fontFamily: k.titleFont, color: '#fff' }}>
             {profile?.displayName}
