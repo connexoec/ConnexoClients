@@ -9,7 +9,7 @@ import {
   SectionHeading, PillLink, FeatureCard, FilterChip, PassCard, HoursSection, ReviewsSection, ProfileHero, type KitTheme,
 } from './PublicKit';
 import { useDebouncedValue } from '../hooks/useCatalogSearch';
-import { BookCard, Shelf } from './books/BooksUi';
+import { BookCard, Shelf, spineColor } from './books/BooksUi';
 import {
   BookDetailModal, WaitlistModal, RequestModal, CartModal, type ShopCtx,
 } from './books/BooksCommerceModals';
@@ -449,7 +449,7 @@ export const ProfileBooksTemplate: React.FC<Props> = ({
                         <div className="flex -space-x-5 shrink-0" aria-hidden>
                           {l.items.slice(0, 3).map((i, n) => (
                             <div key={i.title_id} className="w-9 h-[54px] rounded overflow-hidden border" style={{ borderColor: SURFACE, zIndex: 3 - n, boxShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
-                              {i.cover_url ? <img src={i.cover_url} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full" style={{ background: `${accent}33` }} />}
+                              {i.cover_url ? <img src={i.cover_url} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full" style={{ background: `linear-gradient(160deg, ${spineColor(i.title)}, ${BG_DARK})`, boxShadow: `inset 0 0 0 1px ${accent}33, inset 4px 0 0 ${accent}22` }} />}
                             </div>
                           ))}
                         </div>

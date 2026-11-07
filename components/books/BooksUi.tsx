@@ -43,6 +43,7 @@ export const errMsg = (e: any, fallback = 'No se pudo completar. Inténtalo de n
 
 /** Paleta de lomos para las portadas que aún no tienen foto. */
 const SPINES = ['#2f4a3f', '#4a2f3a', '#2f3a4a', '#4a3f2f', '#3a2f4a', '#4a2f2f', '#2f4a4a'];
+export const spineColor = (title: string) => SPINES[hash(title || '') % SPINES.length];
 const hash = (s: string) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h); };
 
 /** Portada del libro; sin foto dibuja un lomo con el título (que sigue siendo legible y bonito). */
