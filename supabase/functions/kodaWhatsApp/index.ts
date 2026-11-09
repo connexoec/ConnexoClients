@@ -164,8 +164,21 @@ async function llamarMeta(c: Config, cuerpo: Json): Promise<string> {
 /** Una variable de plantilla no admite saltos de línea, tabulaciones ni más de 4 espacios seguidos. */
 const paraVariable = (s: string) => s.replace(/[\r\n\t]+/g, " ").replace(/ {2,}/g, " ").trim().slice(0, 60);
 
+/**
+ * Nombre del negocio tal como se lee en un saludo. Google trae cosas como «DELI GOURMET BAKERY, PASTELERIA - CAFETERIA. Ibarra»:
+ * quita comillas y, si el nombre es largo (más de 30 letras), se queda con lo de antes del primer « - », coma o punto-espacio
+ * (siempre que eso tenga al menos 12 letras, para no dejar solo «Esquivel»). No cambia mayúsculas: respeta siglas y marca.
+ * Nunca devuelve vacío. El nombre del perfil en Connexo NO cambia.
+ */
+export function nombreCorto(original: string): string {
+  const limpio = original.replace(/[\r\n\t]+/g, " ").replace(/["“”«»]/g, "").replace(/\s+/g, " ").trim();
+  if (limpio.length <= 30) return limpio;
+  const primera = limpio.split(/\s[-–—|]\s|\s?,\s?|\.\s/)[0]?.trim() ?? "";
+  return primera.length >= 12 ? primera : limpio;
+}
+
 function cuerpoPlantilla(c: Config, aNumero: string, nombre: string, token: string, paramNombre: string, sinVariable = false): Json {
-  const param: Json = { type: "text", text: paraVariable(nombre) || "amigo" };
+  const param: Json = { type: "text", text: paraVariable(nombreCorto(nombre)) || "amigo" };
   if (paramNombre) param.parameter_name = paramNombre;
   return {
     to: aNumero,
@@ -622,7 +635,8 @@ async function enviarAviso(c: Config, aNumero: string, plantilla: string, variab
       name: plantilla,
       language: { code: c.idioma },
       components: [
-        { type: "body", parameters: variables.map((t) => ({ type: "text", text: paraVariable(t) || "-" })) },
+        // La 1.ª variable de los avisos es siempre el nombre del negocio.
+        { type: "body", parameters: variables.map((t, i) => ({ type: "text", text: paraVariable(i === 0 ? nombreCorto(t) : t) || "-" })) },
         ...botonPayloads.map((payload, i) => ({ type: "button", sub_type: "quick_reply", index: String(i), parameters: [{ type: "payload", payload }] })),
       ],
     },
