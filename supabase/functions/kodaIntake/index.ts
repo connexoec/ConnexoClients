@@ -394,7 +394,11 @@ async function rellenarPerfil(
   }
 
   // 3) Logo provisional con las iniciales.
-  poner("logoURL", logoSvg(nombre, paquete?.logo?.etiqueta ?? "", paquete?.logo?.fondo, paquete?.logo?.acento, paquete?.logo?.texto), "banco");
+  // El mismo logo sirve de FOTO DE PERFIL: varias plantillas (barbería, estándar…) solo muestran `profilePhotoURL` y, sin él,
+  // el avatar sale vacío o con una letra. Un borrador nunca debe verse sin foto de perfil.
+  const logo = logoSvg(nombre, paquete?.logo?.etiqueta ?? "", paquete?.logo?.fondo, paquete?.logo?.acento, paquete?.logo?.texto);
+  poner("logoURL", logo, "banco");
+  poner("profilePhotoURL", logo, "banco");
 
   const { error } = await db.from("profiles").update(cols).eq("id", uid);
   if (error) throw new Error(`perfil: ${error.message}`);
@@ -424,6 +428,62 @@ async function rellenarPerfil(
   return { paquete: paquete ? clave : null, campos: origen, enlaces: enlaces.length, tablas };
 }
 
+// ── Control de completitud ───────────────────────────────────────────────────
+// Regla del dueño (2026-11-09): un borrador NO se aprueba ni se manda por WhatsApp si, al abrirlo, el negocio lo vería
+// incompleto (sin foto de perfil, portada, galería, catálogo con fotos…) y se perdería el cliente. Se compara con lo mínimo
+// universal Y con lo que promete el paquete de su nicho, así un paquete al que le falte algo (p. ej. las fotos de las
+// peluquerías, que se escaparon en la primera oleada) también salta. Devuelve etiquetas en español; vacío = completo.
+const TABLA_ETIQUETA: Record<string, string> = {
+  barber_staff: "equipo", ecom_staff: "equipo", realty_agents: "asesores", realty_properties: "propiedades",
+  gym_plans: "planes", gym_classes: "clases", gym_coaches: "entrenadores", hotel_rooms: "habitaciones",
+  hotel_services: "servicios del hotel", sublima_products: "productos", books_titles: "libros",
+};
+const COLS_IMAGEN = ["image_url", "photo_url", "images", "cover_url", "imageURL", "image"];
+const CON_PRODUCTOS = new Set(["gastro", "barber", "ecom", "medical", "petcare", "stage", "default"]);
+const vacia = (v: unknown): boolean =>
+  v === null || v === undefined || (typeof v === "string" && !v.trim()) || (Array.isArray(v) && v.length === 0) ||
+  (typeof v === "object" && !Array.isArray(v) && Object.keys(v as object).length === 0);
+
+async function faltantes(db: Admin, uid: string, paquete: Paquete | null): Promise<string[]> {
+  const { data: p, error } = await db.from("profiles").select("*").eq("id", uid).maybeSingle();
+  if (error || !p) return ["el perfil"];
+  const f = new Set<string>();
+
+  const exige: [string, string][] = [
+    ["profilePhotoURL", "foto de perfil"], ["logoURL", "logo"], ["coverImageURL", "portada"], ["jobTitle", "título"],
+    ["bio", "descripción"], ["aboutMe", "sobre nosotros"], ["location", "dirección"], ["whatsapp", "WhatsApp"],
+    ["backgroundColor", "colores"], ["buttonColor", "colores"], ["textColor", "colores"],
+  ];
+  for (const [k, etiqueta] of exige) if (vacia(p[k])) f.add(etiqueta);
+  if (!Array.isArray(p.galleryImageURLs) || p.galleryImageURLs.filter(Boolean).length < 3) f.add("galería (mínimo 3 fotos)");
+  if (!Array.isArray(p.faqs) || p.faqs.length < 3) f.add("preguntas frecuentes");
+  if (p.theme !== "stage" && vacia(p.businessHours)) f.add("horario");   // el artista no tiene horario de atención
+  const { data: enlaces } = await db.from("links").select("id").eq("userId", uid).limit(1);
+  if (!enlaces?.length) f.add("enlaces");
+
+  // Catálogo del perfil (platos, servicios, productos): lo que prometa el paquete y, como mínimo, 3.
+  const productos: Json[] = Array.isArray(p.products) ? p.products : [];
+  const delPaquete: Json[] = Array.isArray(paquete?.perfil?.products) ? (paquete!.perfil!.products as Json[]) : [];
+  if (CON_PRODUCTOS.has(p.theme) || delPaquete.length) {
+    if (productos.length < Math.max(3, Math.min(delPaquete.length, 3))) f.add("catálogo");
+    // Si el paquete trae fotos de catálogo, el perfil las muestra (al menos 80 %).
+    if (delPaquete.some((x) => !vacia(x.imageURL)) && productos.filter((x) => !vacia(x?.imageURL)).length < Math.ceil(productos.length * 0.8)) {
+      f.add("fotos del catálogo");
+    }
+  }
+
+  // Tablas propias de la plantilla (planes, habitaciones, propiedades, libros…): las filas del paquete y sus fotos.
+  for (const t of paquete?.tablas ?? []) {
+    if (!/^[a-z_]+$/.test(t.tabla) || !/^[a-z_]+$/.test(t.propietario)) continue;
+    const etiqueta = TABLA_ETIQUETA[t.tabla] ?? t.tabla;
+    const { data: filas, error: tErr } = await db.from(t.tabla).select("*").eq(t.propietario, uid).limit(100);
+    if (tErr || !filas || filas.length < t.filas.length) { f.add(etiqueta); continue; }
+    const col = COLS_IMAGEN.find((c) => t.filas.some((x) => !vacia(x[c])));
+    if (col && filas.filter((x) => !vacia(x[col])).length < Math.ceil(filas.length * 0.8)) f.add(`fotos de ${etiqueta}`);
+  }
+  return [...f];
+}
+
 /** Rellena y guarda el resultado en koda_prospectos. Nunca lanza: si falla, el borrador queda y se avisa en `detalle`. */
 async function aplicarRelleno(
   db: Admin, fila: Json, uid: string, theme: string, clave: string | null, n: Json, username: string,
@@ -432,10 +492,16 @@ async function aplicarRelleno(
   const previo = typeof fila.detalle === "string" ? fila.detalle.replace(/^Relleno incompleto:[^·]*(· )?/, "").trim() : "";
   try {
     const relleno = await rellenarPerfil(db, uid, theme, clave, n, username);
+    // Control de completitud: lo que falte se guarda en `relleno.faltan` y en `detalle`, y bloquea la aprobación.
+    const faltan = await faltantes(db, uid, await cargarPaquete(db, clave));
+    relleno.faltan = faltan;
     const { data, error } = await db.from("koda_prospectos")
-      .update({ clave, relleno, detalle: previo || null, updated_at: ahora }).eq("id", fila.id).select("*").single();
+      .update({
+        clave, relleno, updated_at: ahora,
+        detalle: faltan.length ? `Relleno incompleto: falta ${faltan.join(", ")}${previo ? ` · ${previo}` : ""}` : (previo || null),
+      }).eq("id", fila.id).select("*").single();
     if (error) throw new Error(error.message);
-    return { ok: true, fila: data };
+    return { ok: faltan.length === 0, fila: data };
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     const detalle = `Relleno incompleto: ${msg}${previo ? ` · ${previo}` : ""}`;
@@ -641,11 +707,34 @@ async function cambiarEstado(db: Admin, body: Json): Promise<Response> {
     return json({ error: `Desde KODA no se puede pasar de «${fila.estado}» a «${nuevo}». Ese paso lo hace Connexo.` }, 409);
   }
   if (nuevo === "borrador" && !fila.user_id) return json({ error: "Ese envío no tiene cuenta borrador." }, 409);
+  // Nada incompleto sale por WhatsApp: se comprueba el perfil en vivo (puede haber cambiado desde el relleno).
+  if (nuevo === "aprobado" && body.forzar !== true) {
+    if (!fila.user_id) return json({ error: "Ese envío no tiene cuenta borrador." }, 409);
+    const faltan = await faltantes(db, fila.user_id, await cargarPaquete(db, fila.clave ?? null));
+    if (faltan.length) {
+      return json({ error: `No se puede aprobar: al perfil le falta ${faltan.join(", ")}. Rehaz el contenido y vuelve a intentar.` }, 409);
+    }
+  }
 
   const { data, error: uErr } = await db.from("koda_prospectos")
     .update({ estado: nuevo, updated_at: new Date().toISOString() }).eq("id", fila.id).select("*").single();
   if (uErr) return json({ error: uErr.message }, 500);
   return json(respuesta(data));
+}
+
+/** Qué le falta a cada borrador para verse completo (solo lectura; hasta 25 por llamada). */
+async function auditarBorradores(db: Admin, body: Json): Promise<Response> {
+  const pedidos: unknown[] = Array.isArray(body.envio_ids) ? body.envio_ids : [];
+  const ids = [...new Set(pedidos.filter((x): x is string => typeof x === "string" && UUID_RE.test(x)))].slice(0, 25);
+  if (!ids.length) return json({ ok: true, items: [] });
+  const { data, error } = await db.from("koda_prospectos").select("koda_envio_id, user_id, username, theme, clave, estado").in("koda_envio_id", ids);
+  if (error) return json({ error: error.message }, 500);
+  const items: Json[] = [];
+  for (const f of data ?? []) {
+    const faltan = f.user_id ? await faltantes(db, f.user_id, await cargarPaquete(db, f.clave ?? null)) : ["la cuenta borrador"];
+    items.push({ envio_id: f.koda_envio_id, username: f.username, theme: f.theme, clave: f.clave ?? null, estado: f.estado, faltan });
+  }
+  return json({ ok: true, items });
 }
 
 Deno.serve(async (req: Request) => {
@@ -666,6 +755,7 @@ Deno.serve(async (req: Request) => {
     if (body.action === "rellenar") return await rellenarBorrador(db, body);
     if (body.action === "detalle") return await detalleBorrador(db, body);
     if (body.action === "estado_set") return await cambiarEstado(db, body);
+    if (body.action === "auditar") return await auditarBorradores(db, body);
     return json({ error: "Acción desconocida." }, 400);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);

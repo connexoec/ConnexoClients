@@ -421,269 +421,6 @@
     ]
   },
   {
-    "clave": "belleza",
-    "theme": "barber",
-    "fuente": "setup_demo_02",
-    "logo": {
-      "etiqueta": "BELLEZA",
-      "fondo": "#0c0907",
-      "acento": "#ff6b35",
-      "texto": "#f5e6d3"
-    },
-    "copy": {
-      "jobTitle": "Belleza y cuidado personal",
-      "bio": "Belleza y cuidado personal en {{ciudad}}. Reserva tu cita desde este perfil.",
-      "aboutMe": "En {{nombre}} nos dedicamos a tu cuidado personal. Conoce nuestros servicios y agenda tu cita desde este perfil."
-    },
-    "perfil": {
-      "backgroundColor": "#0c0907",
-      "buttonColor": "#ff6b35",
-      "buttonTextColor": "#0c0907",
-      "textColor": "#f5e6d3",
-      "showSchedule": true,
-      "businessHours": [
-        {
-          "day": "lunes",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "19:00"
-        },
-        {
-          "day": "martes",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "20:00"
-        },
-        {
-          "day": "miércoles",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "20:00"
-        },
-        {
-          "day": "jueves",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "20:00"
-        },
-        {
-          "day": "viernes",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "20:00"
-        },
-        {
-          "day": "sábado",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "18:00"
-        },
-        {
-          "day": "domingo",
-          "isOpen": false,
-          "openTime": "",
-          "closeTime": ""
-        }
-      ],
-      "products": [
-        {
-          "id": "bel_1",
-          "name": "Corte de cabello",
-          "category": "Cabello",
-          "price": "$12.00",
-          "shortDescription": "Corte y peinado final a tu estilo.",
-          "available": true
-        },
-        {
-          "id": "bel_2",
-          "name": "Peinado",
-          "category": "Cabello",
-          "price": "$15.00",
-          "shortDescription": "Peinado para el día a día o para tu evento.",
-          "available": true
-        },
-        {
-          "id": "bel_3",
-          "name": "Tinte",
-          "category": "Cabello",
-          "price": "$35.00",
-          "shortDescription": "Color completo con productos de calidad.",
-          "available": true
-        },
-        {
-          "id": "bel_4",
-          "name": "Tratamiento capilar",
-          "category": "Cabello",
-          "price": "$25.00",
-          "shortDescription": "Hidratación profunda para un cabello sano y brillante.",
-          "available": true
-        },
-        {
-          "id": "bel_5",
-          "name": "Manicure",
-          "category": "Uñas",
-          "price": "$10.00",
-          "shortDescription": "Limpieza, limado y esmaltado.",
-          "available": true
-        },
-        {
-          "id": "bel_6",
-          "name": "Pedicure",
-          "category": "Uñas",
-          "price": "$12.00",
-          "shortDescription": "Cuidado completo para tus pies.",
-          "available": true
-        },
-        {
-          "id": "bel_7",
-          "name": "Limpieza facial",
-          "category": "Cuidado",
-          "price": "$20.00",
-          "shortDescription": "Limpieza profunda e hidratación.",
-          "available": true
-        },
-        {
-          "id": "bel_8",
-          "name": "Masaje relajante",
-          "category": "Cuidado",
-          "price": "$30.00",
-          "shortDescription": "Un respiro para tu cuerpo, 60 minutos.",
-          "available": true
-        }
-      ],
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo agendo una cita?",
-          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ]
-    },
-    "tablas": [
-      {
-        "tabla": "barber_staff",
-        "propietario": "barber_id",
-        "filas": [
-          {
-            "id": "seed-bs1",
-            "name": "Estilista 1",
-            "role": "Estilista",
-            "sort_order": 1,
-            "working_hours": [
-              {
-                "day": 0,
-                "isOpen": false,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 1,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 2,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 3,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 4,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 5,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 6,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "14:00"
-              }
-            ],
-            "is_active": true
-          },
-          {
-            "id": "seed-bs2",
-            "name": "Estilista 2",
-            "role": "Estilista",
-            "sort_order": 2,
-            "working_hours": [
-              {
-                "day": 0,
-                "isOpen": false,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 1,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 2,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 3,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 4,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 5,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 6,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "14:00"
-              }
-            ],
-            "is_active": true
-          }
-        ]
-      }
-    ]
-  },
-  {
     "clave": "restaurantes",
     "theme": "gastro",
     "fuente": "setup_demo_03",
@@ -2069,470 +1806,6 @@
     }
   },
   {
-    "clave": "mascotas",
-    "theme": "petcare",
-    "fuente": "setup_demo_06",
-    "logo": {
-      "etiqueta": "MASCOTAS",
-      "fondo": "#04100f",
-      "acento": "#13a7a6",
-      "texto": "#e6fffd"
-    },
-    "copy": {
-      "jobTitle": "Tienda de mascotas",
-      "bio": "Todo para tu mascota en {{ciudad}}. Escríbenos por WhatsApp y te atendemos.",
-      "aboutMe": "En {{nombre}} encuentras lo que tu mascota necesita. Escríbenos desde este perfil y te ayudamos."
-    },
-    "perfil": {
-      "backgroundColor": "#04100f",
-      "buttonColor": "#13a7a6",
-      "buttonTextColor": "#04100f",
-      "textColor": "#e6fffd",
-      "showSchedule": true,
-      "businessHours": [
-        {
-          "day": "lunes",
-          "isOpen": true,
-          "openTime": "08:00",
-          "closeTime": "19:00"
-        },
-        {
-          "day": "martes",
-          "isOpen": true,
-          "openTime": "08:00",
-          "closeTime": "19:00"
-        },
-        {
-          "day": "miércoles",
-          "isOpen": true,
-          "openTime": "08:00",
-          "closeTime": "19:00"
-        },
-        {
-          "day": "jueves",
-          "isOpen": true,
-          "openTime": "08:00",
-          "closeTime": "19:00"
-        },
-        {
-          "day": "viernes",
-          "isOpen": true,
-          "openTime": "08:00",
-          "closeTime": "19:00"
-        },
-        {
-          "day": "sábado",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "16:00"
-        },
-        {
-          "day": "domingo",
-          "isOpen": true,
-          "openTime": "10:00",
-          "closeTime": "14:00"
-        }
-      ],
-      "coverImageURL": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1400&q=75",
-      "galleryMode": "grid",
-      "galleryImageURLs": [
-        "https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1602979677071-1781b7f40023?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1757553532952-401e0b0e9386?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=75"
-      ],
-      "albums": [],
-      "products": [
-        {
-          "id": "mas_1",
-          "name": "Alimento para perro adulto (3 kg)",
-          "category": "Alimento",
-          "price": "$38.00",
-          "shortDescription": "Nutrición balanceada para perros adultos.",
-          "available": true
-        },
-        {
-          "id": "mas_2",
-          "name": "Alimento para gato adulto (2 kg)",
-          "category": "Alimento",
-          "price": "$26.50",
-          "shortDescription": "Nutrición balanceada para gatos adultos.",
-          "available": true
-        },
-        {
-          "id": "mas_3",
-          "name": "Snacks y premios",
-          "category": "Alimento",
-          "price": "$5.50",
-          "shortDescription": "Para recompensar a tu mascota.",
-          "available": true
-        },
-        {
-          "id": "mas_4",
-          "name": "Arena sanitaria (5 kg)",
-          "category": "Higiene",
-          "price": "$9.00",
-          "shortDescription": "Control de olores y fácil limpieza.",
-          "available": true
-        },
-        {
-          "id": "pet_collar",
-          "name": "Collar ajustable reflectivo",
-          "category": "Accesorios",
-          "price": "$9.00",
-          "shortDescription": "Nailon resistente con hebilla de seguridad. Tallas S, M y L.",
-          "imageURL": "https://images.unsplash.com/photo-1789477024462-de4555754ee5?auto=format&fit=crop&w=700&q=75",
-          "available": true
-        },
-        {
-          "id": "pet_correa",
-          "name": "Correa retráctil 5 m",
-          "category": "Accesorios",
-          "price": "$13.00",
-          "shortDescription": "Agarre ergonómico y freno de seguridad.",
-          "imageURL": "https://images.unsplash.com/photo-1521417611542-86967c2ab11f?auto=format&fit=crop&w=700&q=75",
-          "available": true
-        },
-        {
-          "id": "pet_juguetes",
-          "name": "Set de juguetes mordedores (5 piezas)",
-          "category": "Accesorios",
-          "price": "$7.50",
-          "shortDescription": "Caucho resistente y no tóxico. Ideal para cachorros.",
-          "imageURL": "https://images.unsplash.com/photo-1652755729972-02b96abc6426?auto=format&fit=crop&w=700&q=75",
-          "available": true
-        }
-      ],
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo pido información?",
-          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ],
-      "galleryTitle": "Galería"
-    }
-  },
-  {
-    "clave": "inmobiliaria",
-    "theme": "realty",
-    "fuente": "setup_demo_08",
-    "logo": {
-      "etiqueta": "INMOBILIARIA",
-      "fondo": "#141210",
-      "acento": "#c9a86a",
-      "texto": "#f2ece1"
-    },
-    "copy": {
-      "jobTitle": "Inmobiliaria · Compra, venta y arriendo",
-      "bio": "Te acompañamos a encontrar el inmueble ideal en {{ciudad}}. Conversemos por WhatsApp.",
-      "aboutMe": "En {{nombre}} te asesoramos en la compra, venta y arriendo de inmuebles. Cuéntanos qué buscas y te ayudamos a encontrarlo."
-    },
-    "perfil": {
-      "backgroundColor": "#141210",
-      "buttonColor": "#c9a86a",
-      "buttonTextColor": "#141210",
-      "textColor": "#f2ece1",
-      "showSchedule": true,
-      "businessHours": [
-        {
-          "day": "lunes",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "18:00"
-        },
-        {
-          "day": "martes",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "18:00"
-        },
-        {
-          "day": "miércoles",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "18:00"
-        },
-        {
-          "day": "jueves",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "18:00"
-        },
-        {
-          "day": "viernes",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "18:00"
-        },
-        {
-          "day": "sábado",
-          "isOpen": true,
-          "openTime": "10:00",
-          "closeTime": "14:00"
-        },
-        {
-          "day": "domingo",
-          "isOpen": false,
-          "openTime": "",
-          "closeTime": ""
-        }
-      ],
-      "coverImageURL": "https://images.unsplash.com/photo-1782392429107-fd725ad8d10a?auto=format&fit=crop&w=1400&q=75",
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo pido información?",
-          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ]
-    },
-    "tablas": [
-      {
-        "tabla": "realty_agents",
-        "propietario": "agency_profile_id",
-        "filas": [
-          {
-            "id": "seed-ra1",
-            "agent_username": "{{username}}-asesor-1",
-            "name": "Asesor 1",
-            "phone_whatsapp": "{{wa593}}",
-            "is_active": true
-          },
-          {
-            "id": "seed-ra2",
-            "agent_username": "{{username}}-asesor-2",
-            "name": "Asesor 2",
-            "phone_whatsapp": "{{wa593}}",
-            "is_active": true
-          }
-        ]
-      },
-      {
-        "tabla": "realty_properties",
-        "propietario": "agency_profile_id",
-        "filas": [
-          {
-            "id": "5d4ff491-e4b2-43f5-a3aa-cccf99d2e8a3",
-            "title": "Casa moderna con piscina",
-            "price": 385000,
-            "location": "{{ubicacion}}",
-            "status": "disponible",
-            "description": "Casa de diseño contemporáneo en conjunto cerrado con seguridad 24/7. Amplios ambientes con ventanales, cocina abierta, piscina privada, jardín y terraza. A 10 minutos de colegios y centros comerciales.",
-            "images": [
-              "https://images.unsplash.com/photo-1706808849780-7a04fbac83ef?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1759147960461-b74a7e9a75d4?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 320,
-              "bedrooms": 4,
-              "bathrooms": 3.5,
-              "parking": 3
-            }
-          },
-          {
-            "id": "1db50c65-a820-4d67-a855-17d19a54e7bd",
-            "title": "Departamento de 2 dormitorios",
-            "price": 148000,
-            "location": "{{ubicacion}}",
-            "status": "disponible",
-            "description": "Departamento luminoso frente al parque, con balcón, cocina equipada, bodega y 1 parqueadero. Edificio con gimnasio, sala comunal y guardianía.",
-            "images": [
-              "https://images.unsplash.com/photo-1628592102751-ba83b0314276?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1665249934445-1de680641f50?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1617098900591-3f90928e8c54?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 86,
-              "bedrooms": 2,
-              "bathrooms": 2,
-              "parking": 1
-            }
-          },
-          {
-            "id": "478df1eb-875b-4ae7-a3bd-0cff6d99b28c",
-            "title": "Suite de inversión",
-            "price": 72000,
-            "location": "{{ubicacion}}",
-            "status": "pre_venta",
-            "description": "Suite amoblada ideal para renta corta (alta ocupación). Entrega estimada en 8 meses. Facilidades de pago durante la construcción.",
-            "images": [
-              "https://images.unsplash.com/photo-1738168246881-40f35f8aba0a?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1654506012740-09321c969dc2?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 42,
-              "bedrooms": 1,
-              "bathrooms": 1,
-              "parking": 0
-            }
-          },
-          {
-            "id": "709428f0-20fe-4848-a626-0f20569636b4",
-            "title": "Casa familiar de tres plantas",
-            "price": 210000,
-            "location": "{{ubicacion}}",
-            "status": "reservado",
-            "description": "Casa de tres plantas con patio, sala de estar, estudio y cocina con isla. Conjunto con áreas verdes y casa club.",
-            "images": [
-              "https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1737233459465-8eaf6c7d8856?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1512916194211-3f2b7f5f7de3?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 180,
-              "bedrooms": 3,
-              "bathrooms": 2.5,
-              "parking": 2
-            }
-          },
-          {
-            "id": "43b0645b-b24b-407e-aedc-0bada7017f00",
-            "title": "Penthouse con vista panorámica",
-            "price": 465000,
-            "location": "{{ubicacion}}",
-            "status": "disponible",
-            "description": "Penthouse de 210 m² con terraza de 60 m² y vista a la ciudad. Acabados de lujo, cocina italiana, domótica y 2 parqueaderos.",
-            "images": [
-              "https://images.unsplash.com/photo-1707250441420-89c9b7a5b945?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1772797583328-f83bc3f94f80?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1784653549288-07343300a44f?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1759147960461-b74a7e9a75d4?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 210,
-              "bedrooms": 3,
-              "bathrooms": 3,
-              "parking": 2
-            }
-          },
-          {
-            "id": "6edc48a3-f4fc-4848-a74d-4b0cb2b06c04",
-            "title": "Oficina corporativa",
-            "price": 138000,
-            "location": "{{ubicacion}}",
-            "status": "disponible",
-            "description": "Oficina de 95 m² lista para ocupar, divisiones de vidrio, sala de reuniones y 2 parqueaderos. Edificio inteligente con recepción.",
-            "images": [
-              "https://images.unsplash.com/photo-1700809888987-cf2b29ecbd2c?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1785599954475-01ea848f97c8?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1770993151205-f9534b48eb8b?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 95,
-              "bedrooms": 0,
-              "bathrooms": 2,
-              "parking": 2
-            }
-          },
-          {
-            "id": "314c98c4-2985-4181-a694-935d5c209458",
-            "title": "Residencia con piscina",
-            "price": 540000,
-            "location": "{{ubicacion}}",
-            "status": "disponible",
-            "description": "Residencia de 480 m² en urbanización privada con acceso a club, canchas y malecón. Cinco dormitorios, cuarto de servicio, jardín y piscina.",
-            "images": [
-              "https://images.unsplash.com/photo-1783125127243-49158bb610a5?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1762811054950-b74e0a055c80?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1786051385612-5fac26efaf88?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1783125127094-ea962d41ba42?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 480,
-              "bedrooms": 5,
-              "bathrooms": 4.5,
-              "parking": 4
-            }
-          },
-          {
-            "id": "354af5b1-300c-4167-a29e-07d1c53ccc14",
-            "title": "Casa de descanso",
-            "price": 230000,
-            "location": "{{ubicacion}}",
-            "status": "disponible",
-            "description": "Casa de descanso totalmente amoblada, con terraza, parrillero y acceso a playa privada del conjunto. Excelente para renta vacacional.",
-            "images": [
-              "https://images.unsplash.com/photo-1768590149180-fb8b111db951?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1710046385385-a37df445b619?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1635111300299-e6e677daf7b7?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 160,
-              "bedrooms": 3,
-              "bathrooms": 2,
-              "parking": 2
-            }
-          },
-          {
-            "id": "2826521c-47b0-498f-aec5-3431e37d7f04",
-            "title": "Departamento familiar",
-            "price": 119000,
-            "location": "{{ubicacion}}",
-            "status": "vendido",
-            "description": "Departamento de tres dormitorios en sector residencial, con balcón y bodega. ¡Vendido en 21 días!",
-            "images": [
-              "https://images.unsplash.com/photo-1613575831056-0acd5da8f085?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1725257928373-dc6d2ac7b145?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 110,
-              "bedrooms": 3,
-              "bathrooms": 2,
-              "parking": 1
-            }
-          },
-          {
-            "id": "15d63cb0-5de1-4b9b-a550-7536ccaff48c",
-            "title": "Terreno de 1.200 m²",
-            "price": 96000,
-            "location": "{{ubicacion}}",
-            "status": "disponible",
-            "description": "Terreno plano y esquinero, con escrituras al día, servicios básicos y acceso asfaltado. Ideal para vivienda campestre.",
-            "images": [
-              "https://images.unsplash.com/photo-1761784891269-9c6cc40956d2?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "features": {
-              "area_m2": 1200
-            }
-          }
-        ]
-      }
-    ]
-  },
-  {
     "clave": "gimnasios",
     "theme": "gym",
     "fuente": "setup_demo_10",
@@ -3192,1092 +2465,6 @@
     ]
   },
   {
-    "clave": "hoteles",
-    "theme": "hotel",
-    "fuente": "setup_demo_11",
-    "logo": {
-      "etiqueta": "HOTEL",
-      "fondo": "#130b0e",
-      "acento": "#d9958b",
-      "texto": "#f6ece6"
-    },
-    "copy": {
-      "jobTitle": "Hotel · Hospedaje",
-      "bio": "Descansa en {{ciudad}}. Conoce nuestras habitaciones y reserva desde este perfil.",
-      "aboutMe": "En {{nombre}} queremos que tu estadía sea cómoda y tranquila. Conoce nuestras habitaciones y reserva directo desde este perfil."
-    },
-    "perfil": {
-      "backgroundColor": "#130b0e",
-      "buttonColor": "#d9958b",
-      "buttonTextColor": "#1a0d10",
-      "textColor": "#f6ece6",
-      "showSchedule": true,
-      "businessHours": [
-        {
-          "day": "lunes",
-          "isOpen": true,
-          "openTime": "00:00",
-          "closeTime": "23:59"
-        },
-        {
-          "day": "martes",
-          "isOpen": true,
-          "openTime": "00:00",
-          "closeTime": "23:59"
-        },
-        {
-          "day": "miércoles",
-          "isOpen": true,
-          "openTime": "00:00",
-          "closeTime": "23:59"
-        },
-        {
-          "day": "jueves",
-          "isOpen": true,
-          "openTime": "00:00",
-          "closeTime": "23:59"
-        },
-        {
-          "day": "viernes",
-          "isOpen": true,
-          "openTime": "00:00",
-          "closeTime": "23:59"
-        },
-        {
-          "day": "sábado",
-          "isOpen": true,
-          "openTime": "00:00",
-          "closeTime": "23:59"
-        },
-        {
-          "day": "domingo",
-          "isOpen": true,
-          "openTime": "00:00",
-          "closeTime": "23:59"
-        }
-      ],
-      "coverImageURL": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=75",
-      "galleryMode": "grid",
-      "galleryImageURLs": [
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=75"
-      ],
-      "albums": [],
-      "hotel_settings": {
-        "bookingEnabled": true,
-        "timezone": "America/Guayaquil"
-      },
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo reservo?",
-          "answer": "Elige tus fechas en «Reserva tu estadía», selecciona la habitación y envía tus datos.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ],
-      "galleryTitle": "Galería"
-    },
-    "tablas": [
-      {
-        "tabla": "hotel_rooms",
-        "propietario": "hotel_profile_id",
-        "filas": [
-          {
-            "name": "Suite",
-            "category": "Suite",
-            "description": "Suite amplia con sala de estar, jacuzzi y balcón privado. Perfecta para escapadas en pareja y celebraciones especiales.",
-            "base_price": 185,
-            "max_adults": 2,
-            "max_children": 1,
-            "beds": "1 cama king",
-            "size_m2": 42,
-            "amenities": [
-              "Wi-Fi",
-              "Aire acondicionado",
-              "Jacuzzi",
-              "Minibar",
-              "Desayuno incluido",
-              "Balcón",
-              "TV por cable",
-              "Caja fuerte"
-            ],
-            "images": [
-              "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "units": 3,
-            "min_nights": 1,
-            "id": "dc2c33cc-77ac-4607-aaac-f87dc34e71b4",
-            "is_available": true,
-            "sort_order": 0
-          },
-          {
-            "name": "Doble Superior",
-            "category": "Superior",
-            "description": "Habitación luminosa con dos camas dobles, escritorio y baño completo. Ideal para amigos o familias pequeñas.",
-            "base_price": 95,
-            "max_adults": 3,
-            "max_children": 1,
-            "beds": "2 camas dobles",
-            "size_m2": 28,
-            "amenities": [
-              "Wi-Fi",
-              "Aire acondicionado",
-              "TV por cable",
-              "Baño privado",
-              "Escritorio",
-              "Secador de pelo"
-            ],
-            "images": [
-              "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "units": 6,
-            "min_nights": 1,
-            "id": "dd15168a-59ef-4706-abdd-8b6d254b5968",
-            "is_available": true,
-            "sort_order": 1
-          },
-          {
-            "name": "Habitación Familiar",
-            "category": "Familiar",
-            "description": "Dos ambientes y cocina equipada para que toda la familia disfrute sin apuros.",
-            "base_price": 140,
-            "max_adults": 4,
-            "max_children": 2,
-            "beds": "1 cama king + 2 individuales",
-            "size_m2": 55,
-            "amenities": [
-              "Wi-Fi",
-              "Aire acondicionado",
-              "Cocina equipada",
-              "Piscina",
-              "Parqueadero",
-              "TV por cable"
-            ],
-            "images": [
-              "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "units": 2,
-            "min_nights": 2,
-            "id": "07181763-2a10-4e8f-af27-81817bda996b",
-            "is_available": true,
-            "sort_order": 2
-          },
-          {
-            "name": "Habitación Estándar",
-            "category": "Estándar",
-            "description": "Sencilla y cómoda, con todo lo necesario para descansar. La opción más económica.",
-            "base_price": 70,
-            "max_adults": 2,
-            "max_children": 0,
-            "beds": "1 cama queen",
-            "size_m2": 22,
-            "amenities": [
-              "Wi-Fi",
-              "Ventilador",
-              "Baño privado",
-              "Agua caliente"
-            ],
-            "images": [
-              "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "units": 5,
-            "min_nights": 1,
-            "id": "9e05a26a-6aee-43ab-aba3-a45e6ffbcf60",
-            "is_available": true,
-            "sort_order": 3
-          },
-          {
-            "name": "Cabaña",
-            "category": "Cabaña",
-            "description": "Cabaña independiente con terraza y hamaca. Para quienes buscan privacidad y tranquilidad.",
-            "base_price": 120,
-            "max_adults": 2,
-            "max_children": 2,
-            "beds": "1 cama king",
-            "size_m2": 36,
-            "amenities": [
-              "Wi-Fi",
-              "Aire acondicionado",
-              "Balcón",
-              "Desayuno incluido",
-              "Piscina"
-            ],
-            "images": [
-              "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1100&q=75",
-              "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1100&q=75"
-            ],
-            "units": 2,
-            "min_nights": 2,
-            "id": "f99d10bd-7017-42af-a690-c68dc4624ca0",
-            "is_available": true,
-            "sort_order": 4
-          }
-        ]
-      },
-      {
-        "tabla": "hotel_services",
-        "propietario": "hotel_profile_id",
-        "filas": [
-          {
-            "name": "Desayuno buffet",
-            "category": "Desayuno",
-            "description": "Frutas, panadería y platos calientes.",
-            "image_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=700&q=75",
-            "price": 8,
-            "price_mode": "por_persona_noche",
-            "id": "ce3ed1b1-8e23-4969-af25-51c44ab27a11",
-            "is_available": true,
-            "sort_order": 0
-          },
-          {
-            "name": "Traslado aeropuerto",
-            "category": "Transporte",
-            "description": "Recogida y entrega con conductor privado.",
-            "image_url": null,
-            "price": 25,
-            "price_mode": "por_reserva",
-            "id": "bb3316a7-f48d-4c9e-a4f7-48ec1e1183b9",
-            "is_available": true,
-            "sort_order": 1
-          },
-          {
-            "name": "Masaje relajante",
-            "category": "Spa",
-            "description": "60 minutos de masaje relajante.",
-            "image_url": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=700&q=75",
-            "price": 40,
-            "price_mode": "por_reserva",
-            "id": "2c680b60-c590-4f73-aa69-2a9a0da39459",
-            "is_available": true,
-            "sort_order": 2
-          },
-          {
-            "name": "Cena romántica",
-            "category": "Restaurante",
-            "description": "Mesa privada con menú de tres tiempos.",
-            "image_url": "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=700&q=75",
-            "price": 60,
-            "price_mode": "por_reserva",
-            "id": "c00d7d70-81a5-4cac-a4fc-b767598f05e3",
-            "is_available": true,
-            "sort_order": 4
-          },
-          {
-            "name": "Lavandería",
-            "category": "Lavandería",
-            "description": "Servicio por noche de estancia.",
-            "image_url": null,
-            "price": 3,
-            "price_mode": "por_noche",
-            "id": "9f5981b6-ef51-4af1-a295-c691123b2031",
-            "is_available": true,
-            "sort_order": 5
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "clave": "tiendas",
-    "theme": "ecom",
-    "fuente": "setup_demo_04",
-    "logo": {
-      "etiqueta": "TIENDA",
-      "fondo": "#100a06",
-      "acento": "#d9a066",
-      "texto": "#f3e2cc"
-    },
-    "copy": {
-      "jobTitle": "Tienda",
-      "bio": "Conoce lo que tenemos para ti en {{ciudad}}. Escríbenos por WhatsApp y te atendemos.",
-      "aboutMe": "En {{nombre}} te esperamos con lo que necesitas. Escríbenos desde este perfil y te ayudamos con tu compra."
-    },
-    "perfil": {
-      "backgroundColor": "#100a06",
-      "buttonColor": "#d9a066",
-      "buttonTextColor": "#1a0f08",
-      "textColor": "#f3e2cc",
-      "showSchedule": true,
-      "businessHours": [
-        {
-          "day": "lunes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "martes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "miércoles",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "jueves",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "viernes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "sábado",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "14:00"
-        },
-        {
-          "day": "domingo",
-          "isOpen": false,
-          "openTime": "",
-          "closeTime": ""
-        }
-      ],
-      "products": [
-        {
-          "id": "tie_1",
-          "name": "Producto más vendido",
-          "category": "Destacados",
-          "price": "$9.90",
-          "shortDescription": "El favorito de nuestros clientes.",
-          "available": true
-        },
-        {
-          "id": "tie_2",
-          "name": "Combo familiar",
-          "category": "Destacados",
-          "price": "$19.90",
-          "shortDescription": "Varios productos juntos a mejor precio.",
-          "available": true
-        },
-        {
-          "id": "tie_3",
-          "name": "Kit de regalo",
-          "category": "Destacados",
-          "price": "$24.90",
-          "shortDescription": "Listo para regalar, con envoltura incluida.",
-          "available": true
-        },
-        {
-          "id": "tie_4",
-          "name": "Pack ahorro x3",
-          "category": "Ofertas",
-          "price": "$14.50",
-          "shortDescription": "Lleva tres y ahorra.",
-          "available": true
-        },
-        {
-          "id": "tie_5",
-          "name": "Oferta de la semana",
-          "category": "Ofertas",
-          "price": "$7.90",
-          "shortDescription": "Por tiempo limitado.",
-          "available": true
-        },
-        {
-          "id": "tie_6",
-          "name": "Edición limitada",
-          "category": "Novedades",
-          "price": "$39.90",
-          "shortDescription": "Disponible hasta agotar stock.",
-          "available": true
-        }
-      ],
-      "ecom_booking_form": [
-        {
-          "id": "f_nombre",
-          "label": "Nombre y apellido",
-          "type": "text",
-          "required": true,
-          "placeholder": "Ej. María Pérez"
-        },
-        {
-          "id": "f_tel",
-          "label": "WhatsApp",
-          "type": "tel",
-          "required": true,
-          "placeholder": "09XXXXXXXX"
-        },
-        {
-          "id": "f_notas",
-          "label": "¿En qué podemos ayudarte?",
-          "type": "textarea",
-          "required": false,
-          "placeholder": "Cuéntanos lo que necesitas"
-        }
-      ],
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo pido información?",
-          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ]
-    },
-    "tablas": [
-      {
-        "tabla": "ecom_staff",
-        "propietario": "seller_id",
-        "filas": [
-          {
-            "id": "seed-es1",
-            "name": "Atención al cliente",
-            "role": "Atención",
-            "slot_minutes": 60,
-            "sort_order": 1,
-            "working_hours": [
-              {
-                "day": 0,
-                "isOpen": false,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 1,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 2,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 3,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 4,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 5,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 6,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "14:00"
-              }
-            ],
-            "is_active": true
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "clave": "talleres",
-    "theme": "ecom",
-    "fuente": "setup_demo_04",
-    "logo": {
-      "etiqueta": "TALLER",
-      "fondo": "#100a06",
-      "acento": "#d9a066",
-      "texto": "#f3e2cc"
-    },
-    "copy": {
-      "jobTitle": "Taller · Servicios",
-      "bio": "Servicio de confianza en {{ciudad}}. Escríbenos por WhatsApp y coordinamos tu cita.",
-      "aboutMe": "En {{nombre}} nos encargamos de tu trabajo con responsabilidad. Cuéntanos qué necesitas desde este perfil y coordinamos."
-    },
-    "perfil": {
-      "backgroundColor": "#100a06",
-      "buttonColor": "#d9a066",
-      "buttonTextColor": "#1a0f08",
-      "textColor": "#f3e2cc",
-      "showSchedule": true,
-      "businessHours": [
-        {
-          "day": "lunes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "martes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "miércoles",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "jueves",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "viernes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "sábado",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "14:00"
-        },
-        {
-          "day": "domingo",
-          "isOpen": false,
-          "openTime": "",
-          "closeTime": ""
-        }
-      ],
-      "products": [
-        {
-          "id": "tal_1",
-          "name": "Cambio de aceite y filtro",
-          "category": "Mantenimiento",
-          "price": "$35.00",
-          "shortDescription": "Aceite y filtro nuevos, con revisión de niveles.",
-          "available": true
-        },
-        {
-          "id": "tal_2",
-          "name": "Mantenimiento preventivo",
-          "category": "Mantenimiento",
-          "price": "$60.00",
-          "shortDescription": "Revisión de los puntos clave para evitar daños mayores.",
-          "available": true
-        },
-        {
-          "id": "tal_3",
-          "name": "Revisión general",
-          "category": "Mantenimiento",
-          "price": "$40.00",
-          "shortDescription": "Chequeo completo de tu vehículo.",
-          "available": true
-        },
-        {
-          "id": "tal_4",
-          "name": "Revisión de frenos",
-          "category": "Frenos y suspensión",
-          "price": "$25.00",
-          "shortDescription": "Pastillas, discos y líquido.",
-          "available": true
-        },
-        {
-          "id": "tal_5",
-          "name": "Alineación y balanceo",
-          "category": "Frenos y suspensión",
-          "price": "$30.00",
-          "shortDescription": "Para que tu vehículo ruede recto y sin vibraciones.",
-          "available": true
-        },
-        {
-          "id": "tal_6",
-          "name": "Diagnóstico con scanner",
-          "category": "Diagnóstico",
-          "price": "$20.00",
-          "shortDescription": "Lectura de códigos de falla y reporte.",
-          "available": true
-        },
-        {
-          "id": "tal_7",
-          "name": "Cambio de batería",
-          "category": "Diagnóstico",
-          "price": "$15.00",
-          "shortDescription": "Mano de obra de instalación y prueba de carga.",
-          "available": true
-        }
-      ],
-      "ecom_booking_form": [
-        {
-          "id": "f_nombre",
-          "label": "Nombre y apellido",
-          "type": "text",
-          "required": true,
-          "placeholder": "Ej. María Pérez"
-        },
-        {
-          "id": "f_tel",
-          "label": "WhatsApp",
-          "type": "tel",
-          "required": true,
-          "placeholder": "09XXXXXXXX"
-        },
-        {
-          "id": "f_notas",
-          "label": "¿En qué podemos ayudarte?",
-          "type": "textarea",
-          "required": false,
-          "placeholder": "Cuéntanos lo que necesitas"
-        }
-      ],
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo pido información?",
-          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ]
-    },
-    "tablas": [
-      {
-        "tabla": "ecom_staff",
-        "propietario": "seller_id",
-        "filas": [
-          {
-            "id": "seed-es1",
-            "name": "Atención al cliente",
-            "role": "Atención",
-            "slot_minutes": 60,
-            "sort_order": 1,
-            "working_hours": [
-              {
-                "day": 0,
-                "isOpen": false,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 1,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 2,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 3,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 4,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 5,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 6,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "14:00"
-              }
-            ],
-            "is_active": true
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "clave": "oficinas",
-    "theme": "ecom",
-    "fuente": "setup_demo_04",
-    "logo": {
-      "etiqueta": "SERVICIOS",
-      "fondo": "#100a06",
-      "acento": "#d9a066",
-      "texto": "#f3e2cc"
-    },
-    "copy": {
-      "jobTitle": "Servicios profesionales",
-      "bio": "Servicios profesionales en {{ciudad}}. Escríbenos por WhatsApp y conversemos.",
-      "aboutMe": "En {{nombre}} te asesoramos con atención personalizada. Cuéntanos tu caso desde este perfil y te respondemos."
-    },
-    "perfil": {
-      "backgroundColor": "#100a06",
-      "buttonColor": "#d9a066",
-      "buttonTextColor": "#1a0f08",
-      "textColor": "#f3e2cc",
-      "showSchedule": true,
-      "businessHours": [
-        {
-          "day": "lunes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "martes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "miércoles",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "jueves",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "viernes",
-          "isOpen": true,
-          "openTime": "08:30",
-          "closeTime": "17:30"
-        },
-        {
-          "day": "sábado",
-          "isOpen": true,
-          "openTime": "09:00",
-          "closeTime": "14:00"
-        },
-        {
-          "day": "domingo",
-          "isOpen": false,
-          "openTime": "",
-          "closeTime": ""
-        }
-      ],
-      "products": [
-        {
-          "id": "ofi_1",
-          "name": "Primera consulta",
-          "category": "Asesoría",
-          "price": "$30.00",
-          "shortDescription": "Conversamos tu caso y te orientamos.",
-          "available": true
-        },
-        {
-          "id": "ofi_2",
-          "name": "Asesoría mensual",
-          "category": "Asesoría",
-          "price": "$120.00",
-          "shortDescription": "Acompañamiento continuo durante el mes.",
-          "available": true
-        },
-        {
-          "id": "ofi_3",
-          "name": "Revisión de documentos",
-          "category": "Trámites",
-          "price": "$45.00",
-          "shortDescription": "Revisamos tus documentos antes de que los presentes.",
-          "available": true
-        },
-        {
-          "id": "ofi_4",
-          "name": "Elaboración de contratos",
-          "category": "Trámites",
-          "price": "$90.00",
-          "shortDescription": "Contratos a la medida de tu necesidad.",
-          "available": true
-        },
-        {
-          "id": "ofi_5",
-          "name": "Gestión de trámites",
-          "category": "Trámites",
-          "price": "$60.00",
-          "shortDescription": "Nos encargamos del papeleo por ti.",
-          "available": true
-        },
-        {
-          "id": "ofi_6",
-          "name": "Capacitación para equipos",
-          "category": "Capacitación",
-          "price": "$150.00",
-          "shortDescription": "Sesión práctica para tu equipo de trabajo.",
-          "available": true
-        }
-      ],
-      "ecom_booking_form": [
-        {
-          "id": "f_nombre",
-          "label": "Nombre y apellido",
-          "type": "text",
-          "required": true,
-          "placeholder": "Ej. María Pérez"
-        },
-        {
-          "id": "f_tel",
-          "label": "WhatsApp",
-          "type": "tel",
-          "required": true,
-          "placeholder": "09XXXXXXXX"
-        },
-        {
-          "id": "f_notas",
-          "label": "¿En qué podemos ayudarte?",
-          "type": "textarea",
-          "required": false,
-          "placeholder": "Cuéntanos lo que necesitas"
-        }
-      ],
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo pido información?",
-          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ]
-    },
-    "tablas": [
-      {
-        "tabla": "ecom_staff",
-        "propietario": "seller_id",
-        "filas": [
-          {
-            "id": "seed-es1",
-            "name": "Atención al cliente",
-            "role": "Atención",
-            "slot_minutes": 60,
-            "sort_order": 1,
-            "working_hours": [
-              {
-                "day": 0,
-                "isOpen": false,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 1,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 2,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 3,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 4,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 5,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "18:00"
-              },
-              {
-                "day": 6,
-                "isOpen": true,
-                "openTime": "09:00",
-                "closeTime": "14:00"
-              }
-            ],
-            "is_active": true
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "clave": "musicos",
-    "theme": "stage",
-    "fuente": "setup_demo_05",
-    "logo": {
-      "etiqueta": "MÚSICA",
-      "fondo": "#07060d",
-      "acento": "#b874f8",
-      "texto": "#f0e6ff"
-    },
-    "copy": {
-      "jobTitle": "Música · Artista",
-      "bio": "Música en vivo en {{ciudad}}. Escúchanos y contáctanos para tu evento.",
-      "aboutMe": "En {{nombre}} hacemos música con pasión. Conoce nuestro trabajo, escúchanos y escríbenos desde este perfil para contratarnos o colaborar."
-    },
-    "perfil": {
-      "backgroundColor": "#07060d",
-      "buttonColor": "#b874f8",
-      "buttonTextColor": "#07060d",
-      "textColor": "#f0e6ff",
-      "borderColor": "#a855f7",
-      "coverImageURL": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=1400&q=75",
-      "galleryMode": "grid",
-      "galleryImageURLs": [
-        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1603910234616-3b5f4a6be2b4?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1768405031181-33bb016e2fbb?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=75"
-      ],
-      "albums": [],
-      "products": [
-        {
-          "id": "mus_1",
-          "name": "Camiseta oficial",
-          "category": "Merch",
-          "price": "$15.00",
-          "shortDescription": "Algodón, con el diseño del proyecto.",
-          "available": true
-        },
-        {
-          "id": "mus_2",
-          "name": "Gorra",
-          "category": "Merch",
-          "price": "$12.00",
-          "shortDescription": "Ajustable, con bordado frontal.",
-          "available": true
-        },
-        {
-          "id": "mus_3",
-          "name": "Póster",
-          "category": "Merch",
-          "price": "$8.00",
-          "shortDescription": "Impresión en papel couché, tamaño A3.",
-          "available": true
-        },
-        {
-          "id": "mus_4",
-          "name": "Disco físico",
-          "category": "Música",
-          "price": "$10.00",
-          "shortDescription": "Edición física de tu música.",
-          "available": true
-        },
-        {
-          "id": "mus_5",
-          "name": "Pack de stickers",
-          "category": "Música",
-          "price": "$3.00",
-          "shortDescription": "Para pegar donde quieras.",
-          "available": true
-        }
-      ],
-      "releases": [
-        {
-          "id": "rel_1",
-          "title": "Tu primer sencillo",
-          "platform": "Spotify",
-          "coverURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=600&q=75"
-        },
-        {
-          "id": "rel_2",
-          "title": "Tu próximo lanzamiento",
-          "platform": "YouTube",
-          "coverURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=600&q=75"
-        }
-      ],
-      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo los contrato para un evento?",
-          "answer": "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha y lugar.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ],
-      "galleryTitle": "Galería"
-    }
-  },
-  {
     "clave": "sublimados",
     "theme": "sublima",
     "fuente": "setup_demo_09",
@@ -4693,28 +2880,472 @@
     ]
   },
   {
-    "clave": "profesionales",
-    "theme": "default",
-    "fuente": "setup_demo_01",
+    "clave": "belleza",
+    "theme": "barber",
+    "fuente": "setup_demo_02",
     "logo": {
-      "etiqueta": "PROFESIONAL",
-      "fondo": "#0b0b10",
+      "etiqueta": "BELLEZA",
+      "fondo": "#0c0907",
       "acento": "#ff6b35",
-      "texto": "#f3f4f6"
+      "texto": "#f5e6d3"
     },
     "copy": {
-      "jobTitle": "Servicios profesionales",
-      "bio": "Servicios profesionales en {{ciudad}}. Agenda una cita o escríbenos por WhatsApp.",
-      "aboutMe": "En {{nombre}} te acompañamos con atención personalizada. Conoce nuestros servicios y agenda tu cita desde este perfil."
+      "jobTitle": "Belleza y cuidado personal",
+      "bio": "Belleza y cuidado personal en {{ciudad}}. Reserva tu cita desde este perfil.",
+      "aboutMe": "En {{nombre}} nos dedicamos a tu cuidado personal. Conoce nuestros servicios y agenda tu cita desde este perfil."
     },
     "perfil": {
-      "backgroundColor": "#0b0b10",
+      "backgroundColor": "#0c0907",
       "buttonColor": "#ff6b35",
-      "buttonTextColor": "#0b0b10",
-      "textColor": "#f3f4f6",
-      "buttonStyle": "rounded",
-      "shadow": "soft",
-      "fontFamily": "Inter, sans-serif",
+      "buttonTextColor": "#0c0907",
+      "textColor": "#f5e6d3",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "products": [
+        {
+          "id": "bel_1",
+          "name": "Corte de cabello",
+          "category": "Cabello",
+          "price": "$12.00",
+          "shortDescription": "Corte y peinado final a tu estilo.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bel_2",
+          "name": "Peinado",
+          "category": "Cabello",
+          "price": "$15.00",
+          "shortDescription": "Peinado para el día a día o para tu evento.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bel_3",
+          "name": "Tinte",
+          "category": "Cabello",
+          "price": "$35.00",
+          "shortDescription": "Color completo con productos de calidad.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1761839256791-6a93f89fb8b0?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bel_4",
+          "name": "Tratamiento capilar",
+          "category": "Cabello",
+          "price": "$25.00",
+          "shortDescription": "Hidratación profunda para un cabello sano y brillante.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1595475884562-073c30d45670?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bel_5",
+          "name": "Manicure",
+          "category": "Uñas",
+          "price": "$10.00",
+          "shortDescription": "Limpieza, limado y esmaltado.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bel_6",
+          "name": "Pedicure",
+          "category": "Uñas",
+          "price": "$12.00",
+          "shortDescription": "Cuidado completo para tus pies.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1779636198585-658170ee0283?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bel_7",
+          "name": "Limpieza facial",
+          "category": "Cuidado",
+          "price": "$20.00",
+          "shortDescription": "Limpieza profunda e hidratación.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bel_8",
+          "name": "Masaje relajante",
+          "category": "Cuidado",
+          "price": "$30.00",
+          "shortDescription": "Un respiro para tu cuerpo, 60 minutos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo una cita?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1781450090585-1a511b7066d9?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1761839256791-6a93f89fb8b0?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1761718210089-ba3bb5ccb54f?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "barber_staff",
+        "propietario": "barber_id",
+        "filas": [
+          {
+            "id": "seed-bs1",
+            "name": "Estilista 1",
+            "role": "Estilista",
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          },
+          {
+            "id": "seed-bs2",
+            "name": "Estilista 2",
+            "role": "Estilista",
+            "sort_order": 2,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "clave": "mascotas",
+    "theme": "petcare",
+    "fuente": "setup_demo_06",
+    "logo": {
+      "etiqueta": "MASCOTAS",
+      "fondo": "#04100f",
+      "acento": "#13a7a6",
+      "texto": "#e6fffd"
+    },
+    "copy": {
+      "jobTitle": "Tienda de mascotas",
+      "bio": "Todo para tu mascota en {{ciudad}}. Escríbenos por WhatsApp y te atendemos.",
+      "aboutMe": "En {{nombre}} encuentras lo que tu mascota necesita. Escríbenos desde este perfil y te ayudamos."
+    },
+    "perfil": {
+      "backgroundColor": "#04100f",
+      "buttonColor": "#13a7a6",
+      "buttonTextColor": "#04100f",
+      "textColor": "#e6fffd",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "16:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "10:00",
+          "closeTime": "14:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1602979677071-1781b7f40023?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1757553532952-401e0b0e9386?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "products": [
+        {
+          "id": "mas_1",
+          "name": "Alimento para perro adulto (3 kg)",
+          "category": "Alimento",
+          "price": "$38.00",
+          "shortDescription": "Nutrición balanceada para perros adultos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1591946559594-8c6d3b7391eb?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mas_2",
+          "name": "Alimento para gato adulto (2 kg)",
+          "category": "Alimento",
+          "price": "$26.50",
+          "shortDescription": "Nutrición balanceada para gatos adultos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1689723671448-3fb4dd4b294e?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mas_3",
+          "name": "Snacks y premios",
+          "category": "Alimento",
+          "price": "$5.50",
+          "shortDescription": "Para recompensar a tu mascota.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mas_4",
+          "name": "Arena sanitaria (5 kg)",
+          "category": "Higiene",
+          "price": "$9.00",
+          "shortDescription": "Control de olores y fácil limpieza.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1727510153658-643787acb16a?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "pet_collar",
+          "name": "Collar ajustable reflectivo",
+          "category": "Accesorios",
+          "price": "$9.00",
+          "shortDescription": "Nailon resistente con hebilla de seguridad. Tallas S, M y L.",
+          "imageURL": "https://images.unsplash.com/photo-1789477024462-de4555754ee5?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_correa",
+          "name": "Correa retráctil 5 m",
+          "category": "Accesorios",
+          "price": "$13.00",
+          "shortDescription": "Agarre ergonómico y freno de seguridad.",
+          "imageURL": "https://images.unsplash.com/photo-1521417611542-86967c2ab11f?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        },
+        {
+          "id": "pet_juguetes",
+          "name": "Set de juguetes mordedores (5 piezas)",
+          "category": "Accesorios",
+          "price": "$7.50",
+          "shortDescription": "Caucho resistente y no tóxico. Ideal para cachorros.",
+          "imageURL": "https://images.unsplash.com/photo-1652755729972-02b96abc6426?auto=format&fit=crop&w=700&q=75",
+          "available": true
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "inmobiliaria",
+    "theme": "realty",
+    "fuente": "setup_demo_08",
+    "logo": {
+      "etiqueta": "INMOBILIARIA",
+      "fondo": "#141210",
+      "acento": "#c9a86a",
+      "texto": "#f2ece1"
+    },
+    "copy": {
+      "jobTitle": "Inmobiliaria · Compra, venta y arriendo",
+      "bio": "Te acompañamos a encontrar el inmueble ideal en {{ciudad}}. Conversemos por WhatsApp.",
+      "aboutMe": "En {{nombre}} te asesoramos en la compra, venta y arriendo de inmuebles. Cuéntanos qué buscas y te ayudamos a encontrarlo."
+    },
+    "perfil": {
+      "backgroundColor": "#141210",
+      "buttonColor": "#c9a86a",
+      "buttonTextColor": "#141210",
+      "textColor": "#f2ece1",
       "showSchedule": true,
       "businessHours": [
         {
@@ -4745,13 +3376,13 @@
           "day": "viernes",
           "isOpen": true,
           "openTime": "09:00",
-          "closeTime": "16:00"
+          "closeTime": "18:00"
         },
         {
           "day": "sábado",
-          "isOpen": false,
-          "openTime": "",
-          "closeTime": ""
+          "isOpen": true,
+          "openTime": "10:00",
+          "closeTime": "14:00"
         },
         {
           "day": "domingo",
@@ -4760,7 +3391,1212 @@
           "closeTime": ""
         }
       ],
-      "coverImageURL": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1400&q=75",
+      "coverImageURL": "https://images.unsplash.com/photo-1782392429107-fd725ad8d10a?auto=format&fit=crop&w=1400&q=75",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1706808849780-7a04fbac83ef?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1628592102751-ba83b0314276?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1738168246881-40f35f8aba0a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1707250441420-89c9b7a5b945?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1700809888987-cf2b29ecbd2c?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "realty_agents",
+        "propietario": "agency_profile_id",
+        "filas": [
+          {
+            "id": "seed-ra1",
+            "agent_username": "{{username}}-asesor-1",
+            "name": "Asesor 1",
+            "phone_whatsapp": "{{wa593}}",
+            "is_active": true
+          },
+          {
+            "id": "seed-ra2",
+            "agent_username": "{{username}}-asesor-2",
+            "name": "Asesor 2",
+            "phone_whatsapp": "{{wa593}}",
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "tabla": "realty_properties",
+        "propietario": "agency_profile_id",
+        "filas": [
+          {
+            "id": "5d4ff491-e4b2-43f5-a3aa-cccf99d2e8a3",
+            "title": "Casa moderna con piscina",
+            "price": 385000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Casa de diseño contemporáneo en conjunto cerrado con seguridad 24/7. Amplios ambientes con ventanales, cocina abierta, piscina privada, jardín y terraza. A 10 minutos de colegios y centros comerciales.",
+            "images": [
+              "https://images.unsplash.com/photo-1706808849780-7a04fbac83ef?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1759147960461-b74a7e9a75d4?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 320,
+              "bedrooms": 4,
+              "bathrooms": 3.5,
+              "parking": 3
+            }
+          },
+          {
+            "id": "1db50c65-a820-4d67-a855-17d19a54e7bd",
+            "title": "Departamento de 2 dormitorios",
+            "price": 148000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Departamento luminoso frente al parque, con balcón, cocina equipada, bodega y 1 parqueadero. Edificio con gimnasio, sala comunal y guardianía.",
+            "images": [
+              "https://images.unsplash.com/photo-1628592102751-ba83b0314276?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1665249934445-1de680641f50?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1617098900591-3f90928e8c54?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 86,
+              "bedrooms": 2,
+              "bathrooms": 2,
+              "parking": 1
+            }
+          },
+          {
+            "id": "478df1eb-875b-4ae7-a3bd-0cff6d99b28c",
+            "title": "Suite de inversión",
+            "price": 72000,
+            "location": "{{ubicacion}}",
+            "status": "pre_venta",
+            "description": "Suite amoblada ideal para renta corta (alta ocupación). Entrega estimada en 8 meses. Facilidades de pago durante la construcción.",
+            "images": [
+              "https://images.unsplash.com/photo-1738168246881-40f35f8aba0a?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1654506012740-09321c969dc2?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 42,
+              "bedrooms": 1,
+              "bathrooms": 1,
+              "parking": 0
+            }
+          },
+          {
+            "id": "709428f0-20fe-4848-a626-0f20569636b4",
+            "title": "Casa familiar de tres plantas",
+            "price": 210000,
+            "location": "{{ubicacion}}",
+            "status": "reservado",
+            "description": "Casa de tres plantas con patio, sala de estar, estudio y cocina con isla. Conjunto con áreas verdes y casa club.",
+            "images": [
+              "https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1737233459465-8eaf6c7d8856?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1512916194211-3f2b7f5f7de3?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 180,
+              "bedrooms": 3,
+              "bathrooms": 2.5,
+              "parking": 2
+            }
+          },
+          {
+            "id": "43b0645b-b24b-407e-aedc-0bada7017f00",
+            "title": "Penthouse con vista panorámica",
+            "price": 465000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Penthouse de 210 m² con terraza de 60 m² y vista a la ciudad. Acabados de lujo, cocina italiana, domótica y 2 parqueaderos.",
+            "images": [
+              "https://images.unsplash.com/photo-1707250441420-89c9b7a5b945?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1772797583328-f83bc3f94f80?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1784653549288-07343300a44f?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1759147960461-b74a7e9a75d4?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 210,
+              "bedrooms": 3,
+              "bathrooms": 3,
+              "parking": 2
+            }
+          },
+          {
+            "id": "6edc48a3-f4fc-4848-a74d-4b0cb2b06c04",
+            "title": "Oficina corporativa",
+            "price": 138000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Oficina de 95 m² lista para ocupar, divisiones de vidrio, sala de reuniones y 2 parqueaderos. Edificio inteligente con recepción.",
+            "images": [
+              "https://images.unsplash.com/photo-1700809888987-cf2b29ecbd2c?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1785599954475-01ea848f97c8?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1770993151205-f9534b48eb8b?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 95,
+              "bedrooms": 0,
+              "bathrooms": 2,
+              "parking": 2
+            }
+          },
+          {
+            "id": "314c98c4-2985-4181-a694-935d5c209458",
+            "title": "Residencia con piscina",
+            "price": 540000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Residencia de 480 m² en urbanización privada con acceso a club, canchas y malecón. Cinco dormitorios, cuarto de servicio, jardín y piscina.",
+            "images": [
+              "https://images.unsplash.com/photo-1783125127243-49158bb610a5?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1762811054950-b74e0a055c80?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1786051385612-5fac26efaf88?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1783125127094-ea962d41ba42?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 480,
+              "bedrooms": 5,
+              "bathrooms": 4.5,
+              "parking": 4
+            }
+          },
+          {
+            "id": "354af5b1-300c-4167-a29e-07d1c53ccc14",
+            "title": "Casa de descanso",
+            "price": 230000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Casa de descanso totalmente amoblada, con terraza, parrillero y acceso a playa privada del conjunto. Excelente para renta vacacional.",
+            "images": [
+              "https://images.unsplash.com/photo-1768590149180-fb8b111db951?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1710046385385-a37df445b619?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1635111300299-e6e677daf7b7?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 160,
+              "bedrooms": 3,
+              "bathrooms": 2,
+              "parking": 2
+            }
+          },
+          {
+            "id": "2826521c-47b0-498f-aec5-3431e37d7f04",
+            "title": "Departamento familiar",
+            "price": 119000,
+            "location": "{{ubicacion}}",
+            "status": "vendido",
+            "description": "Departamento de tres dormitorios en sector residencial, con balcón y bodega. ¡Vendido en 21 días!",
+            "images": [
+              "https://images.unsplash.com/photo-1613575831056-0acd5da8f085?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1725257928373-dc6d2ac7b145?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 110,
+              "bedrooms": 3,
+              "bathrooms": 2,
+              "parking": 1
+            }
+          },
+          {
+            "id": "15d63cb0-5de1-4b9b-a550-7536ccaff48c",
+            "title": "Terreno de 1.200 m²",
+            "price": 96000,
+            "location": "{{ubicacion}}",
+            "status": "disponible",
+            "description": "Terreno plano y esquinero, con escrituras al día, servicios básicos y acceso asfaltado. Ideal para vivienda campestre.",
+            "images": [
+              "https://images.unsplash.com/photo-1761784891269-9c6cc40956d2?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "features": {
+              "area_m2": 1200
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "clave": "hoteles",
+    "theme": "hotel",
+    "fuente": "setup_demo_11",
+    "logo": {
+      "etiqueta": "HOTEL",
+      "fondo": "#130b0e",
+      "acento": "#d9958b",
+      "texto": "#f6ece6"
+    },
+    "copy": {
+      "jobTitle": "Hotel · Hospedaje",
+      "bio": "Descansa en {{ciudad}}. Conoce nuestras habitaciones y reserva desde este perfil.",
+      "aboutMe": "En {{nombre}} queremos que tu estadía sea cómoda y tranquila. Conoce nuestras habitaciones y reserva directo desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#130b0e",
+      "buttonColor": "#d9958b",
+      "buttonTextColor": "#1a0d10",
+      "textColor": "#f6ece6",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "00:00",
+          "closeTime": "23:59"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "hotel_settings": {
+        "bookingEnabled": true,
+        "timezone": "America/Guayaquil"
+      },
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo?",
+          "answer": "Elige tus fechas en «Reserva tu estadía», selecciona la habitación y envía tus datos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "hotel_rooms",
+        "propietario": "hotel_profile_id",
+        "filas": [
+          {
+            "name": "Suite",
+            "category": "Suite",
+            "description": "Suite amplia con sala de estar, jacuzzi y balcón privado. Perfecta para escapadas en pareja y celebraciones especiales.",
+            "base_price": 185,
+            "max_adults": 2,
+            "max_children": 1,
+            "beds": "1 cama king",
+            "size_m2": 42,
+            "amenities": [
+              "Wi-Fi",
+              "Aire acondicionado",
+              "Jacuzzi",
+              "Minibar",
+              "Desayuno incluido",
+              "Balcón",
+              "TV por cable",
+              "Caja fuerte"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 3,
+            "min_nights": 1,
+            "id": "dc2c33cc-77ac-4607-aaac-f87dc34e71b4",
+            "is_available": true,
+            "sort_order": 0
+          },
+          {
+            "name": "Doble Superior",
+            "category": "Superior",
+            "description": "Habitación luminosa con dos camas dobles, escritorio y baño completo. Ideal para amigos o familias pequeñas.",
+            "base_price": 95,
+            "max_adults": 3,
+            "max_children": 1,
+            "beds": "2 camas dobles",
+            "size_m2": 28,
+            "amenities": [
+              "Wi-Fi",
+              "Aire acondicionado",
+              "TV por cable",
+              "Baño privado",
+              "Escritorio",
+              "Secador de pelo"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 6,
+            "min_nights": 1,
+            "id": "dd15168a-59ef-4706-abdd-8b6d254b5968",
+            "is_available": true,
+            "sort_order": 1
+          },
+          {
+            "name": "Habitación Familiar",
+            "category": "Familiar",
+            "description": "Dos ambientes y cocina equipada para que toda la familia disfrute sin apuros.",
+            "base_price": 140,
+            "max_adults": 4,
+            "max_children": 2,
+            "beds": "1 cama king + 2 individuales",
+            "size_m2": 55,
+            "amenities": [
+              "Wi-Fi",
+              "Aire acondicionado",
+              "Cocina equipada",
+              "Piscina",
+              "Parqueadero",
+              "TV por cable"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 2,
+            "min_nights": 2,
+            "id": "07181763-2a10-4e8f-af27-81817bda996b",
+            "is_available": true,
+            "sort_order": 2
+          },
+          {
+            "name": "Habitación Estándar",
+            "category": "Estándar",
+            "description": "Sencilla y cómoda, con todo lo necesario para descansar. La opción más económica.",
+            "base_price": 70,
+            "max_adults": 2,
+            "max_children": 0,
+            "beds": "1 cama queen",
+            "size_m2": 22,
+            "amenities": [
+              "Wi-Fi",
+              "Ventilador",
+              "Baño privado",
+              "Agua caliente"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 5,
+            "min_nights": 1,
+            "id": "9e05a26a-6aee-43ab-aba3-a45e6ffbcf60",
+            "is_available": true,
+            "sort_order": 3
+          },
+          {
+            "name": "Cabaña",
+            "category": "Cabaña",
+            "description": "Cabaña independiente con terraza y hamaca. Para quienes buscan privacidad y tranquilidad.",
+            "base_price": 120,
+            "max_adults": 2,
+            "max_children": 2,
+            "beds": "1 cama king",
+            "size_m2": 36,
+            "amenities": [
+              "Wi-Fi",
+              "Aire acondicionado",
+              "Balcón",
+              "Desayuno incluido",
+              "Piscina"
+            ],
+            "images": [
+              "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1100&q=75",
+              "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1100&q=75"
+            ],
+            "units": 2,
+            "min_nights": 2,
+            "id": "f99d10bd-7017-42af-a690-c68dc4624ca0",
+            "is_available": true,
+            "sort_order": 4
+          }
+        ]
+      },
+      {
+        "tabla": "hotel_services",
+        "propietario": "hotel_profile_id",
+        "filas": [
+          {
+            "name": "Desayuno buffet",
+            "category": "Desayuno",
+            "description": "Frutas, panadería y platos calientes.",
+            "image_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=700&q=75",
+            "price": 8,
+            "price_mode": "por_persona_noche",
+            "id": "ce3ed1b1-8e23-4969-af25-51c44ab27a11",
+            "is_available": true,
+            "sort_order": 0
+          },
+          {
+            "name": "Traslado aeropuerto",
+            "category": "Transporte",
+            "description": "Recogida y entrega con conductor privado.",
+            "image_url": "https://images.unsplash.com/photo-1772465877912-08f178bd07f6?auto=format&fit=crop&w=800&q=75",
+            "price": 25,
+            "price_mode": "por_reserva",
+            "id": "bb3316a7-f48d-4c9e-a4f7-48ec1e1183b9",
+            "is_available": true,
+            "sort_order": 1
+          },
+          {
+            "name": "Masaje relajante",
+            "category": "Spa",
+            "description": "60 minutos de masaje relajante.",
+            "image_url": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=700&q=75",
+            "price": 40,
+            "price_mode": "por_reserva",
+            "id": "2c680b60-c590-4f73-aa69-2a9a0da39459",
+            "is_available": true,
+            "sort_order": 2
+          },
+          {
+            "name": "Cena romántica",
+            "category": "Restaurante",
+            "description": "Mesa privada con menú de tres tiempos.",
+            "image_url": "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=700&q=75",
+            "price": 60,
+            "price_mode": "por_reserva",
+            "id": "c00d7d70-81a5-4cac-a4fc-b767598f05e3",
+            "is_available": true,
+            "sort_order": 4
+          },
+          {
+            "name": "Lavandería",
+            "category": "Lavandería",
+            "description": "Servicio por noche de estancia.",
+            "image_url": "https://images.unsplash.com/photo-1760722974657-f64bce2f9cc5?auto=format&fit=crop&w=800&q=75",
+            "price": 3,
+            "price_mode": "por_noche",
+            "id": "9f5981b6-ef51-4af1-a295-c691123b2031",
+            "is_available": true,
+            "sort_order": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "clave": "tiendas",
+    "theme": "ecom",
+    "fuente": "setup_demo_04",
+    "logo": {
+      "etiqueta": "TIENDA",
+      "fondo": "#100a06",
+      "acento": "#d9a066",
+      "texto": "#f3e2cc"
+    },
+    "copy": {
+      "jobTitle": "Tienda",
+      "bio": "Conoce lo que tenemos para ti en {{ciudad}}. Escríbenos por WhatsApp y te atendemos.",
+      "aboutMe": "En {{nombre}} te esperamos con lo que necesitas. Escríbenos desde este perfil y te ayudamos con tu compra."
+    },
+    "perfil": {
+      "backgroundColor": "#100a06",
+      "buttonColor": "#d9a066",
+      "buttonTextColor": "#1a0f08",
+      "textColor": "#f3e2cc",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "products": [
+        {
+          "id": "tie_1",
+          "name": "Producto más vendido",
+          "category": "Destacados",
+          "price": "$9.90",
+          "shortDescription": "El favorito de nuestros clientes.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1583316174775-bd6dc0e9f298?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tie_2",
+          "name": "Combo familiar",
+          "category": "Destacados",
+          "price": "$19.90",
+          "shortDescription": "Varios productos juntos a mejor precio.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1573612664822-d7d347da7b80?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tie_3",
+          "name": "Kit de regalo",
+          "category": "Destacados",
+          "price": "$24.90",
+          "shortDescription": "Listo para regalar, con envoltura incluida.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1513884923967-4b182ef167ab?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tie_4",
+          "name": "Pack ahorro x3",
+          "category": "Ofertas",
+          "price": "$14.50",
+          "shortDescription": "Lleva tres y ahorra.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1521335629791-ce4aec67dd15?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tie_5",
+          "name": "Oferta de la semana",
+          "category": "Ofertas",
+          "price": "$7.90",
+          "shortDescription": "Por tiempo limitado.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1760565030346-4b947220fe3a?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tie_6",
+          "name": "Edición limitada",
+          "category": "Novedades",
+          "price": "$39.90",
+          "shortDescription": "Disponible hasta agotar stock.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1595991209266-5ff5a3a2f008?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "ecom_booking_form": [
+        {
+          "id": "f_nombre",
+          "label": "Nombre y apellido",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ej. María Pérez"
+        },
+        {
+          "id": "f_tel",
+          "label": "WhatsApp",
+          "type": "tel",
+          "required": true,
+          "placeholder": "09XXXXXXXX"
+        },
+        {
+          "id": "f_notas",
+          "label": "¿En qué podemos ayudarte?",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Cuéntanos lo que necesitas"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1718985342149-7178154e0aee?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1603400521630-9f2de124b33b?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1573879500655-98f2012dd1db?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1555529771-835f59fc5efe?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "ecom_staff",
+        "propietario": "seller_id",
+        "filas": [
+          {
+            "id": "seed-es1",
+            "name": "Atención al cliente",
+            "role": "Atención",
+            "slot_minutes": 60,
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "clave": "talleres",
+    "theme": "ecom",
+    "fuente": "setup_demo_04",
+    "logo": {
+      "etiqueta": "TALLER",
+      "fondo": "#100a06",
+      "acento": "#d9a066",
+      "texto": "#f3e2cc"
+    },
+    "copy": {
+      "jobTitle": "Taller · Servicios",
+      "bio": "Servicio de confianza en {{ciudad}}. Escríbenos por WhatsApp y coordinamos tu cita.",
+      "aboutMe": "En {{nombre}} nos encargamos de tu trabajo con responsabilidad. Cuéntanos qué necesitas desde este perfil y coordinamos."
+    },
+    "perfil": {
+      "backgroundColor": "#100a06",
+      "buttonColor": "#d9a066",
+      "buttonTextColor": "#1a0f08",
+      "textColor": "#f3e2cc",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "products": [
+        {
+          "id": "tal_1",
+          "name": "Cambio de aceite y filtro",
+          "category": "Mantenimiento",
+          "price": "$35.00",
+          "shortDescription": "Aceite y filtro nuevos, con revisión de niveles.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1771340742493-52fbd5476ccb?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tal_2",
+          "name": "Mantenimiento preventivo",
+          "category": "Mantenimiento",
+          "price": "$60.00",
+          "shortDescription": "Revisión de los puntos clave para evitar daños mayores.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1727893119356-1702fe921cf9?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tal_3",
+          "name": "Revisión general",
+          "category": "Mantenimiento",
+          "price": "$40.00",
+          "shortDescription": "Chequeo completo de tu vehículo.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tal_4",
+          "name": "Revisión de frenos",
+          "category": "Frenos y suspensión",
+          "price": "$25.00",
+          "shortDescription": "Pastillas, discos y líquido.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1632733711679-529326f6db12?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tal_5",
+          "name": "Alineación y balanceo",
+          "category": "Frenos y suspensión",
+          "price": "$30.00",
+          "shortDescription": "Para que tu vehículo ruede recto y sin vibraciones.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1767681092416-bccf9410bda4?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tal_6",
+          "name": "Diagnóstico con scanner",
+          "category": "Diagnóstico",
+          "price": "$20.00",
+          "shortDescription": "Lectura de códigos de falla y reporte.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1786198984387-b63cdf520602?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "tal_7",
+          "name": "Cambio de batería",
+          "category": "Diagnóstico",
+          "price": "$15.00",
+          "shortDescription": "Mano de obra de instalación y prueba de carga.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "ecom_booking_form": [
+        {
+          "id": "f_nombre",
+          "label": "Nombre y apellido",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ej. María Pérez"
+        },
+        {
+          "id": "f_tel",
+          "label": "WhatsApp",
+          "type": "tel",
+          "required": true,
+          "placeholder": "09XXXXXXXX"
+        },
+        {
+          "id": "f_notas",
+          "label": "¿En qué podemos ayudarte?",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Cuéntanos lo que necesitas"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1767681092416-bccf9410bda4?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1727893119356-1702fe921cf9?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1632733711679-529326f6db12?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1771340742493-52fbd5476ccb?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1676018366904-c083ed678e60?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "ecom_staff",
+        "propietario": "seller_id",
+        "filas": [
+          {
+            "id": "seed-es1",
+            "name": "Atención al cliente",
+            "role": "Atención",
+            "slot_minutes": 60,
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "clave": "oficinas",
+    "theme": "ecom",
+    "fuente": "setup_demo_04",
+    "logo": {
+      "etiqueta": "SERVICIOS",
+      "fondo": "#100a06",
+      "acento": "#d9a066",
+      "texto": "#f3e2cc"
+    },
+    "copy": {
+      "jobTitle": "Servicios profesionales",
+      "bio": "Servicios profesionales en {{ciudad}}. Escríbenos por WhatsApp y conversemos.",
+      "aboutMe": "En {{nombre}} te asesoramos con atención personalizada. Cuéntanos tu caso desde este perfil y te respondemos."
+    },
+    "perfil": {
+      "backgroundColor": "#100a06",
+      "buttonColor": "#d9a066",
+      "buttonTextColor": "#1a0f08",
+      "textColor": "#f3e2cc",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "17:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "products": [
+        {
+          "id": "ofi_1",
+          "name": "Primera consulta",
+          "category": "Asesoría",
+          "price": "$30.00",
+          "shortDescription": "Conversamos tu caso y te orientamos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1620275765334-4ed948bb4502?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "ofi_2",
+          "name": "Asesoría mensual",
+          "category": "Asesoría",
+          "price": "$120.00",
+          "shortDescription": "Acompañamiento continuo durante el mes.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "ofi_3",
+          "name": "Revisión de documentos",
+          "category": "Trámites",
+          "price": "$45.00",
+          "shortDescription": "Revisamos tus documentos antes de que los presentes.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1488998427799-e3362cec87c3?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "ofi_4",
+          "name": "Elaboración de contratos",
+          "category": "Trámites",
+          "price": "$90.00",
+          "shortDescription": "Contratos a la medida de tu necesidad.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1511385348-a52b4a160dc2?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "ofi_5",
+          "name": "Gestión de trámites",
+          "category": "Trámites",
+          "price": "$60.00",
+          "shortDescription": "Nos encargamos del papeleo por ti.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "ofi_6",
+          "name": "Capacitación para equipos",
+          "category": "Capacitación",
+          "price": "$150.00",
+          "shortDescription": "Sesión práctica para tu equipo de trabajo.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "ecom_booking_form": [
+        {
+          "id": "f_nombre",
+          "label": "Nombre y apellido",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ej. María Pérez"
+        },
+        {
+          "id": "f_tel",
+          "label": "WhatsApp",
+          "type": "tel",
+          "required": true,
+          "placeholder": "09XXXXXXXX"
+        },
+        {
+          "id": "f_notas",
+          "label": "¿En qué podemos ayudarte?",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Cuéntanos lo que necesitas"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo pido información?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y te atendemos.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=75",
       "galleryMode": "grid",
       "galleryImageURLs": [
         "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=800&q=75",
@@ -4771,53 +4607,168 @@
         "https://images.unsplash.com/photo-1646579886135-068c73800308?auto=format&fit=crop&w=800&q=75"
       ],
       "albums": [],
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "ecom_staff",
+        "propietario": "seller_id",
+        "filas": [
+          {
+            "id": "seed-es1",
+            "name": "Atención al cliente",
+            "role": "Atención",
+            "slot_minutes": 60,
+            "sort_order": 1,
+            "working_hours": [
+              {
+                "day": 0,
+                "isOpen": false,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 1,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 2,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 3,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 4,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 5,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "18:00"
+              },
+              {
+                "day": 6,
+                "isOpen": true,
+                "openTime": "09:00",
+                "closeTime": "14:00"
+              }
+            ],
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "clave": "musicos",
+    "theme": "stage",
+    "fuente": "setup_demo_05",
+    "logo": {
+      "etiqueta": "MÚSICA",
+      "fondo": "#07060d",
+      "acento": "#b874f8",
+      "texto": "#f0e6ff"
+    },
+    "copy": {
+      "jobTitle": "Música · Artista",
+      "bio": "Música en vivo en {{ciudad}}. Escúchanos y contáctanos para tu evento.",
+      "aboutMe": "En {{nombre}} hacemos música con pasión. Conoce nuestro trabajo, escúchanos y escríbenos desde este perfil para contratarnos o colaborar."
+    },
+    "perfil": {
+      "backgroundColor": "#07060d",
+      "buttonColor": "#b874f8",
+      "buttonTextColor": "#07060d",
+      "textColor": "#f0e6ff",
+      "borderColor": "#a855f7",
+      "coverImageURL": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1603910234616-3b5f4a6be2b4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1768405031181-33bb016e2fbb?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
       "products": [
         {
-          "id": "prf_1",
-          "name": "Primera consulta",
-          "category": "Servicios",
-          "price": "$30.00",
-          "shortDescription": "Conversamos tu caso y te orientamos.",
-          "available": true
+          "id": "mus_1",
+          "name": "Camiseta oficial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Algodón, con el diseño del proyecto.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1693443687750-611ad77f3aba?auto=format&fit=crop&w=800&q=75"
         },
         {
-          "id": "prf_2",
-          "name": "Sesión de seguimiento",
-          "category": "Servicios",
-          "price": "$45.00",
-          "shortDescription": "Revisamos avances y definimos los siguientes pasos.",
-          "available": true
+          "id": "mus_2",
+          "name": "Camiseta edición especial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Otro diseño del proyecto, en algodón.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1759572095384-1a7e646d0d4f?auto=format&fit=crop&w=800&q=75"
         },
         {
-          "id": "prf_3",
-          "name": "Plan a la medida",
-          "category": "Servicios",
-          "price": "$120.00",
-          "shortDescription": "Un plan de trabajo pensado para tu objetivo.",
-          "available": true
+          "id": "mus_3",
+          "name": "Póster",
+          "category": "Merch",
+          "price": "$8.00",
+          "shortDescription": "Impresión en papel couché, tamaño A3.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1501612780327-45045538702b?auto=format&fit=crop&w=800&q=75"
         },
         {
-          "id": "prf_4",
-          "name": "Taller o charla",
-          "category": "Servicios",
-          "price": "$150.00",
-          "shortDescription": "Sesión práctica para tu equipo o comunidad.",
-          "available": true
+          "id": "mus_4",
+          "name": "Disco físico",
+          "category": "Música",
+          "price": "$10.00",
+          "shortDescription": "Edición física de tu música.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1602848596718-45693ff58c78?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_5",
+          "name": "Vinilo",
+          "category": "Música",
+          "price": "$22.00",
+          "shortDescription": "Edición en vinilo de tu música.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=800&q=75"
         }
       ],
-      "showCalendar": true,
-      "calendarServices": [
-        "Primera consulta",
-        "Sesión de seguimiento",
-        "Taller o charla"
+      "releases": [
+        {
+          "id": "rel_1",
+          "title": "Tu primer sencillo",
+          "platform": "Spotify",
+          "coverURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=600&q=75"
+        },
+        {
+          "id": "rel_2",
+          "title": "Tu próximo lanzamiento",
+          "platform": "YouTube",
+          "coverURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=600&q=75"
+        }
       ],
-      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20agendar%20una%20cita",
-      "calendarWebhookUrl": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20agendar%20una%20cita",
+      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
       "faqs": [
         {
           "id": "faq_1",
-          "question": "¿Cómo agendo una cita?",
-          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "question": "¿Cómo los contrato para un evento?",
+          "answer": "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha y lugar.",
           "order": 1
         },
         {
@@ -5022,31 +4973,6 @@
             "is_available": true
           },
           {
-            "id": "f172a5c8-137d-4ae2-b7b7-ae2e3e4c0103",
-            "title": "Los que se van",
-            "author": "Gallegos Lara, Aguilera Malta y Gil Gilbert",
-            "publisher": "El Conejo",
-            "isbn": "9789978182147",
-            "category": "Cuento y relato",
-            "book_format": "tapa_blanda",
-            "lang": "Español",
-            "pages": 128,
-            "pub_year": 1930,
-            "price": 7.5,
-            "original_price": null,
-            "stock": 5,
-            "book_condition": "nuevo",
-            "is_featured": false,
-            "description": "Veinticuatro cuentos del Grupo de Guayaquil que cambiaron la narrativa ecuatoriana.",
-            "release_date": null,
-            "cover_url": null,
-            "sort_order": 4,
-            "subtitle": null,
-            "tags": [],
-            "sold_count": 0,
-            "is_available": true
-          },
-          {
             "id": "3e38d46f-6b27-416b-8032-e1b13d956d91",
             "title": "Platero y yo",
             "author": "Juan Ramón Jiménez",
@@ -5065,7 +4991,7 @@
             "description": "Elegía andaluza en prosa poética sobre un burrito pequeño, peludo y suave.",
             "release_date": null,
             "cover_url": "https://covers.openlibrary.org/b/id/14201241-L.jpg",
-            "sort_order": 5,
+            "sort_order": 4,
             "subtitle": null,
             "tags": [],
             "sold_count": 0,
@@ -5090,7 +5016,7 @@
             "description": "El libro de poesía más leído en español.",
             "release_date": null,
             "cover_url": "https://covers.openlibrary.org/b/id/747596-L.jpg",
-            "sort_order": 6,
+            "sort_order": 5,
             "subtitle": null,
             "tags": [],
             "sold_count": 0,
@@ -5115,7 +5041,7 @@
             "description": "Cinco niños, un billete dorado y la fábrica de chocolate más extraordinaria del mundo.",
             "release_date": null,
             "cover_url": "https://covers.openlibrary.org/b/id/12459564-L.jpg",
-            "sort_order": 7,
+            "sort_order": 6,
             "subtitle": null,
             "tags": [],
             "sold_count": 0,
@@ -5140,7 +5066,7 @@
             "description": "Un aviador perdido en el desierto conoce a un pequeño príncipe que viene de otro planeta.",
             "release_date": null,
             "cover_url": "https://covers.openlibrary.org/b/isbn/9780156012195-L.jpg?default=false",
-            "sort_order": 8,
+            "sort_order": 7,
             "subtitle": null,
             "tags": [],
             "sold_count": 0,
@@ -5165,7 +5091,7 @@
             "description": "Tres granjeros malvados contra un zorro muy astuto.",
             "release_date": null,
             "cover_url": "https://covers.openlibrary.org/b/isbn/9780140328721-L.jpg?default=false",
-            "sort_order": 9,
+            "sort_order": 8,
             "subtitle": null,
             "tags": [],
             "sold_count": 0,
@@ -5190,7 +5116,7 @@
             "description": "Las tiras originales de la niña más contestataria de la historieta.",
             "release_date": null,
             "cover_url": "https://covers.openlibrary.org/b/id/1052097-L.jpg",
-            "sort_order": 10,
+            "sort_order": 9,
             "subtitle": null,
             "tags": [],
             "sold_count": 0,
@@ -5215,132 +5141,7 @@
             "description": "Harry descubre en su cumpleaños número once que es un mago y que lo esperan en Hogwarts.",
             "release_date": null,
             "cover_url": "https://covers.openlibrary.org/b/isbn/9780747532743-L.jpg?default=false",
-            "sort_order": 11,
-            "subtitle": null,
-            "tags": [],
-            "sold_count": 0,
-            "is_available": true
-          },
-          {
-            "id": "d6f7a3ef-8b7e-4768-a4e2-9e00bb1b4d97",
-            "title": "Matemática 5.º EGB — texto del estudiante",
-            "author": "Ministerio de Educación",
-            "publisher": "Don Bosco",
-            "isbn": null,
-            "category": "Texto escolar",
-            "book_format": "tapa_blanda",
-            "lang": "Español",
-            "pages": 208,
-            "pub_year": 2026,
-            "price": 14.5,
-            "original_price": null,
-            "stock": 25,
-            "book_condition": "nuevo",
-            "is_featured": false,
-            "description": "Texto oficial para 5.º grado de Educación General Básica.",
-            "release_date": null,
-            "cover_url": null,
-            "sort_order": 12,
-            "subtitle": null,
-            "tags": [],
-            "sold_count": 0,
-            "is_available": true
-          },
-          {
-            "id": "c2a7e214-dffd-46f1-b43b-36bbf63d670f",
-            "title": "Lengua y Literatura 5.º EGB — texto del estudiante",
-            "author": "Ministerio de Educación",
-            "publisher": "Don Bosco",
-            "isbn": null,
-            "category": "Texto escolar",
-            "book_format": "tapa_blanda",
-            "lang": "Español",
-            "pages": 224,
-            "pub_year": 2026,
-            "price": 13.8,
-            "original_price": null,
-            "stock": 22,
-            "book_condition": "nuevo",
-            "is_featured": false,
-            "description": "Texto oficial para 5.º grado de Educación General Básica.",
-            "release_date": null,
-            "cover_url": null,
-            "sort_order": 13,
-            "subtitle": null,
-            "tags": [],
-            "sold_count": 0,
-            "is_available": true
-          },
-          {
-            "id": "3dea03ee-5f5f-4d58-8fc4-297d8ba84f17",
-            "title": "Ciencias Naturales 5.º EGB — texto del estudiante",
-            "author": "Ministerio de Educación",
-            "publisher": "Don Bosco",
-            "isbn": null,
-            "category": "Texto escolar",
-            "book_format": "tapa_blanda",
-            "lang": "Español",
-            "pages": 192,
-            "pub_year": 2026,
-            "price": 13.8,
-            "original_price": null,
-            "stock": 5,
-            "book_condition": "nuevo",
-            "is_featured": false,
-            "description": "Texto oficial para 5.º grado de Educación General Básica.",
-            "release_date": null,
-            "cover_url": null,
-            "sort_order": 14,
-            "subtitle": null,
-            "tags": [],
-            "sold_count": 0,
-            "is_available": true
-          },
-          {
-            "id": "f1dfa7a1-0d75-4f05-9b70-e4106ec9b6bf",
-            "title": "Cuaderno universitario 100 hojas",
-            "author": null,
-            "publisher": null,
-            "isbn": null,
-            "category": "Papelería",
-            "book_format": "otro",
-            "lang": "Español",
-            "pages": null,
-            "pub_year": null,
-            "price": 2.25,
-            "original_price": null,
-            "stock": 60,
-            "book_condition": "nuevo",
-            "is_featured": false,
-            "description": "Cuaderno cuadriculado de 100 hojas, tapa dura.",
-            "release_date": null,
-            "cover_url": null,
-            "sort_order": 15,
-            "subtitle": null,
-            "tags": [],
-            "sold_count": 0,
-            "is_available": true
-          },
-          {
-            "id": "11221ac6-636b-43d5-bbb9-ace99daf392c",
-            "title": "Set de resaltadores pastel (6)",
-            "author": null,
-            "publisher": null,
-            "isbn": null,
-            "category": "Papelería",
-            "book_format": "otro",
-            "lang": "Español",
-            "pages": null,
-            "pub_year": null,
-            "price": 4.5,
-            "original_price": null,
-            "stock": 30,
-            "book_condition": "nuevo",
-            "is_featured": false,
-            "description": "Seis colores pastel, punta biselada.",
-            "release_date": null,
-            "cover_url": null,
-            "sort_order": 16,
+            "sort_order": 10,
             "subtitle": null,
             "tags": [],
             "sold_count": 0,
@@ -5349,5 +5150,153 @@
         ]
       }
     ]
+  },
+  {
+    "clave": "profesionales",
+    "theme": "default",
+    "fuente": "setup_demo_01",
+    "logo": {
+      "etiqueta": "PROFESIONAL",
+      "fondo": "#0b0b10",
+      "acento": "#ff6b35",
+      "texto": "#f3f4f6"
+    },
+    "copy": {
+      "jobTitle": "Servicios profesionales",
+      "bio": "Servicios profesionales en {{ciudad}}. Agenda una cita o escríbenos por WhatsApp.",
+      "aboutMe": "En {{nombre}} te acompañamos con atención personalizada. Conoce nuestros servicios y agenda tu cita desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#0b0b10",
+      "buttonColor": "#ff6b35",
+      "buttonTextColor": "#0b0b10",
+      "textColor": "#f3f4f6",
+      "buttonStyle": "rounded",
+      "shadow": "soft",
+      "fontFamily": "Inter, sans-serif",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "16:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1560439513-74b037a25d84?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1688380692117-63178554d76d?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1646579886135-068c73800308?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "products": [
+        {
+          "id": "prf_1",
+          "name": "Primera consulta",
+          "category": "Servicios",
+          "price": "$30.00",
+          "shortDescription": "Conversamos tu caso y te orientamos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1620275765334-4ed948bb4502?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "prf_2",
+          "name": "Sesión de seguimiento",
+          "category": "Servicios",
+          "price": "$45.00",
+          "shortDescription": "Revisamos avances y definimos los siguientes pasos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "prf_3",
+          "name": "Plan a la medida",
+          "category": "Servicios",
+          "price": "$120.00",
+          "shortDescription": "Un plan de trabajo pensado para tu objetivo.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1488998427799-e3362cec87c3?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "prf_4",
+          "name": "Taller o charla",
+          "category": "Servicios",
+          "price": "$150.00",
+          "shortDescription": "Sesión práctica para tu equipo o comunidad.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1511385348-a52b4a160dc2?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "showCalendar": true,
+      "calendarServices": [
+        "Primera consulta",
+        "Sesión de seguimiento",
+        "Taller o charla"
+      ],
+      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20agendar%20una%20cita",
+      "calendarWebhookUrl": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20agendar%20una%20cita",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo una cita?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
   }
 ]
