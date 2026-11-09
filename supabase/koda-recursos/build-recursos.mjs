@@ -82,6 +82,50 @@ function sinMarca(valor, marcas) {
 }
 
 const quitar = (fila, cols) => { const r = structuredClone(fila); for (const c of cols) delete r[c]; return r; };
+
+// ── Fotos que las demos no traen (peluquería, ropa, taller, oficina…) ─────────────────────────────
+// Regla del dueño (2026-11-09): NINGÚN borrador sale sin foto de perfil, portada, galería y fotos en su catálogo; el negocio
+// que ve su plantilla vacía la ve «incompleta» y se pierde el cliente. Son ids de fotos de Unsplash (verificadas con HTTP 200),
+// con el mismo recorte que usan las demos. La foto de perfil NO está aquí: kodaIntake pone el logo con iniciales también como foto de perfil.
+const U = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=800&q=75`;
+const FOTOS = {
+  belleza: {
+    cover: "1633681926022-84c23e8cb2d6",
+    galeria: ["1781450090585-1a511b7066d9", "1600948836101-f9ffda59d250", "1761839256791-6a93f89fb8b0", "1580618672591-eb180b1a973f", "1634449571010-02389ed0f9b0", "1761718210089-ba3bb5ccb54f"],
+    // Corte, Peinado, Tinte, Tratamiento capilar, Manicure, Pedicure, Limpieza facial, Masaje
+    productos: ["1634449571010-02389ed0f9b0", "1580618672591-eb180b1a973f", "1761839256791-6a93f89fb8b0", "1595475884562-073c30d45670", "1632345031435-8727f6897d53", "1779636198585-658170ee0283", "1570172619644-dfd03ed5d881", "1616394584738-fc6e612e71b9"],
+  },
+  tiendas: {
+    cover: "1441984904996-e0b6ba687e04",
+    galeria: ["1532453288672-3a27e9be9efd", "1445205170230-053b83016050", "1718985342149-7178154e0aee", "1603400521630-9f2de124b33b", "1573879500655-98f2012dd1db", "1555529771-835f59fc5efe"],
+    productos: ["1583316174775-bd6dc0e9f298", "1573612664822-d7d347da7b80", "1513884923967-4b182ef167ab", "1521335629791-ce4aec67dd15", "1760565030346-4b947220fe3a", "1595991209266-5ff5a3a2f008"],
+  },
+  talleres: {
+    cover: "1767681092416-bccf9410bda4",
+    galeria: ["1727893119356-1702fe921cf9", "1615906655593-ad0386982a0f", "1632733711679-529326f6db12", "1771340742493-52fbd5476ccb", "1487754180451-c456f719a1fc", "1676018366904-c083ed678e60"],
+    productos: ["1771340742493-52fbd5476ccb", "1727893119356-1702fe921cf9", "1615906655593-ad0386982a0f", "1632733711679-529326f6db12", "1767681092416-bccf9410bda4", "1786198984387-b63cdf520602", "1487754180451-c456f719a1fc"],
+  },
+  oficinas: {
+    cover: "1542744173-8e7e53415bb0",
+    galeria: ["1591115765373-5207764f72e7", "1560439513-74b037a25d84", "1517048676732-d65bc937f952", "1542744173-8e7e53415bb0", "1688380692117-63178554d76d", "1646579886135-068c73800308"],
+    productos: ["1620275765334-4ed948bb4502", "1563986768494-4dee2763ff3f", "1488998427799-e3362cec87c3", "1511385348-a52b4a160dc2", "1591115765373-5207764f72e7", "1460925895917-afdab827c52f"],
+  },
+  profesionales: { productos: ["1620275765334-4ed948bb4502", "1563986768494-4dee2763ff3f", "1488998427799-e3362cec87c3", "1511385348-a52b4a160dc2"] },
+  // La inmobiliaria muestra sus propiedades; la galería del perfil usa las mismas fotos de las propiedades de ejemplo.
+  inmobiliaria: { galeria: ["1706808849780-7a04fbac83ef", "1628592102751-ba83b0314276", "1738168246881-40f35f8aba0a", "1721815693498-cc28507c0ba2", "1707250441420-89c9b7a5b945", "1700809888987-cf2b29ecbd2c"] },
+  // Alimento perro, alimento gato, snacks, arena (los 3 accesorios ya traen su foto de la demo).
+  mascotas: { productos: ["1591946559594-8c6d3b7391eb", "1689723671448-3fb4dd4b294e", "1568640347023-a616a30bc3bd", "1727510153658-643787acb16a"] },
+  // Camiseta oficial, camiseta especial, póster, disco, vinilo.
+  musicos: { productos: ["1693443687750-611ad77f3aba", "1759572095384-1a7e646d0d4f", "1501612780327-45045538702b", "1602848596718-45693ff58c78", "1616714109948-c74fe5029a4d"] },
+};
+function aplicarFotos(clave, perfil) {
+  const f = FOTOS[clave];
+  if (!f) return perfil;
+  if (f.cover) perfil.coverImageURL = U(f.cover);
+  if (f.galeria) { perfil.galleryMode = "grid"; perfil.galleryImageURLs = f.galeria.map(U); perfil.albums = []; }
+  if (f.productos && perfil.products) perfil.products = perfil.products.map((p, i) => (f.productos[i] ? { ...p, imageURL: U(f.productos[i]) } : p));
+  return perfil;
+}
 const GALERIA_TITULO = "Galería";
 
 /** Preguntas frecuentes NEUTRAS: explican cómo usar el perfil, no hablan por el negocio. */
@@ -319,6 +363,8 @@ const paquetes = [
             ...quitar(s, ["hotel_profile_id"]),
             name: s.name === "Cena romántica en la playa" ? "Cena romántica" : s.name,
             description: servicios[s.name] ?? s.description,
+            // La demo deja sin foto el traslado y la lavandería; un servicio sin foto se ve «incompleto».
+            image_url: s.image_url || U({ "Traslado aeropuerto": "1772465877912-08f178bd07f6", "Lavandería": "1760722974657-f64bce2f9cc5" }[s.name] ?? "1520250497591-112f2f40a3f4"),
           })),
         },
       ];
@@ -384,10 +430,10 @@ const paquetes = [
       // Merch genérico: nada de títulos de discos, giras ni fechas inventadas (serían promesas del artista).
       products: catalogo("mus", [
         ["Merch", "Camiseta oficial", "$15.00", "Algodón, con el diseño del proyecto."],
-        ["Merch", "Gorra", "$12.00", "Ajustable, con bordado frontal."],
+        ["Merch", "Camiseta edición especial", "$15.00", "Otro diseño del proyecto, en algodón."],
         ["Merch", "Póster", "$8.00", "Impresión en papel couché, tamaño A3."],
         ["Música", "Disco físico", "$10.00", "Edición física de tu música."],
-        ["Música", "Pack de stickers", "$3.00", "Para pegar donde quieras."],
+        ["Música", "Vinilo", "$22.00", "Edición en vinilo de tu música."],
       ]),
       releases: [
         { id: "rel_1", title: "Tu primer sencillo", platform: "Spotify", coverURL: d.releases[0].coverURL },
@@ -437,6 +483,7 @@ const paquetes = [
       const porCategoria = new Map();
       for (const t of fl.books_titles) {
         if (DE_LA_DEMO.test([t.title, t.author, t.publisher, t.description].join(" "))) continue;
+        if (!t.cover_url) continue;   // un libro sin portada se ve «incompleto»: solo entran los que la traen
         const lista = porCategoria.get(t.category) ?? [];
         if (lista.length < 3) lista.push(t);
         porCategoria.set(t.category, lista);
@@ -493,7 +540,7 @@ for (const p of paquetes) {
   if (!d) throw new Error(`Falta la demo ${p.demo} (¿están los setup_demo_*.sql en la carpeta del proyecto?)`);
   const extra = { "01": ["Villacís Consultores", "Mateo Villacís"], "02": ["Navaja & Cuero"], "03": ["Brasa & Mar"], "04": ["Cumbre"], "05": ["Los Desvelados"], "06": ["Huellitas"], "07": ["Vitalis"], "08": ["Cimientos"], "09": ["Estampa Total", "Club Mayorista Estampa"], "10": ["Titán"], "11": ["Costa Rosa"], "12": ["El Rincón de Papel", "Rincón de Papel"] };
   const marcas = [d.displayName, d.company, ...(extra[p.demo] ?? [])].filter(Boolean).sort((a, b) => b.length - a.length);
-  const perfil = sinMarca(p.perfil(d), marcas);
+  const perfil = aplicarFotos(p.clave, sinMarca(p.perfil(d), marcas));
   Object.assign(perfil, sanearPaleta(perfil));   // contraste (WCAG): acento legible, texto de botón y de página
   if (perfil.galleryImageURLs?.length) perfil.galleryTitle = GALERIA_TITULO;
   const tablas = sinMarca(p.tablas ? p.tablas(d, F[p.demo]) : [], marcas);
