@@ -421,6 +421,43 @@ const paquetes = [
     },
   },
   {
+    clave: "librerias", theme: "books", demo: "12", etiqueta: "LIBRERÍA",
+    perfil: (d) => ({
+      ...pick(d, [...ESTILO, ...GALERIA]),
+      // Sin tarifas de envío, días de apartado ni envoltorio de regalo: son promesas del negocio, no del ejemplo.
+      books_settings: { ordersEnabled: true, pickupEnabled: true, pickupNote: "Retira en la librería con tu código de pedido.", deliveryEnabled: false, timezone: "America/Guayaquil" },
+      faqs: faq("¿Cómo pido un libro?", "Elige el libro en el catálogo y envía tu pedido desde este perfil. Recibirás un código para consultarlo."),
+    }),
+    tablas: (_d, fl) => {
+      // Catálogo de EJEMPLO: hasta 3 títulos por categoría (clásicos conocidos, con portada e ISBN). NO se copian lectores, pedidos,
+      // pedidos especiales, listas de espera, listas escolares (nombran colegios), eventos (nombran invitados) ni tarjetas de regalo.
+      // Se descartan los títulos de la demo que son inventados o ligados a ella o a un lugar (editorial/autor propios de la demo,
+      // «Quito…», «Municipio…»): en un ejemplo sin dueño real no tienen sentido.
+      const DE_LA_DEMO = /Rinc[oó]n|Mariscal|Municipio|Quito|Mariana Lazo/i;
+      const porCategoria = new Map();
+      for (const t of fl.books_titles) {
+        if (DE_LA_DEMO.test([t.title, t.author, t.publisher, t.description].join(" "))) continue;
+        const lista = porCategoria.get(t.category) ?? [];
+        if (lista.length < 3) lista.push(t);
+        porCategoria.set(t.category, lista);
+      }
+      const titulos = [...porCategoria.values()].flat().map((t, i) => ({
+        ...quitar(t, ["shop_profile_id", "staff_note", "images"]),
+        // En un ejemplo no hay «agotados», ni descuentos, ni fechas de estreno de la demo (macros «@D(-9)» sin resolver),
+        // ni marcas de papelería como si fueran editorial.
+        sold_count: 0, original_price: null, release_date: null, is_available: true, sort_order: i + 1,
+        stock: t.stock > 0 ? t.stock : 5,
+        publisher: t.category === "Papelería" ? null : t.publisher,
+      }));
+      return [{ tabla: "books_titles", propietario: "shop_profile_id", filas: titulos }];
+    },
+    copy: {
+      jobTitle: "Librería · Libros y papelería",
+      bio: "Libros, papelería y más en {{ciudad}}. Pide el tuyo desde este perfil.",
+      aboutMe: "En {{nombre}} encuentras novela, infantil, textos escolares y papelería. Mira el catálogo, pide tu libro desde este perfil y retíralo en la librería.",
+    },
+  },
+  {
     clave: "profesionales", theme: "default", demo: "01", etiqueta: "PROFESIONAL",
     perfil: (d) => ({
       ...pick(d, [...ESTILO, "coverImageURL"]),
@@ -446,11 +483,15 @@ const paquetes = [
 ];
 
 // ── 4) Armar, limpiar y escribir ─────────────────────────────────────────────
+// SOLO=librerias (o varias claves separadas por coma): arma únicamente esos paquetes, los mezcla en recursos.json sin tocar
+// los demás (así un cambio en una demo ajena no reescribe todo el banco) y escribe un SQL solo con ellos.
+const SOLO = process.env.SOLO ? process.env.SOLO.split(",").map((s) => s.trim()).filter(Boolean) : null;
 const salida = [];
 for (const p of paquetes) {
+  if (SOLO && !SOLO.includes(p.clave)) continue;
   const d = D[p.demo];
   if (!d) throw new Error(`Falta la demo ${p.demo} (¿están los setup_demo_*.sql en la carpeta del proyecto?)`);
-  const extra = { "01": ["Villacís Consultores", "Mateo Villacís"], "02": ["Navaja & Cuero"], "03": ["Brasa & Mar"], "04": ["Cumbre"], "05": ["Los Desvelados"], "06": ["Huellitas"], "07": ["Vitalis"], "08": ["Cimientos"], "09": ["Estampa Total", "Club Mayorista Estampa"], "10": ["Titán"], "11": ["Costa Rosa"] };
+  const extra = { "01": ["Villacís Consultores", "Mateo Villacís"], "02": ["Navaja & Cuero"], "03": ["Brasa & Mar"], "04": ["Cumbre"], "05": ["Los Desvelados"], "06": ["Huellitas"], "07": ["Vitalis"], "08": ["Cimientos"], "09": ["Estampa Total", "Club Mayorista Estampa"], "10": ["Titán"], "11": ["Costa Rosa"], "12": ["El Rincón de Papel", "Rincón de Papel"] };
   const marcas = [d.displayName, d.company, ...(extra[p.demo] ?? [])].filter(Boolean).sort((a, b) => b.length - a.length);
   const perfil = sinMarca(p.perfil(d), marcas);
   Object.assign(perfil, sanearPaleta(perfil));   // contraste (WCAG): acento legible, texto de botón y de página
@@ -464,7 +505,15 @@ for (const p of paquetes) {
   if (tablas.length) paquete.tablas = tablas;
   salida.push(paquete);
 }
-fs.writeFileSync(path.join(aqui, "recursos.json"), JSON.stringify(salida, null, 2) + "\n");
+{
+  const ruta = path.join(aqui, "recursos.json");
+  let completo = salida;
+  if (SOLO) {   // mezcla: reemplaza los paquetes pedidos y deja intactos los demás
+    const previos = fs.existsSync(ruta) ? JSON.parse(fs.readFileSync(ruta, "utf8")) : [];
+    completo = [...previos.filter((x) => !SOLO.includes(x.clave)), ...salida];
+  }
+  fs.writeFileSync(ruta, JSON.stringify(completo, null, 2) + "\n");
+}
 
 // Revisión automática: restos de las demos que no deben pasar.
 const turbio = /navaja|cuero|brasa|huellitas|vitalis|cimientos|tit[aá]n|costa rosa|cumbre|estampa total|desvelados|villac[ií]s|quito|guayaquil|cuenca|urdesa|floresta|cumbay|carolina|mariscal|samborond|salinas|tumbaco|chillos|\.test|connexo|club |banco|@|diego|andr[eé]s|valeria|camila|roberto|silvana|andrea|mateo/i;
@@ -525,11 +574,21 @@ ${filasSql}
 INSERT INTO public.koda_rubro_plantilla (rubro, theme, nota) VALUES
   ('musicos',       'stage',   'Plantilla Artista: músicos, bandas, DJ, estudios y escuelas de música.'),
   ('sublimados',    'sublima', 'Plantilla Sublimados: sublimación, bordados, serigrafía, imprentas y uniformes.'),
-  ('profesionales', 'default', 'Plantilla Estándar: profesionales independientes (fotógrafos, coaches, psicólogos, consultores).')
+  ('profesionales', 'default', 'Plantilla Estándar: profesionales independientes (fotógrafos, coaches, psicólogos, consultores).'),
+  ('librerias',     'books',   'Plantilla Librería: librerías y papelerías (catálogo con ISBN y stock, pedidos con apartado).')
 ON CONFLICT (rubro) DO NOTHING;
 
 -- VERIFICACIÓN (opcional)
 -- SELECT clave, theme, jsonb_array_length(coalesce(pack->'perfil'->'products', '[]'::jsonb)) AS productos, jsonb_array_length(coalesce(pack->'tablas', '[]'::jsonb)) AS tablas FROM koda_recursos_nicho ORDER BY clave;
 `;
+if (SOLO) {
+  const nombreSql = `setup_koda_${SOLO.join("_")}.sql`;
+  const reglas = SOLO.includes("librerias")
+    ? `\n-- Qué plantilla le toca al rubro NUEVO «librerias» de KODA (no pisa lo que ya hayas cambiado a mano).\nINSERT INTO public.koda_rubro_plantilla (rubro, theme, nota) VALUES\n  ('librerias', 'books', 'Plantilla Librería: librerías y papelerías (catálogo con ISBN y stock, pedidos con apartado).')\nON CONFLICT (rubro) DO NOTHING;\n`
+    : "";
+  const subconjunto = `-- Paquete(s) ${SOLO.join(", ")} del banco de recursos — subconjunto de setup_koda_recursos.sql.\n-- Requiere que koda_recursos_nicho y koda_rubro_plantilla ya existan (Fase 2). Idempotente.\n-- Generado con: SOLO=${SOLO.join(",")} node supabase/koda-recursos/build-recursos.mjs\n\n${filasSql}\n${reglas}\n-- VERIFICACIÓN\nSELECT clave, theme, jsonb_array_length(coalesce(pack->'tablas'->0->'filas', '[]'::jsonb)) AS filas_tabla FROM public.koda_recursos_nicho ORDER BY clave;\n`;
+  fs.writeFileSync(path.join(raiz, nombreSql), subconjunto);
+  console.log(`SQL (solo ${SOLO.join(", ")}): ${path.join(raiz, nombreSql)} (${(subconjunto.length / 1024).toFixed(1)} KB)`);
+} else
 fs.writeFileSync(path.join(raiz, "setup_koda_recursos.sql"), sql);
 console.log(`SQL: ${path.join(raiz, "setup_koda_recursos.sql")} (${(sql.length / 1024).toFixed(1)} KB)`);
