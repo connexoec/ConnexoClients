@@ -174,7 +174,7 @@ type Vars = { nombre: string; ciudad: string | null; ubicacion: string; username
 const TABLAS_SEMBRABLES = new Set([
   "barber_staff", "ecom_staff", "realty_agents", "realty_properties",
   "gym_plans", "gym_coaches", "gym_classes", "hotel_rooms", "hotel_services",
-  "sublima_products",
+  "sublima_products", "books_titles",
 ]);
 
 // Estas plantillas muestran una «prueba social» propia; en las demás la calificación va al final de la bio.
