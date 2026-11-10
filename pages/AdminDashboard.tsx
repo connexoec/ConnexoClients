@@ -26,6 +26,7 @@ const StageFansTab = React.lazy(() => import('../components/tabs/StageFansTab').
 const StageReleasesTab = React.lazy(() => import('../components/tabs/StageReleasesTab').then(m => ({ default: m.StageReleasesTab })));
 const StageTourTab = React.lazy(() => import('../components/tabs/StageTourTab').then(m => ({ default: m.StageTourTab })));
 const StagePressTab = React.lazy(() => import('../components/tabs/StagePressTab').then(m => ({ default: m.StagePressTab })));
+const StageClassesTab = React.lazy(() => import('../components/tabs/StageClassesTab').then(m => ({ default: m.StageClassesTab })));
 const RealtyPropertiesTab = React.lazy(() => import('../components/tabs/RealtyPropertiesTab').then(m => ({ default: m.RealtyPropertiesTab })));
 const RealtyAgentsTab = React.lazy(() => import('../components/tabs/RealtyAgentsTab').then(m => ({ default: m.RealtyAgentsTab })));
 const RealtyLeadsTab = React.lazy(() => import('../components/tabs/RealtyLeadsTab').then(m => ({ default: m.RealtyLeadsTab })));
@@ -67,14 +68,14 @@ const TabSpinner = () => (
   </div>
 );
 
-type Tab = 'links' | 'gallery' | 'appearance' | 'analytics' | 'account' | 'contacts' | 'chat' | 'orders' | 'ecom_orders' | 'ecom_loyalty' | 'ecom_products' | 'ecom_appointments' | 'loyalty' | 'menu' | 'reservations' | 'inventory' | 'services' | 'barber_products' | 'barber_reservations' | 'stage_fans' | 'stage_releases' | 'stage_tour' | 'stage_press' | 'realty_properties' | 'realty_agents' | 'realty_leads' | 'realty_loyalty' | 'sublima_products' | 'sublima_orders' | 'sublima_loyalty' | 'gym_plans' | 'gym_classes' | 'gym_members' | 'gym_leads' | 'hotel_rooms' | 'hotel_bookings' | 'hotel_guests' | 'hotel_calendar' | 'books_catalog' | 'books_orders' | 'books_readers' | 'books_requests' | 'books_events' | 'books_insights';
+type Tab = 'links' | 'gallery' | 'appearance' | 'analytics' | 'account' | 'contacts' | 'chat' | 'orders' | 'ecom_orders' | 'ecom_loyalty' | 'ecom_products' | 'ecom_appointments' | 'loyalty' | 'menu' | 'reservations' | 'inventory' | 'services' | 'barber_products' | 'barber_reservations' | 'stage_fans' | 'stage_releases' | 'stage_tour' | 'stage_press' | 'stage_classes' | 'realty_properties' | 'realty_agents' | 'realty_leads' | 'realty_loyalty' | 'sublima_products' | 'sublima_orders' | 'sublima_loyalty' | 'gym_plans' | 'gym_classes' | 'gym_members' | 'gym_leads' | 'hotel_rooms' | 'hotel_bookings' | 'hotel_guests' | 'hotel_calendar' | 'books_catalog' | 'books_orders' | 'books_readers' | 'books_requests' | 'books_events' | 'books_insights';
 
 const LAST_TAB_KEY = 'cnx_dashboard_tab';
 
 const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
     const [activeTab, setActiveTab] = useState<Tab>(() => {
         const saved = localStorage.getItem(LAST_TAB_KEY) as Tab | null;
-        const valid: Tab[] = ['links', 'gallery', 'appearance', 'analytics', 'account', 'contacts', 'chat', 'orders', 'ecom_orders', 'ecom_loyalty', 'ecom_products', 'ecom_appointments', 'loyalty', 'menu', 'reservations', 'inventory', 'services', 'barber_products', 'barber_reservations', 'stage_fans', 'stage_releases', 'stage_tour', 'stage_press', 'realty_properties', 'realty_agents', 'realty_leads', 'realty_loyalty', 'sublima_products', 'sublima_orders', 'sublima_loyalty', 'gym_plans', 'gym_classes', 'gym_members', 'gym_leads', 'hotel_rooms', 'hotel_bookings', 'hotel_guests', 'hotel_calendar', 'books_catalog', 'books_orders', 'books_readers', 'books_requests', 'books_events', 'books_insights'];
+        const valid: Tab[] = ['links', 'gallery', 'appearance', 'analytics', 'account', 'contacts', 'chat', 'orders', 'ecom_orders', 'ecom_loyalty', 'ecom_products', 'ecom_appointments', 'loyalty', 'menu', 'reservations', 'inventory', 'services', 'barber_products', 'barber_reservations', 'stage_fans', 'stage_releases', 'stage_tour', 'stage_press', 'stage_classes', 'realty_properties', 'realty_agents', 'realty_leads', 'realty_loyalty', 'sublima_products', 'sublima_orders', 'sublima_loyalty', 'gym_plans', 'gym_classes', 'gym_members', 'gym_leads', 'hotel_rooms', 'hotel_bookings', 'hotel_guests', 'hotel_calendar', 'books_catalog', 'books_orders', 'books_readers', 'books_requests', 'books_events', 'books_insights'];
         // Las notificaciones push traen la pestaña destino en la URL
         // (ej. '?tab=ecom_appointments'): al tocar la alerta se abre justo ahí.
         try {
@@ -948,6 +949,8 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
             tabs.push({ id: 'stage_tour', nameKey: 'tab_stage_tour', icon: <Ticket className="w-5 h-5" /> });
             tabs.push({ id: 'ecom_products', nameKey: 'tab_stage_merch', icon: <ShoppingBag className="w-5 h-5" /> });
             tabs.push({ id: 'stage_fans', nameKey: 'tab_stage_fans', icon: <Heart className="w-5 h-5" /> });
+            // Clases / academia (al final: no mueve ninguna pestaña que ya existía).
+            tabs.push({ id: 'stage_classes', nameKey: 'tab_stage_classes', icon: <CalendarDays className="w-5 h-5" /> });
         }
         if (effectivePlan === 'ultra') {
             tabs.push({ id: 'stage_press', nameKey: 'tab_stage_press', icon: <FolderOpen className="w-5 h-5" /> });
@@ -1204,6 +1207,7 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
                   {activeTab === 'stage_tour' && (t('tab_stage_tour') || 'Tour & Tickets')}
                   {activeTab === 'stage_fans' && (t('tab_stage_fans') || 'Fan Base')}
                   {activeTab === 'stage_press' && (t('tab_stage_press') || 'Prensa & EPK')}
+                  {activeTab === 'stage_classes' && (t('tab_stage_classes') || 'Clases')}
                   {activeTab === 'realty_properties' && (t('tab_realty_properties') || 'Propiedades')}
                   {activeTab === 'realty_loyalty' && (t('tab_realty_loyalty') || 'Club de Inversionistas')}
                   {activeTab === 'realty_agents' && (t('tab_realty_agents') || 'Agentes')}
@@ -1530,6 +1534,9 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
             )}
             {activeTab === 'stage_fans' && (
                 <StageFansTab user={user} />
+            )}
+            {activeTab === 'stage_classes' && (
+                <StageClassesTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
             )}
             {activeTab === 'stage_press' && (
                 <StagePressTab

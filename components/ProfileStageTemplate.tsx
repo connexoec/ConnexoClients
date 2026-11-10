@@ -4,6 +4,7 @@ import { MemberPlanCard } from './MemberPlanCard';
 import { useMemberPlan } from '../hooks/useMemberPlan';
 import { supabase } from '../src/lib/supabase';
 import { ProfileExtraSections } from './ProfileExtraSections';
+import { StageClassesSection } from './StageClassesSection';
 import FullCatalogView from './FullCatalogView';
 import type { Profile, UserLink, Product, Release, TourDate } from '../types';
 import {
@@ -85,7 +86,8 @@ export const ProfileStageTemplate: React.FC<ProfileStageTemplateProps> = ({
 
   // ── Visibilidad + orden de módulos (organizable desde el panel) ──
   const moduleOrder = useMemo(() => {
-    const defaults = ['releases', 'tour', 'merch', 'fanbase'];
+    // «classes» (academia) va primero: solo se dibuja si el perfil tiene clases, así que no mueve nada en los demás.
+    const defaults = ['classes', 'releases', 'tour', 'merch', 'fanbase'];
     const order: any[] = Array.isArray(profile?.sectionOrder) ? profile.sectionOrder : [];
     const rank = (k: string) => {
       const found = order.find((s: any) => s?.type === k);
@@ -127,6 +129,11 @@ export const ProfileStageTemplate: React.FC<ProfileStageTemplateProps> = ({
 
   // ── Módulos renderizables (clave → JSX) ──
   const modules: Record<string, React.ReactNode> = {
+    // Clases / academia (horario semanal con cupos). Se auto-oculta sin clases activas.
+    classes: isOn(profile, 'classes')
+      ? <StageClassesSection key="classes" profile={profile} userId={userId} accent={accent} isMobilePreview={isMobilePreview} />
+      : null,
+
     releases: showReleases ? (
       <section key="releases">
         <SectionHeading>Lanzamientos</SectionHeading>

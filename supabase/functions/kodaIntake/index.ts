@@ -104,8 +104,12 @@ function admin() {
 type Admin = ReturnType<typeof admin>;
 
 /** Nicho del banco de recursos (koda_recursos_nicho.clave) que le toca a este negocio. */
-function claveDePack(rubro: string | null, categoria: string | null): string | null {
+function claveDePack(rubro: string | null, categoria: string | null, nombre: string | null = null): string | null {
   const cat = sinAcentos(categoria ?? "").toLowerCase();
+  // Escuelas y academias de música: la plantilla Artista CON horario de clases (las bandas, DJ y estudios siguen con «musicos»).
+  if (rubro === "musicos" && /music.?school|educational|school|escuela|academia|conservatorio/.test(`${cat} ${sinAcentos(nombre ?? "").toLowerCase()}`)) {
+    return "academia_musica";
+  }
   if (/veterinar/.test(cat)) return "veterinaria";
   if (/pet.?(shop|store)|mascota/.test(cat)) return "mascotas";
   if (/inmobiliar|estate.?agent|real.?estate|bienes.?raices/.test(cat)) return "inmobiliaria";
@@ -116,9 +120,9 @@ function claveDePack(rubro: string | null, categoria: string | null): string | n
 
 /** Plantilla (profiles.theme) y nicho del banco que le tocan a este negocio; theme null si su rubro aún no tiene. */
 async function resolverPlantilla(
-  db: Admin, rubro: string | null, categoria: string | null,
+  db: Admin, rubro: string | null, categoria: string | null, nombre: string | null = null,
 ): Promise<{ theme: string | null; clave: string | null }> {
-  const clave = claveDePack(rubro, categoria);
+  const clave = claveDePack(rubro, categoria, nombre);
   const cat = sinAcentos(categoria ?? "").toLowerCase();
   for (const o of SOBRE_CATEGORIA) if (o.re.test(cat)) return { theme: o.theme, clave };
   if (!rubro) return { theme: null, clave };
@@ -174,7 +178,7 @@ type Vars = { nombre: string; ciudad: string | null; ubicacion: string; username
 const TABLAS_SEMBRABLES = new Set([
   "barber_staff", "ecom_staff", "realty_agents", "realty_properties",
   "gym_plans", "gym_coaches", "gym_classes", "hotel_rooms", "hotel_services",
-  "sublima_products", "books_titles",
+  "sublima_products", "books_titles", "stage_classes",
 ]);
 
 // Estas plantillas muestran una «prueba social» propia; en las demás la calificación va al final de la bio.
@@ -436,7 +440,7 @@ async function rellenarPerfil(
 const TABLA_ETIQUETA: Record<string, string> = {
   barber_staff: "equipo", ecom_staff: "equipo", realty_agents: "asesores", realty_properties: "propiedades",
   gym_plans: "planes", gym_classes: "clases", gym_coaches: "entrenadores", hotel_rooms: "habitaciones",
-  hotel_services: "servicios del hotel", sublima_products: "productos", books_titles: "libros",
+  hotel_services: "servicios del hotel", sublima_products: "productos", books_titles: "libros", stage_classes: "clases",
 };
 const COLS_IMAGEN = ["image_url", "photo_url", "images", "cover_url", "imageURL", "image"];
 const CON_PRODUCTOS = new Set(["gastro", "barber", "ecom", "medical", "petcare", "stage", "default"]);
@@ -532,7 +536,7 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
 
   const rubro = str(n.rubro, 40);
   const categoria = str(n.categoria, 120);
-  const { theme, clave } = await resolverPlantilla(db, rubro, categoria);
+  const { theme, clave } = await resolverPlantilla(db, rubro, categoria, nombre);
 
   const comun = {
     koda_envio_id: k.envio_id,
@@ -636,7 +640,7 @@ async function rellenarBorrador(db: Admin, body: Json): Promise<Response> {
   if (fila.estado !== "borrador") return json({ error: `Solo se puede rellenar un borrador (estado actual: ${fila.estado}).` }, 409);
 
   const negocio: Json = fila.negocio ?? {};
-  const clave = claveDePack(fila.rubro ?? null, str(negocio.categoria, 120));
+  const clave = claveDePack(fila.rubro ?? null, str(negocio.categoria, 120), str(negocio.nombre, 120));
   const res = await aplicarRelleno(db, fila, fila.user_id, fila.theme, clave, negocio, fila.username ?? "");
   return json({ ...respuesta(res.fila), relleno_ok: res.ok, relleno: res.fila.relleno ?? null });
 }

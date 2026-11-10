@@ -529,6 +529,51 @@ const paquetes = [
   },
 ];
 
+// ── Academia de música: la plantilla Artista CON horario de clases (stage_classes) ──────────────────────────
+// Variante del paquete «musicos» para escuelas y academias (claveDePack en kodaIntake la elige por categoría/nombre): mismo
+// look, fotos y merch, más un horario semanal de ejemplo con cupos (todo EJEMPLO: sin nombres de profesores, precios ni promesas).
+FOTOS.academia_musica = FOTOS.musicos;
+{
+  const base = paquetes.find((p) => p.clave === "musicos");
+  const HORAS = (h, mins = 60) => { const [a, b] = h.split(":").map(Number); const t = a * 60 + b + mins; return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; };
+  // [nombre, disciplina, día (0=Dom…6=Sáb), inicio, aforo, nivel, profesor, aula]
+  const CLASES = [
+    ["Guitarra inicial", "Guitarra", 1, "17:00", 8, "principiante", "Profesor 1", "Aula 1"],
+    ["Canto", "Canto", 1, "18:30", 10, "todos", "Profesor 2", "Aula 2"],
+    ["Piano", "Piano", 2, "16:00", 6, "principiante", "Profesor 3", "Aula 3"],
+    ["Lenguaje musical", "Teoría", 2, "18:00", 12, "todos", "Profesor 2", "Aula 2"],
+    ["Guitarra inicial", "Guitarra", 3, "17:00", 8, "principiante", "Profesor 1", "Aula 1"],
+    ["Batería", "Batería", 3, "18:30", 4, "intermedio", "Profesor 4", "Aula 4"],
+    ["Piano", "Piano", 4, "16:00", 6, "principiante", "Profesor 3", "Aula 3"],
+    ["Violín", "Violín", 4, "17:30", 6, "principiante", "Profesor 5", "Aula 5"],
+    ["Canto", "Canto", 5, "18:30", 10, "todos", "Profesor 2", "Aula 2"],
+    ["Batería", "Batería", 6, "10:00", 4, "intermedio", "Profesor 4", "Aula 4"],
+    ["Producción musical", "Producción", 6, "11:30", 10, "intermedio", "Profesor 6", "Aula 6"],
+    ["Ensamble de música", "Banda", 6, "15:00", 12, "avanzado", "Profesor 1", "Aula 1"],
+  ];
+  paquetes.push({
+    ...base,
+    clave: "academia_musica", etiqueta: "ACADEMIA",
+    perfil: (d) => ({
+      ...base.perfil(d),
+      stage_settings: { bookingEnabled: true, bookingDaysAhead: 14, cancelHours: 2, timezone: "America/Guayaquil" },
+      faqs: faq("¿Cómo reservo una clase?", "En la sección Clases elige el día y la clase, y reserva tu cupo. Recibirás un código para consultarlo o cancelarlo."),
+    }),
+    tablas: () => [{
+      tabla: "stage_classes", propietario: "stage_profile_id",
+      filas: CLASES.map(([name, discipline, dia, inicio, capacity, level, teacher_name, room], i) => ({
+        id: `seed-sc${i + 1}`, name, discipline, description: null, day_of_week: dia, start_time: inicio, end_time: HORAS(inicio),
+        teacher_name, capacity, level, room, is_active: true, sort_order: i + 1,
+      })),
+    }],
+    copy: {
+      jobTitle: "Academia de música · Clases",
+      bio: "Clases de música en {{ciudad}}. Mira el horario y reserva tu cupo desde este perfil.",
+      aboutMe: "En {{nombre}} aprendes música con clases para todos los niveles. Conoce nuestro horario semanal, reserva tu cupo desde este perfil y escríbenos si tienes preguntas.",
+    },
+  });
+}
+
 // ── 4) Armar, limpiar y escribir ─────────────────────────────────────────────
 // SOLO=librerias (o varias claves separadas por coma): arma únicamente esos paquetes, los mezcla en recursos.json sin tocar
 // los demás (así un cambio en una demo ajena no reescribe todo el banco) y escribe un SQL solo con ellos.

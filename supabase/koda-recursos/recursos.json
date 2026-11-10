@@ -5298,5 +5298,316 @@
       ],
       "galleryTitle": "Galería"
     }
+  },
+  {
+    "clave": "academia_musica",
+    "theme": "stage",
+    "fuente": "setup_demo_05",
+    "logo": {
+      "etiqueta": "ACADEMIA",
+      "fondo": "#07060d",
+      "acento": "#b874f8",
+      "texto": "#f0e6ff"
+    },
+    "copy": {
+      "jobTitle": "Academia de música · Clases",
+      "bio": "Clases de música en {{ciudad}}. Mira el horario y reserva tu cupo desde este perfil.",
+      "aboutMe": "En {{nombre}} aprendes música con clases para todos los niveles. Conoce nuestro horario semanal, reserva tu cupo desde este perfil y escríbenos si tienes preguntas."
+    },
+    "perfil": {
+      "backgroundColor": "#07060d",
+      "buttonColor": "#b874f8",
+      "buttonTextColor": "#07060d",
+      "textColor": "#f0e6ff",
+      "borderColor": "#a855f7",
+      "coverImageURL": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1603910234616-3b5f4a6be2b4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1768405031181-33bb016e2fbb?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "products": [
+        {
+          "id": "mus_1",
+          "name": "Camiseta oficial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Algodón, con el diseño del proyecto.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1693443687750-611ad77f3aba?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_2",
+          "name": "Camiseta edición especial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Otro diseño del proyecto, en algodón.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1759572095384-1a7e646d0d4f?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_3",
+          "name": "Póster",
+          "category": "Merch",
+          "price": "$8.00",
+          "shortDescription": "Impresión en papel couché, tamaño A3.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1501612780327-45045538702b?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_4",
+          "name": "Disco físico",
+          "category": "Música",
+          "price": "$10.00",
+          "shortDescription": "Edición física de tu música.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1602848596718-45693ff58c78?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_5",
+          "name": "Vinilo",
+          "category": "Música",
+          "price": "$22.00",
+          "shortDescription": "Edición en vinilo de tu música.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "releases": [
+        {
+          "id": "rel_1",
+          "title": "Tu primer sencillo",
+          "platform": "Spotify",
+          "coverURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=600&q=75"
+        },
+        {
+          "id": "rel_2",
+          "title": "Tu próximo lanzamiento",
+          "platform": "YouTube",
+          "coverURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=600&q=75"
+        }
+      ],
+      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo una clase?",
+          "answer": "En la sección Clases elige el día y la clase, y reserva tu cupo. Recibirás un código para consultarlo o cancelarlo.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "stage_settings": {
+        "bookingEnabled": true,
+        "bookingDaysAhead": 14,
+        "cancelHours": 2,
+        "timezone": "America/Guayaquil"
+      },
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "stage_classes",
+        "propietario": "stage_profile_id",
+        "filas": [
+          {
+            "id": "seed-sc1",
+            "name": "Guitarra inicial",
+            "discipline": "Guitarra",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "17:00",
+            "end_time": "18:00",
+            "teacher_name": "Profesor 1",
+            "capacity": 8,
+            "level": "principiante",
+            "room": "Aula 1",
+            "is_active": true,
+            "sort_order": 1
+          },
+          {
+            "id": "seed-sc2",
+            "name": "Canto",
+            "discipline": "Canto",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "18:30",
+            "end_time": "19:30",
+            "teacher_name": "Profesor 2",
+            "capacity": 10,
+            "level": "todos",
+            "room": "Aula 2",
+            "is_active": true,
+            "sort_order": 2
+          },
+          {
+            "id": "seed-sc3",
+            "name": "Piano",
+            "discipline": "Piano",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "16:00",
+            "end_time": "17:00",
+            "teacher_name": "Profesor 3",
+            "capacity": 6,
+            "level": "principiante",
+            "room": "Aula 3",
+            "is_active": true,
+            "sort_order": 3
+          },
+          {
+            "id": "seed-sc4",
+            "name": "Lenguaje musical",
+            "discipline": "Teoría",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "18:00",
+            "end_time": "19:00",
+            "teacher_name": "Profesor 2",
+            "capacity": 12,
+            "level": "todos",
+            "room": "Aula 2",
+            "is_active": true,
+            "sort_order": 4
+          },
+          {
+            "id": "seed-sc5",
+            "name": "Guitarra inicial",
+            "discipline": "Guitarra",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "17:00",
+            "end_time": "18:00",
+            "teacher_name": "Profesor 1",
+            "capacity": 8,
+            "level": "principiante",
+            "room": "Aula 1",
+            "is_active": true,
+            "sort_order": 5
+          },
+          {
+            "id": "seed-sc6",
+            "name": "Batería",
+            "discipline": "Batería",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "18:30",
+            "end_time": "19:30",
+            "teacher_name": "Profesor 4",
+            "capacity": 4,
+            "level": "intermedio",
+            "room": "Aula 4",
+            "is_active": true,
+            "sort_order": 6
+          },
+          {
+            "id": "seed-sc7",
+            "name": "Piano",
+            "discipline": "Piano",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "16:00",
+            "end_time": "17:00",
+            "teacher_name": "Profesor 3",
+            "capacity": 6,
+            "level": "principiante",
+            "room": "Aula 3",
+            "is_active": true,
+            "sort_order": 7
+          },
+          {
+            "id": "seed-sc8",
+            "name": "Violín",
+            "discipline": "Violín",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "17:30",
+            "end_time": "18:30",
+            "teacher_name": "Profesor 5",
+            "capacity": 6,
+            "level": "principiante",
+            "room": "Aula 5",
+            "is_active": true,
+            "sort_order": 8
+          },
+          {
+            "id": "seed-sc9",
+            "name": "Canto",
+            "discipline": "Canto",
+            "description": null,
+            "day_of_week": 5,
+            "start_time": "18:30",
+            "end_time": "19:30",
+            "teacher_name": "Profesor 2",
+            "capacity": 10,
+            "level": "todos",
+            "room": "Aula 2",
+            "is_active": true,
+            "sort_order": 9
+          },
+          {
+            "id": "seed-sc10",
+            "name": "Batería",
+            "discipline": "Batería",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "teacher_name": "Profesor 4",
+            "capacity": 4,
+            "level": "intermedio",
+            "room": "Aula 4",
+            "is_active": true,
+            "sort_order": 10
+          },
+          {
+            "id": "seed-sc11",
+            "name": "Producción musical",
+            "discipline": "Producción",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "11:30",
+            "end_time": "12:30",
+            "teacher_name": "Profesor 6",
+            "capacity": 10,
+            "level": "intermedio",
+            "room": "Aula 6",
+            "is_active": true,
+            "sort_order": 11
+          },
+          {
+            "id": "seed-sc12",
+            "name": "Ensamble de música",
+            "discipline": "Banda",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "15:00",
+            "end_time": "16:00",
+            "teacher_name": "Profesor 1",
+            "capacity": 12,
+            "level": "avanzado",
+            "room": "Aula 1",
+            "is_active": true,
+            "sort_order": 12
+          }
+        ]
+      }
+    ]
   }
 ]
