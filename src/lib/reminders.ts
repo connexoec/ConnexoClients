@@ -61,7 +61,7 @@ export const addDaysISO = (iso: string, days: number): string => {
  */
 const CLOSED = new Set([
   'cancelada', 'cancelado', 'no_show', 'completada', 'completado',
-  'atendida', 'cerrado', 'entregado',
+  'atendida', 'cerrado', 'entregado', 'realizada', 'entregada',
 ]);
 
 export const isActiveStatus = (status?: string | null): boolean =>
