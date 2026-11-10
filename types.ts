@@ -982,6 +982,157 @@ export interface BookTitle {
   created_at?: string;
 }
 
+// ─── Fotografía (theme 'photo', motor photo_*; setup_photo.sql) ─────────────────────────────────────────────
+// Ajustes (columna profiles.photo_settings jsonb, lectura pública).
+export interface PhotoWorkingDay { day: number; isOpen: boolean; openTime: string; closeTime: string }
+export interface PhotoSettings {
+  bookingEnabled?: boolean;
+  bookingDaysAhead?: number;          // hasta cuántos días adelante se puede reservar (60 por defecto)
+  minNoticeHours?: number;            // anticipación mínima (12 h por defecto)
+  slotMinutes?: number;               // cada cuántos minutos comienza una franja (60 por defecto)
+  cancelHours?: number;               // el cliente cancela por la web hasta N horas antes (48 por defecto)
+  parallelSessions?: number;          // sesiones a la vez (solo ULTRA, 1 por defecto)
+  workingHours?: PhotoWorkingDay[];
+  galleriesEnabled?: boolean;
+  quotesEnabled?: boolean;
+  studioName?: string;                // «Estudio Luz», para el texto de alquiler
+  timezone?: string;
+}
+
+export type PhotoPackageKind = 'sesion' | 'evento' | 'documentos' | 'impresion' | 'estudio';
+export type PhotoPackageMode = 'reserva' | 'cotizacion' | 'consulta';
+
+export interface PhotoWork {
+  id: string;
+  photo_profile_id: string;
+  title: string;
+  category: string;
+  description?: string | null;
+  cover_url?: string | null;
+  images: string[];
+  is_featured: boolean;
+  is_visible: boolean;
+  sort_order: number;
+  created_at?: string;
+}
+
+export interface PhotoPackage {
+  id: string;
+  photo_profile_id: string;
+  name: string;
+  kind: PhotoPackageKind;
+  description?: string | null;
+  includes: string[];
+  delivery_note?: string | null;
+  price: number;
+  price_prefix?: string | null;
+  hourly: boolean;
+  min_hours: number;
+  max_hours: number;
+  duration_min: number;
+  full_day: boolean;
+  deposit_percent: number;
+  mode: PhotoPackageMode;
+  image_url?: string | null;
+  is_featured: boolean;
+  is_active: boolean;
+  sort_order: number;
+  created_at?: string;
+}
+
+export interface PhotoTeamMember {
+  id: string;
+  photo_profile_id: string;
+  name: string;
+  role?: string | null;
+  bio?: string | null;
+  photo_url?: string | null;
+  instagram?: string | null;
+  is_active: boolean;
+  sort_order: number;
+}
+
+export type PhotoBookingStatus = 'pendiente' | 'confirmada' | 'realizada' | 'entregada' | 'cancelada' | 'no_show';
+export type PhotoPaymentStatus = 'pendiente' | 'anticipo' | 'pagado';
+export type PhotoLocationKind = 'estudio' | 'domicilio' | 'exterior';
+
+export interface PhotoBooking {
+  id: string;
+  photo_profile_id: string;
+  package_id?: string | null;
+  package_name: string;
+  package_kind?: PhotoPackageKind | null;
+  session_date: string;
+  start_time: string;
+  end_time: string;
+  hours?: number | null;
+  full_day: boolean;
+  customer_name: string;
+  customer_phone?: string | null;
+  customer_email?: string | null;
+  location_kind: PhotoLocationKind;
+  location_text?: string | null;
+  people?: number | null;
+  notes?: string | null;
+  photographer_id?: string | null;
+  photographer_name?: string | null;
+  total: number;
+  deposit_required: number;
+  payment_status: PhotoPaymentStatus;
+  status: PhotoBookingStatus;
+  confirmation_code: string;
+  admin_note?: string | null;
+  source_campaign?: string | null;
+  created_at: string;
+}
+
+export interface PhotoBlock { id: string; photo_profile_id: string; date_from: string; date_to: string; reason?: string | null }
+
+export type PhotoQuoteStatus = 'nueva' | 'contactado' | 'cotizada' | 'aceptada' | 'descartada';
+export interface PhotoQuote {
+  id: string;
+  photo_profile_id: string;
+  package_id?: string | null;
+  package_name?: string | null;
+  quote_code: string;
+  customer_name: string;
+  customer_phone?: string | null;
+  customer_email?: string | null;
+  session_type: string;
+  event_date?: string | null;
+  location_text?: string | null;
+  people?: number | null;
+  budget?: string | null;
+  details?: string | null;
+  status: PhotoQuoteStatus;
+  quoted_total?: number | null;
+  admin_note?: string | null;
+  created_at: string;
+}
+
+export interface PhotoGalleryPhoto { id: string; url: string; name?: string }
+export interface PhotoGallery {
+  id: string;
+  photo_profile_id: string;
+  booking_id?: string | null;
+  gallery_code: string;
+  pin: string;
+  client_name: string;
+  title: string;
+  note?: string | null;
+  photos: PhotoGalleryPhoto[];
+  allow_download: boolean;
+  download_url?: string | null;
+  favorites_limit?: number | null;
+  favorites: string[];
+  favorites_note?: string | null;
+  favorites_sent_at?: string | null;
+  expires_at?: string | null;
+  status: 'activa' | 'archivada';
+  views: number;
+  created_at: string;
+}
+
 // Ajustes de la librería (columna profiles.books_settings jsonb, lectura pública).
 export interface BooksSettings {
   ordersEnabled?: boolean;
@@ -1215,6 +1366,7 @@ export interface Profile {
   hotel_settings?: HotelSettings;   // columna profiles.hotel_settings jsonb
   books_settings?: BooksSettings;   // columna profiles.books_settings jsonb (librería)
   stage_settings?: StageSettings;   // columna profiles.stage_settings jsonb (clases de Artista)
+  photo_settings?: PhotoSettings;   // columna profiles.photo_settings jsonb (plantilla Fotografía)
 
   clubName?: string;    // Nombre del club de fidelidad (gastro); default "Club Secreto"
   clubTagline?: string; // Eslogan del club de fidelidad (gastro)

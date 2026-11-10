@@ -48,6 +48,11 @@ const BooksReadersTab = React.lazy(() => import('../components/tabs/BooksReaders
 const BooksRequestsTab = React.lazy(() => import('../components/tabs/BooksRequestsTab').then(m => ({ default: m.BooksRequestsTab })));
 const BooksEventsTab = React.lazy(() => import('../components/tabs/BooksEventsTab').then(m => ({ default: m.BooksEventsTab })));
 const BooksInsightsTab = React.lazy(() => import('../components/tabs/BooksInsightsTab').then(m => ({ default: m.BooksInsightsTab })));
+const PhotoPortfolioTab = React.lazy(() => import('../components/tabs/PhotoPortfolioTab').then(m => ({ default: m.PhotoPortfolioTab })));
+const PhotoPackagesTab = React.lazy(() => import('../components/tabs/PhotoPackagesTab').then(m => ({ default: m.PhotoPackagesTab })));
+const PhotoSessionsTab = React.lazy(() => import('../components/tabs/PhotoSessionsTab').then(m => ({ default: m.PhotoSessionsTab })));
+const PhotoDeliveriesTab = React.lazy(() => import('../components/tabs/PhotoDeliveriesTab').then(m => ({ default: m.PhotoDeliveriesTab })));
+const PhotoStudioTab = React.lazy(() => import('../components/tabs/PhotoStudioTab').then(m => ({ default: m.PhotoStudioTab })));
 const GalleryTab = React.lazy(() => import('../components/tabs/GalleryTab').then(m => ({ default: m.GalleryTab })));
 const ContactsTab = React.lazy(() => import('../components/ContactsTab').then(m => ({ default: m.ContactsTab })));
 import { TestimonialFormModal } from '../components/TestimonialFormModal';
@@ -58,7 +63,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../src/lib/supabase';
 import { getOwnerTimeZone } from '../src/lib/analytics';
 import { pushMultiAccountEnabled, releasePushDevice } from '../src/lib/push';
-import { Link, Palette, BarChart3, UserIcon, Users, MessageCircle, QrCode, ExternalLink, LogOut, Save, Eye, Utensils, ShoppingBag, Package, Music, Ticket, Heart, FolderOpen, CalendarCheck, Boxes, ClipboardList, Building2, UserCog, Shirt, Scissors, Images, HelpCircle, Dumbbell, CalendarDays, BedDouble, ConciergeBell, Crown, BookOpen, Feather, TrendingUp } from 'lucide-react';
+import { Link, Palette, BarChart3, UserIcon, Users, MessageCircle, QrCode, ExternalLink, LogOut, Save, Eye, Utensils, ShoppingBag, Package, Music, Ticket, Heart, FolderOpen, CalendarCheck, Boxes, ClipboardList, Building2, UserCog, Shirt, Scissors, Images, HelpCircle, Dumbbell, CalendarDays, BedDouble, ConciergeBell, Crown, BookOpen, Feather, TrendingUp, Camera, Send, Aperture } from 'lucide-react';
 const ChatList = React.lazy(() => import('../components/chat/ChatList'));
 const ChatWindow = React.lazy(() => import('../components/chat/ChatWindow'));
 
@@ -68,14 +73,14 @@ const TabSpinner = () => (
   </div>
 );
 
-type Tab = 'links' | 'gallery' | 'appearance' | 'analytics' | 'account' | 'contacts' | 'chat' | 'orders' | 'ecom_orders' | 'ecom_loyalty' | 'ecom_products' | 'ecom_appointments' | 'loyalty' | 'menu' | 'reservations' | 'inventory' | 'services' | 'barber_products' | 'barber_reservations' | 'stage_fans' | 'stage_releases' | 'stage_tour' | 'stage_press' | 'stage_classes' | 'realty_properties' | 'realty_agents' | 'realty_leads' | 'realty_loyalty' | 'sublima_products' | 'sublima_orders' | 'sublima_loyalty' | 'gym_plans' | 'gym_classes' | 'gym_members' | 'gym_leads' | 'hotel_rooms' | 'hotel_bookings' | 'hotel_guests' | 'hotel_calendar' | 'books_catalog' | 'books_orders' | 'books_readers' | 'books_requests' | 'books_events' | 'books_insights';
+type Tab = 'links' | 'gallery' | 'appearance' | 'analytics' | 'account' | 'contacts' | 'chat' | 'orders' | 'ecom_orders' | 'ecom_loyalty' | 'ecom_products' | 'ecom_appointments' | 'loyalty' | 'menu' | 'reservations' | 'inventory' | 'services' | 'barber_products' | 'barber_reservations' | 'stage_fans' | 'stage_releases' | 'stage_tour' | 'stage_press' | 'stage_classes' | 'realty_properties' | 'realty_agents' | 'realty_leads' | 'realty_loyalty' | 'sublima_products' | 'sublima_orders' | 'sublima_loyalty' | 'gym_plans' | 'gym_classes' | 'gym_members' | 'gym_leads' | 'hotel_rooms' | 'hotel_bookings' | 'hotel_guests' | 'hotel_calendar' | 'books_catalog' | 'books_orders' | 'books_readers' | 'books_requests' | 'books_events' | 'books_insights' | 'photo_portfolio' | 'photo_packages' | 'photo_sessions' | 'photo_deliveries' | 'photo_studio';
 
 const LAST_TAB_KEY = 'cnx_dashboard_tab';
 
 const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
     const [activeTab, setActiveTab] = useState<Tab>(() => {
         const saved = localStorage.getItem(LAST_TAB_KEY) as Tab | null;
-        const valid: Tab[] = ['links', 'gallery', 'appearance', 'analytics', 'account', 'contacts', 'chat', 'orders', 'ecom_orders', 'ecom_loyalty', 'ecom_products', 'ecom_appointments', 'loyalty', 'menu', 'reservations', 'inventory', 'services', 'barber_products', 'barber_reservations', 'stage_fans', 'stage_releases', 'stage_tour', 'stage_press', 'stage_classes', 'realty_properties', 'realty_agents', 'realty_leads', 'realty_loyalty', 'sublima_products', 'sublima_orders', 'sublima_loyalty', 'gym_plans', 'gym_classes', 'gym_members', 'gym_leads', 'hotel_rooms', 'hotel_bookings', 'hotel_guests', 'hotel_calendar', 'books_catalog', 'books_orders', 'books_readers', 'books_requests', 'books_events', 'books_insights'];
+        const valid: Tab[] = ['links', 'gallery', 'appearance', 'analytics', 'account', 'contacts', 'chat', 'orders', 'ecom_orders', 'ecom_loyalty', 'ecom_products', 'ecom_appointments', 'loyalty', 'menu', 'reservations', 'inventory', 'services', 'barber_products', 'barber_reservations', 'stage_fans', 'stage_releases', 'stage_tour', 'stage_press', 'stage_classes', 'realty_properties', 'realty_agents', 'realty_leads', 'realty_loyalty', 'sublima_products', 'sublima_orders', 'sublima_loyalty', 'gym_plans', 'gym_classes', 'gym_members', 'gym_leads', 'hotel_rooms', 'hotel_bookings', 'hotel_guests', 'hotel_calendar', 'books_catalog', 'books_orders', 'books_readers', 'books_requests', 'books_events', 'books_insights', 'photo_portfolio', 'photo_packages', 'photo_sessions', 'photo_deliveries', 'photo_studio'];
         // Las notificaciones push traen la pestaña destino en la URL
         // (ej. '?tab=ecom_appointments'): al tocar la alerta se abre justo ahí.
         try {
@@ -888,6 +893,8 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
     const isHotel = profileData?.theme === 'hotel';
     // Librería: motor propio books_* (catálogo con stock, pedidos, club, encargos, eventos, regalos).
     const isBooks = profileData?.theme === 'books';
+    // Fotografía: motor propio photo_* (portafolio, paquetes, reservas con agenda, cotizaciones, entregas, equipo).
+    const isPhoto = profileData?.theme === 'photo';
 
     if (isGym) {
         // Planes y Solicitudes para todos; Clases y Socios (carnet, vencimientos, check-in) PRO+.
@@ -908,6 +915,18 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
         }
         if (effectivePlan === 'ultra') {
             tabs.push({ id: 'hotel_calendar', nameKey: 'tab_hotel_calendar', icon: <CalendarDays className="w-5 h-5" /> });
+        }
+    } else if (isPhoto) {
+        // Portafolio y Paquetes para todos; Sesiones (la agenda y las fechas cerradas son PRO+, las cotizaciones de todos);
+        // Entregas (galerías privadas con favoritos y descarga) PRO+; Estudio (equipo, alquiler por hora, resumen) ULTRA.
+        tabs.push({ id: 'photo_portfolio', nameKey: 'tab_photo_portfolio', icon: <Camera className="w-5 h-5" /> });
+        tabs.push({ id: 'photo_packages', nameKey: 'tab_photo_packages', icon: <Package className="w-5 h-5" /> });
+        tabs.push({ id: 'photo_sessions', nameKey: 'tab_photo_sessions', icon: <CalendarCheck className="w-5 h-5" /> });
+        if (isProOrUltra) {
+            tabs.push({ id: 'photo_deliveries', nameKey: 'tab_photo_deliveries', icon: <Send className="w-5 h-5" /> });
+        }
+        if (effectivePlan === 'ultra') {
+            tabs.push({ id: 'photo_studio', nameKey: 'tab_photo_studio', icon: <Aperture className="w-5 h-5" /> });
         }
     } else if (isBooks) {
         // Catálogo y Pedidos para todos; Lectores (club + tarjetas de regalo) y Encargos (con lista de espera)
@@ -1229,6 +1248,11 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
                   {activeTab === 'books_requests' && (t('tab_books_requests') || 'Encargos')}
                   {activeTab === 'books_events' && (t('tab_books_events') || 'Eventos')}
                   {activeTab === 'books_insights' && (t('tab_books_insights') || 'Resumen')}
+                  {activeTab === 'photo_portfolio' && (t('tab_photo_portfolio') || 'Portafolio')}
+                  {activeTab === 'photo_packages' && (t('tab_photo_packages') || 'Paquetes')}
+                  {activeTab === 'photo_sessions' && (t('tab_photo_sessions') || 'Sesiones')}
+                  {activeTab === 'photo_deliveries' && (t('tab_photo_deliveries') || 'Entregas')}
+                  {activeTab === 'photo_studio' && (t('tab_photo_studio') || 'Estudio')}
                 </h1>
               </div>
 
@@ -1608,6 +1632,21 @@ const AdminDashboard: React.FC<{ user: any }> = ({ user }) => {
             )}
             {activeTab === 'books_insights' && (
                 <BooksInsightsTab user={user} showNotification={showNotification} />
+            )}
+            {activeTab === 'photo_portfolio' && (
+                <PhotoPortfolioTab user={user} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
+            )}
+            {activeTab === 'photo_packages' && (
+                <PhotoPackagesTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
+            )}
+            {activeTab === 'photo_sessions' && (
+                <PhotoSessionsTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
+            )}
+            {activeTab === 'photo_deliveries' && (
+                <PhotoDeliveriesTab user={user} profileData={profileData} showNotification={showNotification} plan={effectivePlan as 'conecta' | 'pro' | 'ultra'} />
+            )}
+            {activeTab === 'photo_studio' && (
+                <PhotoStudioTab user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} />
             )}
             </React.Suspense>
           </div>

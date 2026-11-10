@@ -75,6 +75,7 @@ const TEMPLATES = [
   { val: 'gym',     label: 'Gimnasio', desc: 'Planes, horario de clases, carnet de socio, vencimientos y reserva de cupos' },
   { val: 'hotel',   label: 'Hotel', desc: 'Habitaciones, motor de reservas con disponibilidad, servicios y club de huéspedes' },
   { val: 'books',   label: 'Librería', desc: 'Catálogo con stock e ISBN, pedidos con apartado, club de lectores, encargos, listas escolares, eventos y tarjetas de regalo' },
+  { val: 'photo',   label: 'Fotografía', desc: 'Portafolio por categorías, paquetes con precio, reserva de sesiones con agenda, cotizaciones, galería privada de entrega, equipo y alquiler del estudio' },
 ];
 
 // Color distintivo por plantilla (para los chips de filtro de CLIENTES)
@@ -92,6 +93,7 @@ const THEME_COLORS: Record<string, string> = {
   gym:     '#c6f432',
   hotel:   '#d9958b',
   books:   '#e2a43f',
+  photo:   '#ff6a56',
 };
 
 const COUNTRIES = [
@@ -1638,6 +1640,15 @@ const SuperAdmin: React.FC = () => {
                             fontSize: '9px', fontWeight: 800, letterSpacing: '1px',
                           }}>
                             LIBRERÍA
+                          </span>
+                        )}
+                        {profile.theme === 'photo' && (
+                          <span style={{
+                            padding: '3px 9px', borderRadius: '20px',
+                            background: 'rgba(255,106,86,0.16)', color: '#ff9a8c',
+                            fontSize: '9px', fontWeight: 800, letterSpacing: '1px',
+                          }}>
+                            FOTOGRAFÍA
                           </span>
                         )}
                       </div>
