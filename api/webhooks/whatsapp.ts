@@ -138,7 +138,8 @@ function interesaAKoda(payload: WaPayload): boolean {
       const v = change.value
       if (!v) continue
       if ((v.messages ?? []).length > 0) return true
-      if ((v.statuses ?? []).some((s) => s.status === 'failed')) return true
+      // TODOS los avisos de estado (enviado/entregado/leído/falló): la bandeja de KODA muestra los ✓✓ de las respuestas.
+      if ((v.statuses ?? []).length > 0) return true
     }
   }
   return false
