@@ -15,6 +15,11 @@
 //   { action: 'rellenar', envio_id } → vuelve a llenar un borrador con KODA + banco de recursos
 //   { action: 'detalle', envio_id } → qué se llenó y de dónde salió cada dato
 //   { action: 'estado_set', envio_id, estado } → revisión desde KODA: borrador↔aprobado, descartar y restaurar
+//   { action: 'lote_set', lote: { id, numero, nombre }, envio_ids } → asigna (o renombra) el LOTE de varios envíos a la vez
+//
+// Lotes (setup_koda_lotes.sql): cada envío llega con `koda.lote` = { id, numero, nombre }; así el SuperAdmin ve los negocios
+// agrupados igual que en KODA. Un celular NUNCA recibe dos perfiles ni dos saludos: si otro negocio con el mismo celular ya
+// está en marcha, el nuevo se registra como «descartado» (duplicado) y no se crea cuenta.
 //
 // El WhatsApp, la aceptación y el vencimiento NO se mueven desde aquí: los maneja Connexo (SuperAdmin).
 //
@@ -93,6 +98,15 @@ const str = (v: unknown, max = 500): string | null => {
   const t = v.trim();
   return t ? t.slice(0, max) : null;
 };
+
+/** El lote que manda KODA ({ id, numero, nombre }), o null si no trae uno válido. */
+function leerLote(x: unknown): { id: string; numero: number; nombre: string | null } | null {
+  const l = x as Json | null | undefined;
+  if (!l || typeof l.id !== "string" || !UUID_RE.test(l.id)) return null;
+  const numero = Number(l.numero);
+  if (!Number.isInteger(numero) || numero < 1 || numero > 100000) return null;
+  return { id: l.id, numero, nombre: str(l.nombre, 80) };
+}
 
 function admin() {
   const url = Deno.env.get("SUPABASE_URL");
@@ -536,6 +550,7 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
 
   const rubro = str(n.rubro, 40);
   const categoria = str(n.categoria, 120);
+  const lote = leerLote(k.lote);
   const { theme, clave } = await resolverPlantilla(db, rubro, categoria, nombre);
 
   const comun = {
@@ -545,11 +560,35 @@ async function upsertBorrador(db: Admin, body: Json): Promise<Response> {
     koda_owner_nombre: str(k.owner_nombre, 200),
     busqueda_job_id: typeof k.busqueda?.job_id === "string" && UUID_RE.test(k.busqueda.job_id) ? k.busqueda.job_id : null,
     busqueda_nombre: str(k.busqueda?.nombre, 200),
+    ...(lote ? { lote_id: lote.id, lote_numero: lote.numero, lote_nombre: lote.nombre } : {}),
     rubro,
     whatsapp,
     negocio: n,
     updated_at: new Date().toISOString(),
   };
+
+  // Un celular nunca recibe dos perfiles ni dos saludos: si OTRO negocio con este mismo celular ya tiene cuenta, ya recibió el
+  // saludo o pidió que no le escriban, este no se crea (queda registrado como duplicado, a la vista del administrador).
+  const { data: gemelos, error: gErr } = await db
+    .from("koda_prospectos")
+    .select("id, koda_envio_id, koda_prospect_id, estado, opt_out, user_id, wa_enviado_at, negocio")
+    .eq("whatsapp", whatsapp);
+  if (gErr) return json({ error: gErr.message }, 500);
+  const gemelo = (gemelos ?? []).find((g) =>
+    g.id !== previo?.id && g.koda_envio_id !== k.envio_id && g.koda_prospect_id !== k.prospect_id
+    && (g.opt_out || g.wa_enviado_at || g.user_id));
+  if (gemelo) {
+    const quien = String(gemelo.negocio?.nombre ?? "otro negocio");
+    const fila = {
+      ...comun, estado: "descartado", theme: null, user_id: null,
+      detalle: `Duplicado: ese celular ya está en Connexo como «${quien}» (${gemelo.estado}). No se creó otro perfil ni se le escribirá.`,
+    };
+    const { data, error } = previo
+      ? await db.from("koda_prospectos").update(fila).eq("id", previo.id).select("*").single()
+      : await db.from("koda_prospectos").insert(fila).select("*").single();
+    if (error) return json({ error: error.message }, 500);
+    return json(respuesta(data));
+  }
 
   // Sin plantilla para su rubro (p. ej. Gimnasios/Hoteles hasta que existan): se registra y no se crea cuenta.
   if (!theme) {
@@ -726,6 +765,20 @@ async function cambiarEstado(db: Admin, body: Json): Promise<Response> {
   return json(respuesta(data));
 }
 
+/** Asigna (o renombra) el lote de varios envíos de una vez. Solo toca las columnas del lote. */
+async function fijarLote(db: Admin, body: Json): Promise<Response> {
+  const lote = leerLote(body.lote);
+  if (!lote) return json({ error: "lote inválido (id, numero, nombre)." }, 400);
+  const pedidos: unknown[] = Array.isArray(body.envio_ids) ? body.envio_ids : [];
+  const ids = [...new Set(pedidos.filter((x): x is string => typeof x === "string" && UUID_RE.test(x)))].slice(0, 500);
+  if (!ids.length) return json({ ok: true, actualizados: 0 });
+  const { data, error } = await db.from("koda_prospectos")
+    .update({ lote_id: lote.id, lote_numero: lote.numero, lote_nombre: lote.nombre })
+    .in("koda_envio_id", ids).select("id");
+  if (error) return json({ error: error.message }, 500);
+  return json({ ok: true, actualizados: (data ?? []).length });
+}
+
 /** Qué le falta a cada borrador para verse completo (solo lectura; hasta 25 por llamada). */
 async function auditarBorradores(db: Admin, body: Json): Promise<Response> {
   const pedidos: unknown[] = Array.isArray(body.envio_ids) ? body.envio_ids : [];
@@ -760,6 +813,7 @@ Deno.serve(async (req: Request) => {
     if (body.action === "detalle") return await detalleBorrador(db, body);
     if (body.action === "estado_set") return await cambiarEstado(db, body);
     if (body.action === "auditar") return await auditarBorradores(db, body);
+    if (body.action === "lote_set") return await fijarLote(db, body);
     return json({ error: "Acción desconocida." }, 400);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);

@@ -17,6 +17,10 @@ export type KodaProspecto = {
   koda_owner_email: string | null;
   koda_owner_nombre: string | null;
   busqueda_nombre: string | null;
+  /** Lote con que KODA envió este negocio (setup_koda_lotes.sql): «Lote 7 · Gimnasios Quito». */
+  lote_id?: string | null;
+  lote_numero?: number | null;
+  lote_nombre?: string | null;
   user_id: string | null;
   username: string | null;
   theme: string | null;
@@ -214,6 +218,7 @@ const KodaProspectsTab: React.FC<Props> = ({ onToast, onOpenClient, onPendientes
   const [fEstado, setFEstado] = useState<'all' | KodaEstado>('all');
   const [fTheme, setFTheme] = useState('all');
   const [fBusqueda, setFBusqueda] = useState('all');
+  const [fLote, setFLote] = useState('all');
   const [texto, setTexto] = useState('');
   const [visibles, setVisibles] = useState(POR_PAGINA);
 
@@ -271,20 +276,35 @@ const KodaProspectsTab: React.FC<Props> = ({ onToast, onOpenClient, onPendientes
     [items],
   );
 
+  // Lotes que KODA envió (el más nuevo primero), con cuántos negocios trae cada uno y en qué paso del embudo va.
+  const lotes = useMemo(() => {
+    const m = new Map<string, { id: string; numero: number; nombre: string | null; n: number; por: Record<string, number> }>();
+    for (const i of items) {
+      if (!i.lote_id || !i.lote_numero) continue;
+      const l = m.get(i.lote_id) ?? { id: i.lote_id, numero: i.lote_numero, nombre: i.lote_nombre ?? null, n: 0, por: {} };
+      l.n += 1;
+      l.por[i.estado] = (l.por[i.estado] || 0) + 1;
+      m.set(i.lote_id, l);
+    }
+    return Array.from(m.values()).sort((a, b) => b.numero - a.numero);
+  }, [items]);
+  const etiquetaLote = (l: { numero: number; nombre: string | null }) => (l.nombre ? `Lote ${l.numero} · ${l.nombre}` : `Lote ${l.numero}`);
+
   const filtrados = useMemo(() => {
     const q = norm(texto.trim());
     return items.filter(p => {
       if (fEstado !== 'all' && p.estado !== fEstado) return false;
       if (fTheme !== 'all' && (fTheme === 'none' ? p.theme : p.theme !== fTheme)) return false;
       if (fBusqueda !== 'all' && p.busqueda_nombre !== fBusqueda) return false;
+      if (fLote !== 'all' && (fLote === 'none' ? p.lote_id : p.lote_id !== fLote)) return false;
       if (!q) return true;
       const n = p.negocio || {};
-      const pajar = norm([nombreDe(p), n.ciudad, n.categoria, p.whatsapp, p.username, p.koda_owner_nombre, p.busqueda_nombre].filter(Boolean).join(' '));
+      const pajar = norm([nombreDe(p), n.ciudad, n.categoria, p.whatsapp, p.username, p.koda_owner_nombre, p.busqueda_nombre, p.lote_nombre, p.lote_numero ? `lote ${p.lote_numero}` : ''].filter(Boolean).join(' '));
       return pajar.includes(q);
     });
-  }, [items, fEstado, fTheme, fBusqueda, texto]);
+  }, [items, fEstado, fTheme, fBusqueda, fLote, texto]);
 
-  useEffect(() => { setVisibles(POR_PAGINA); }, [fEstado, fTheme, fBusqueda, texto]);
+  useEffect(() => { setVisibles(POR_PAGINA); }, [fEstado, fTheme, fBusqueda, fLote, texto]);
 
   const reemplazar = (fila: Partial<KodaProspecto> & { id: string }) =>
     setItems(prev => prev.map(i => (i.id === fila.id ? { ...i, ...fila } : i)));
@@ -423,6 +443,35 @@ const KodaProspectsTab: React.FC<Props> = ({ onToast, onOpenClient, onPendientes
         })}
       </div>
 
+      {/* Lotes que envió KODA: cada tarjeta es una tanda; al pulsarla se filtra la lista a ese lote. */}
+      {lotes.length > 0 && (
+        <div data-testid="koda-lotes" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
+          {lotes.map(l => {
+            const activo = fLote === l.id;
+            const tramos = ESTADOS.map(e => ({ e, n: l.por[e.id] || 0 })).filter(t => t.n > 0);
+            return (
+              <button
+                key={l.id} type="button" aria-pressed={activo} data-testid="koda-lote"
+                title={`${etiquetaLote(l)} · ${tramos.map(t => `${t.n} ${t.e.label.toLowerCase()}`).join(', ')}`}
+                onClick={() => setFLote(activo ? 'all' : l.id)}
+                style={{
+                  flexShrink: 0, minWidth: '150px', maxWidth: '230px', textAlign: 'left', padding: '10px 12px', borderRadius: '12px', cursor: 'pointer',
+                  background: activo ? 'rgba(255,107,53,0.12)' : 'rgba(255,255,255,0.025)',
+                  border: `1px solid ${activo ? 'rgba(255,107,53,0.55)' : 'rgba(255,255,255,0.09)'}`,
+                  color: '#fff', fontFamily: "'Inter', -apple-system, sans-serif",
+                }}
+              >
+                <div style={{ fontSize: '12px', fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{etiquetaLote(l)}</div>
+                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{l.n} {l.n === 1 ? 'negocio' : 'negocios'}</div>
+                <div style={{ display: 'flex', height: 5, borderRadius: 999, overflow: 'hidden', background: 'rgba(255,255,255,0.08)', marginTop: 8 }}>
+                  {tramos.map(t => <div key={t.e.id} style={{ width: `${(t.n / l.n) * 100}%`, background: t.e.color }} />)}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Búsqueda y filtros */}
       <input
         type="text" value={texto} onChange={e => setTexto(e.target.value)}
@@ -440,7 +489,7 @@ const KodaProspectsTab: React.FC<Props> = ({ onToast, onOpenClient, onPendientes
         </select>
       </div>
 
-      {(fEstado !== 'all' || fTheme !== 'all' || fBusqueda !== 'all' || texto.trim()) && (
+      {(fEstado !== 'all' || fTheme !== 'all' || fBusqueda !== 'all' || fLote !== 'all' || texto.trim()) && (
         <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>
           {filtrados.length} {filtrados.length === 1 ? 'negocio' : 'negocios'}
         </div>
@@ -463,7 +512,12 @@ const KodaProspectsTab: React.FC<Props> = ({ onToast, onOpenClient, onPendientes
         const dPrueba = p.estado === 'aceptado' ? diasHasta(p.trial_ends_at) : null;
         const expandido = abierto === p.id;
         const ocupado = trabajando === p.id;
-        const acciones = ACCIONES[p.estado] || [];
+        // A quien ya recibió el saludo NO se le vuelve a ofrecer (la base tampoco lo enviaría): «Volver a invitar» solo aplica
+        // a invitaciones que nunca salieron.
+        // Sin cuenta borrador (p. ej. un duplicado por celular) nada puede avanzar en el embudo: solo se descarta o se deja así.
+        const acciones = (ACCIONES[p.estado] || [])
+          .filter(a => !(p.estado === 'vencido' && a.to === 'aprobado' && p.wa_enviado_at))
+          .filter(a => p.user_id || !['borrador', 'aprobado', 'wa_enviado', 'aceptado'].includes(a.to));
         const conf = confirmando?.id === p.id ? acciones.find(a => a.to === confirmando.to) : null;
         const rel = resumenRelleno(p);
         return (
@@ -483,6 +537,7 @@ const KodaProspectsTab: React.FC<Props> = ({ onToast, onOpenClient, onPendientes
                   {p.theme
                     ? <Insignia color={tcolor}>{(THEME_LABEL[p.theme] || p.theme).toUpperCase()}</Insignia>
                     : <Insignia color="#94a3b8">SIN PLANTILLA</Insignia>}
+                  {p.lote_numero ? <Insignia color="#ff6b35" title={etiquetaLote({ numero: p.lote_numero, nombre: p.lote_nombre ?? null })}>LOTE {p.lote_numero}</Insignia> : null}
                   {p.opt_out && <Insignia color="#ef4444">NO CONTACTAR</Insignia>}
                   {p.user_id && !p.email_real && <Insignia color="#94a3b8" title="El negocio no tenía correo: la cuenta usa uno interno">CORREO INTERNO</Insignia>}
                   {dInv !== null && (dInv <= 0

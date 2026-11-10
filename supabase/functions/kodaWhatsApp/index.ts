@@ -50,6 +50,8 @@ const corsHeaders = {
 const VERSION_CONTRATO = 1;
 const MAX_POR_LLAMADA = 50;
 const CONCURRENCIA = 3;
+// Estados de quien ya recibió el saludo de invitación: ese celular no vuelve a recibirlo jamás.
+const CONTACTADOS = ["wa_enviado", "aceptado", "declinado", "vencido"];
 const TIMEOUT_META_MS = 15_000;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const WHATSAPP_RE = /^\+5939\d{8}$/;
@@ -265,14 +267,28 @@ async function enviar(db: Admin, body: Json): Promise<Response> {
 
   const { data: filas, error } = await db
     .from("koda_prospectos")
-    .select("id, koda_envio_id, estado, opt_out, whatsapp, user_id, wa_intentos")
+    .select("id, koda_envio_id, estado, opt_out, whatsapp, user_id, wa_intentos, wa_enviado_at, negocio")
     .in("koda_envio_id", ids);
   if (error) return json({ error: error.message }, 500);
   const porEnvio = new Map((filas ?? []).map((f) => [f.koda_envio_id as string, f]));
 
+  // Libro de celulares: otros negocios con el mismo celular que ya recibieron el saludo o pidieron que no les escriban.
+  // Un celular NUNCA recibe el saludo dos veces (aunque sea de otro negocio o alguien haya re-aprobado el envío).
+  const numeros = [...new Set((filas ?? []).map((f) => f.whatsapp as string | null).filter((x): x is string => !!x))];
+  const libro: Json[] = [];
+  if (numeros.length) {
+    const r = await db.from("koda_prospectos")
+      .select("id, estado, opt_out, whatsapp, wa_enviado_at, negocio").in("whatsapp", numeros);
+    if (r.error) return json({ error: r.error.message }, 500);
+    libro.push(...(r.data ?? []));
+  }
+  const yaRecibio = (f: Json): Json | undefined =>
+    libro.find((o) => o.id !== f.id && o.whatsapp === f.whatsapp && (o.wa_enviado_at || o.opt_out || CONTACTADOS.includes(o.estado)));
+
   const resultados: Json[] = [];
   const aptos: string[] = [];          // ids de koda_prospectos
   const envioDe = new Map<string, string>();
+  const yaEnTanda = new Map<string, string>();   // celular → negocio al que le toca en esta tanda
   for (const envio of ids) {
     const f = porEnvio.get(envio);
     const base = { envio_id: envio };
@@ -281,7 +297,22 @@ async function enviar(db: Admin, body: Json): Promise<Response> {
     if (f.opt_out) { resultados.push({ ...base, resultado: "omitido", motivo: "Pidió no ser contactado." }); continue; }
     if (!f.user_id) { resultados.push({ ...base, resultado: "omitido", motivo: "No tiene cuenta borrador." }); continue; }
     if (!f.whatsapp || !WHATSAPP_RE.test(f.whatsapp)) { resultados.push({ ...base, resultado: "omitido", motivo: "No tiene un celular de Ecuador válido." }); continue; }
+    if (f.wa_enviado_at) {
+      resultados.push({ ...base, resultado: "omitido", motivo: `Ya recibió el saludo el ${fechaCorta(f.wa_enviado_at)}: no se le vuelve a escribir.` });
+      continue;
+    }
+    const otro = yaRecibio(f);
+    if (otro) {
+      resultados.push({ ...base, resultado: "omitido", motivo: `Ese celular ya recibió el saludo (como «${otro.negocio?.nombre ?? "otro negocio"}»): no se le escribe dos veces.` });
+      continue;
+    }
+    const gemelo = yaEnTanda.get(f.whatsapp);
+    if (gemelo) {
+      resultados.push({ ...base, resultado: "omitido", motivo: `Tiene el mismo celular que «${gemelo}», que sale en esta misma tanda.` });
+      continue;
+    }
     if ((f.wa_intentos ?? 0) >= 2) { resultados.push({ ...base, resultado: "omitido", motivo: "Ya falló dos veces: revisa el número antes de insistir." }); continue; }
+    yaEnTanda.set(f.whatsapp, String(f.negocio?.nombre ?? "otro negocio"));
     aptos.push(f.id);
     envioDe.set(f.id, envio);
   }
@@ -294,9 +325,20 @@ async function enviar(db: Admin, body: Json): Promise<Response> {
     reservados = (r.data ?? []) as Reservado[];
   }
   const reservadoIds = new Set(reservados.map((r) => r.id));
-  for (const id of aptos) {
-    if (!reservadoIds.has(id)) {
-      resultados.push({ envio_id: envioDe.get(id), resultado: "omitido", motivo: `Sin cupo: el límite es ${c.limite} cada 24 horas. Se envía mañana.` });
+  const sinReservar = aptos.filter((id) => !reservadoIds.has(id));
+  if (sinReservar.length) {
+    // Si sobraba cupo para todos, los que no salieron los frenó la última barrera de la base (otro envío con su mismo celular
+    // se les adelantó o ya recibió el saludo); si no, es el tope diario.
+    const despues = await cupo(db, c);
+    const habiaCupoParaTodos = Number(despues.disponibles ?? 0) + reservados.length >= aptos.length;
+    for (const id of sinReservar) {
+      resultados.push({
+        envio_id: envioDe.get(id),
+        resultado: "omitido",
+        motivo: habiaCupoParaTodos
+          ? "Su celular ya recibió el saludo (o va en otro envío al mismo tiempo): no se le escribe dos veces."
+          : `Sin cupo: el límite es ${c.limite} cada 24 horas. Se envía mañana.`,
+      });
     }
   }
 
