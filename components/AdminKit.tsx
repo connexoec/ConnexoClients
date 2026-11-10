@@ -144,7 +144,7 @@ export function useOwnerTable<T extends { id: string }>(opts: OwnerTableOpts<T>)
  * toquen la misma columna no se pisan con datos viejos.
  */
 export function useJsonSettings<T extends Record<string, any>>(
-  column: 'gym_settings' | 'hotel_settings' | 'books_settings' | 'stage_settings',
+  column: 'gym_settings' | 'hotel_settings' | 'books_settings' | 'stage_settings' | 'photo_settings',
   userId: string | undefined,
   profileData: any,
   setProfileData: React.Dispatch<React.SetStateAction<any>> | undefined,

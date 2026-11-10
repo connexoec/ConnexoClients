@@ -12,6 +12,7 @@ const ProfileSublimaTemplate = React.lazy(() => import('./ProfileSublimaTemplate
 const ProfileGymTemplate = React.lazy(() => import('./ProfileGymTemplate').then(m => ({ default: m.ProfileGymTemplate })));
 const ProfileHotelTemplate = React.lazy(() => import('./ProfileHotelTemplate').then(m => ({ default: m.ProfileHotelTemplate })));
 const ProfileBooksTemplate = React.lazy(() => import('./ProfileBooksTemplate').then(m => ({ default: m.ProfileBooksTemplate })));
+const ProfilePhotoTemplate = React.lazy(() => import('./ProfilePhotoTemplate').then(m => ({ default: m.ProfilePhotoTemplate })));
 // Faltaba: los perfiles de artista caían al bloque genérico del final y el
 // dueño veía una maqueta que no era la suya al ajustar su apariencia.
 const ProfileStageTemplate = React.lazy(() => import('./ProfileStageTemplate').then(m => ({ default: m.ProfileStageTemplate })));
@@ -128,6 +129,13 @@ export const MobilePreview: React.FC<MobilePreviewProps> = ({ profileData, links
             />
           ) : profileData?.theme === 'books' ? (
             <ProfileBooksTemplate
+              profile={profileData}
+              links={links}
+              userId={profileData?.id}
+              isMobilePreview={true}
+            />
+          ) : profileData?.theme === 'photo' ? (
+            <ProfilePhotoTemplate
               profile={profileData}
               links={links}
               userId={profileData?.id}

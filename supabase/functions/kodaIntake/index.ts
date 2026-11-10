@@ -62,10 +62,16 @@ const USERNAMES_RESERVADOS = new Set([
   "auth", "dashboard", "admin", "api", "login", "registro", "signup", "superadmin", "assets", "public",
 ]);
 
+// Fotografía (sin acentos y en minúsculas). «photograph» cubre photographer, photography y photography_studio; «fotograf», fotógrafo/fotografía.
+const FOTO_RE = /photograph|photo.?(studio|lab)|portrait.?studio|fotograf|foto.?estudio|estudio.?foto|laboratorio.?foto/;
+
 // Excepciones por categoría: un rubro de KODA es más amplio que la plantilla de Connexo.
-const SOBRE_CATEGORIA: { re: RegExp; theme: string }[] = [
+const SOBRE_CATEGORIA: { re: RegExp; theme: string; conNombre?: boolean }[] = [
   { re: /veterinar|pet.?(shop|store)|mascota/, theme: "petcare" },
   { re: /inmobiliar|estate.?agent|real.?estate|bienes.?raices/, theme: "realty" },
+  // Fotógrafos y estudios fotográficos: por categoría de Google (photographer, photography_studio, wedding_photographer, photo_lab,
+  // portrait_studio…) o por el NOMBRE («Edward López Fotografía», «Estudio Fotográfico Esteves»). Una tienda de cámaras o de fotocopias NO entra.
+  { re: FOTO_RE, theme: "photo", conNombre: true },
 ];
 
 // deno-lint-ignore no-explicit-any
@@ -124,6 +130,8 @@ function claveDePack(rubro: string | null, categoria: string | null, nombre: str
   if (rubro === "musicos" && /music.?school|educational|school|escuela|academia|conservatorio/.test(`${cat} ${sinAcentos(nombre ?? "").toLowerCase()}`)) {
     return "academia_musica";
   }
+  // Fotógrafos y estudios fotográficos: la plantilla Fotografía (aunque KODA los clasifique como «profesionales»).
+  if (FOTO_RE.test(`${cat} ${sinAcentos(nombre ?? "").toLowerCase()}`)) return "fotografia";
   if (/veterinar/.test(cat)) return "veterinaria";
   if (/pet.?(shop|store)|mascota/.test(cat)) return "mascotas";
   if (/inmobiliar|estate.?agent|real.?estate|bienes.?raices/.test(cat)) return "inmobiliaria";
@@ -138,7 +146,8 @@ async function resolverPlantilla(
 ): Promise<{ theme: string | null; clave: string | null }> {
   const clave = claveDePack(rubro, categoria, nombre);
   const cat = sinAcentos(categoria ?? "").toLowerCase();
-  for (const o of SOBRE_CATEGORIA) if (o.re.test(cat)) return { theme: o.theme, clave };
+  const texto = `${cat} ${sinAcentos(nombre ?? "").toLowerCase()}`;
+  for (const o of SOBRE_CATEGORIA) if (o.re.test(o.conNombre ? texto : cat)) return { theme: o.theme, clave };
   if (!rubro) return { theme: null, clave };
   const { data } = await db.from("koda_rubro_plantilla").select("theme").eq("rubro", rubro).maybeSingle();
   return { theme: (data?.theme as string | null) ?? null, clave };
@@ -192,7 +201,7 @@ type Vars = { nombre: string; ciudad: string | null; ubicacion: string; username
 const TABLAS_SEMBRABLES = new Set([
   "barber_staff", "ecom_staff", "realty_agents", "realty_properties",
   "gym_plans", "gym_coaches", "gym_classes", "hotel_rooms", "hotel_services",
-  "sublima_products", "books_titles", "stage_classes",
+  "sublima_products", "books_titles", "stage_classes", "photo_works", "photo_packages", "photo_team",
 ]);
 
 // Estas plantillas muestran una «prueba social» propia; en las demás la calificación va al final de la bio.
@@ -455,6 +464,7 @@ const TABLA_ETIQUETA: Record<string, string> = {
   barber_staff: "equipo", ecom_staff: "equipo", realty_agents: "asesores", realty_properties: "propiedades",
   gym_plans: "planes", gym_classes: "clases", gym_coaches: "entrenadores", hotel_rooms: "habitaciones",
   hotel_services: "servicios del hotel", sublima_products: "productos", books_titles: "libros", stage_classes: "clases",
+  photo_works: "portafolio", photo_packages: "paquetes", photo_team: "equipo",
 };
 const COLS_IMAGEN = ["image_url", "photo_url", "images", "cover_url", "imageURL", "image"];
 const CON_PRODUCTOS = new Set(["gastro", "barber", "ecom", "medical", "petcare", "stage", "default"]);

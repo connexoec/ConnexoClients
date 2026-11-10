@@ -115,6 +115,12 @@ const FOTOS = {
   inmobiliaria: { galeria: ["1706808849780-7a04fbac83ef", "1628592102751-ba83b0314276", "1738168246881-40f35f8aba0a", "1721815693498-cc28507c0ba2", "1707250441420-89c9b7a5b945", "1700809888987-cf2b29ecbd2c"] },
   // Alimento perro, alimento gato, snacks, arena (los 3 accesorios ya traen su foto de la demo).
   mascotas: { productos: ["1591946559594-8c6d3b7391eb", "1689723671448-3fb4dd4b294e", "1568640347023-a616a30bc3bd", "1727510153658-643787acb16a"] },
+  // Fotografía: portada del perfil = un estudio con luces; la galería del perfil = el estudio por dentro. Las fotos del portafolio y de los
+  // paquetes viven en las filas de photo_works / photo_packages (más abajo), no en el perfil.
+  fotografia: {
+    cover: "1471341971476-ae15ff5dd4ea",
+    galeria: ["1617463874381-85b513b3e991", "1777322615136-2f1d5d636cc4", "1664817550969-5e76adc4a3fe", "1786325492057-e45a9aea8c8a", "1586232702178-f044c5f4d4b7", "1615458509636-856366d3396e"],
+  },
   // Camiseta oficial, camiseta especial, póster, disco, vinilo.
   musicos: { productos: ["1693443687750-611ad77f3aba", "1759572095384-1a7e646d0d4f", "1501612780327-45045538702b", "1602848596718-45693ff58c78", "1616714109948-c74fe5029a4d"] },
 };
@@ -505,6 +511,86 @@ const paquetes = [
     },
   },
   {
+    // Fotógrafos y estudios fotográficos. Sin demo propia: todo el contenido es de EJEMPLO escrito a mano (series con fotos de Unsplash
+    // verificadas con HTTP 200, paquetes con precios orientativos). No se inventa equipo, nombres ni promesas de plazos.
+    clave: "fotografia", theme: "photo", demo: null, etiqueta: "FOTOGRAFÍA",
+    perfil: () => ({
+      backgroundColor: "#0b0b0d", buttonColor: "#ff6a56", buttonTextColor: "#1a0805", textColor: "#ececee",
+      fontFamily: "'Space Grotesk', sans-serif", showSchedule: true,
+      businessHours: [
+        { day: "lunes", isOpen: true, openTime: "09:00", closeTime: "18:00" }, { day: "martes", isOpen: true, openTime: "09:00", closeTime: "18:00" },
+        { day: "miércoles", isOpen: true, openTime: "09:00", closeTime: "18:00" }, { day: "jueves", isOpen: true, openTime: "09:00", closeTime: "18:00" },
+        { day: "viernes", isOpen: true, openTime: "09:00", closeTime: "18:00" }, { day: "sábado", isOpen: true, openTime: "09:00", closeTime: "14:00" },
+        { day: "domingo", isOpen: false, openTime: "", closeTime: "" },
+      ],
+      // Reservas con agenda (PRO+), cotizaciones y galería privada de entrega: reglas de ejemplo, el dueño las ajusta en Sesiones → Horario.
+      photo_settings: { bookingEnabled: true, quotesEnabled: true, galleriesEnabled: true, bookingDaysAhead: 60, minNoticeHours: 24, slotMinutes: 60, cancelHours: 48, workingHours: HORARIO },
+      faqs: [
+        { id: "faq_1", question: "¿Cómo reservo una sesión?", answer: "Elige tu paquete en este perfil, escoge un día y una hora disponibles y envía tu solicitud. Recibirás un código para ver el estado de tu reserva.", order: 1 },
+        { id: "faq_2", question: "¿Cómo recibo mis fotos?", answer: "Tus fotos editadas llegan en una galería privada en línea, con un código y una clave que te enviamos. Ahí marcas tus favoritas y las descargas.", order: 2 },
+        { id: "faq_3", question: "¿Cómo pido una cotización?", answer: "Para bodas, eventos y proyectos a medida usa «Pedir cotización» o escríbenos por WhatsApp desde este perfil y te enviamos una propuesta.", order: 3 },
+        { id: "faq_4", question: "¿Dónde están ubicados?", answer: "Encuentra nuestra dirección y el mapa en este perfil.", order: 4 },
+      ],
+    }),
+    tablas: () => {
+      const W = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1200&q=75`;
+      // [título, categoría, descripción, destacada, [fotos: la primera es la portada]]
+      const SERIES = [
+        ["Bodas al aire libre", "Bodas", "Luz natural, detalles y momentos espontáneos de la ceremonia y la celebración.", true,
+          ["1604017011826-d3b4c23f8914", "1537633552985-df8429e8048b", "1533091090875-1ff4acc497dd", "1622277430358-f4d134452e2e", "1783579084824-8eebb7a7f116", "1769038950019-e8d022aa0cdb", "1617724975854-70b5d0cedb0a"]],
+        ["Quince años", "Quinceañeras", "Un día especial contado con retratos, vestido y celebración.", false,
+          ["1763625640030-7aa962b205f4", "1775871600190-f18ad6f54c45", "1763625639811-d8c2a993ae6b", "1775871600288-6ffbbb0d3551", "1775871301977-e511cdec016a", "1775871302079-490ae3572b14"]],
+        ["Retratos de estudio", "Retratos", "Retratos individuales con luz controlada y guía de poses.", false,
+          ["1544005313-94ddf0286df2", "1606122017369-d782bbb78f32", "1788013869458-5c48de5a357b", "1506863530036-1efeddceb993", "1603775020644-eb8decd79994", "1674932668403-33398b81c92f", "1536766768598-e09213fdcf22"]],
+        ["Sesiones de pareja", "Retratos", "Sesiones en exteriores para parejas, aniversarios y compromisos.", false,
+          ["1591969851586-adbbd4accf81", "1540076156429-35ffe82b7870", "1627964464837-6328f5931576", "1563808599481-34a342e44508", "1622503958522-9f847e7e18de", "1560745155-a978f7ef4d06", "1617788472008-1e524a74cf25"]],
+        ["Familia en exteriores", "Familia", "Fotos de familia relajadas, con niños y mascotas, al aire libre.", false,
+          ["1588979355313-6711a095465f", "1761839258657-457dda39b5cc", "1542037104857-ffbb0b9155fb", "1761839259484-4741afbbdcbf", "1602255680702-c47261041a97", "1611024847487-e26177381a3f", "1559734840-f9509ee5677f"]],
+        ["Recién nacidos", "Maternidad y recién nacidos", "Sesiones tranquilas y delicadas para los primeros días.", false,
+          ["1610901158532-d246c011729e", "1610901137736-d7cc46657b11", "1583007054045-800d870b8249", "1583086762675-5a88bcc72548", "1649880210584-3365f4c4c08b", "1773243086679-20c427d28092", "1679919996303-1824ae520235"]],
+        ["Retratos corporativos", "Corporativo", "Retratos profesionales para perfiles, páginas web y equipos de trabajo.", false,
+          ["1560250097-0b93528c311a", "1781888681811-332968760c2a", "1573497019940-1c28c88b4f3e", "1760543998147-117ae5649c5c", "1500648767791-00dcc994a43e", "1573496359142-b8d87734a5a2", "1685760259914-ee8d2c92d2e0"]],
+        ["Fotografía de producto", "Producto", "Fotos limpias y atractivas para catálogos, tiendas en línea y redes.", false,
+          ["1763987300634-7b0822cbf390", "1611930022073-b7a4ba5fcccd", "1771759754790-9c5ce78195b8", "1763970586854-62e14f07ae35", "1764694187688-454d172e5ca0", "1615900119312-2acd3a71f3aa", "1629198688000-71f23e745b6e"]],
+        ["Eventos y celebraciones", "Eventos", "Cobertura de eventos sociales y corporativos: ambiente, detalles y personas.", false,
+          ["1768508951262-42931f7ad924", "1511795409834-ef04bbd61622", "1653821355736-0c2598d0a63e", "1665672051874-a1d1541b452c", "1531058020387-3be344556be6", "1785167291390-34f4862729b5", "1779374506292-e29be1e83991"]],
+      ];
+      const works = SERIES.map(([title, category, description, is_featured, fotos], i) => ({
+        id: `seed-pw${i + 1}`, title, category, description, cover_url: W(fotos[0]), images: fotos.map(W),
+        is_featured, is_visible: true, sort_order: i + 1,
+      }));
+      // [nombre, tipo, cómo se pide, precio, prefijo, por hora, horas mín., horas máx., minutos, día completo, % anticipo, descripción, qué incluye, entrega, popular, foto]
+      const PAQ = [
+        ["Sesión de retrato", "sesion", "reserva", 45, null, false, 1, 8, 60, false, 30, "Retratos individuales en estudio o exteriores, con guía de poses.", ["1 hora de sesión", "Guía de poses y de vestuario", "15 fotos editadas", "Galería privada en línea"], "15 fotos editadas", true, "1606122017369-d782bbb78f32"],
+        ["Sesión de pareja", "sesion", "reserva", 65, null, false, 1, 8, 90, false, 30, "Una sesión relajada para parejas, aniversarios o compromisos.", ["1 hora y media de sesión", "Locación a elegir", "25 fotos editadas", "Galería privada en línea"], "25 fotos editadas", false, "1627964464837-6328f5931576"],
+        ["Sesión familiar", "sesion", "reserva", 80, null, false, 1, 8, 90, false, 30, "Fotos de familia naturales, con niños y mascotas.", ["1 hora y media de sesión", "Hasta 6 personas", "25 fotos editadas", "Galería privada en línea"], "25 fotos editadas", false, "1588979355313-6711a095465f"],
+        ["Recién nacido y maternidad", "sesion", "reserva", 95, null, false, 1, 8, 120, false, 40, "Sesión tranquila y cuidadosa para la familia que crece.", ["2 horas de sesión", "Accesorios y fondos incluidos", "20 fotos editadas", "Galería privada en línea"], "20 fotos editadas", false, "1610901158532-d246c011729e"],
+        ["Quince años", "sesion", "reserva", 160, "Desde", false, 1, 8, 180, false, 40, "Retratos del gran día en estudio y exteriores.", ["3 horas de sesión", "Cambios de vestuario", "40 fotos editadas", "Galería privada en línea"], "40 fotos editadas", false, "1775871600190-f18ad6f54c45"],
+        ["Cobertura de boda", "evento", "cotizacion", 600, "Desde", false, 1, 8, 60, true, 30, "Cobertura fotográfica de tu boda, de los preparativos a la fiesta.", ["Cobertura del día completo", "Fotos editadas de toda la jornada", "Galería privada en línea", "Pre-boda opcional"], "Galería de toda la jornada", false, "1604017011826-d3b4c23f8914"],
+        ["Cobertura de eventos por horas", "evento", "cotizacion", 40, null, true, 2, 8, 120, false, 0, "Fotografía de cumpleaños, reuniones y eventos corporativos, por horas.", ["Fotógrafo en el evento", "Fotos editadas", "Galería privada en línea"], "Fotos editadas", false, "1768508951262-42931f7ad924"],
+        ["Fotos corporativas", "sesion", "reserva", 55, null, false, 1, 8, 45, false, 0, "Retrato profesional para tu perfil, tu web o tu equipo.", ["45 minutos de sesión", "Fondo neutro", "5 fotos editadas", "Galería privada en línea"], "5 fotos editadas", false, "1560250097-0b93528c311a"],
+        ["Fotografía de producto", "sesion", "cotizacion", 80, "Desde", false, 1, 8, 120, false, 0, "Fotos de tus productos para catálogo, tienda en línea y redes.", ["Fondo blanco o ambientado", "Fotos editadas por producto", "Galería privada en línea"], "Fotos editadas por producto", false, "1763987300634-7b0822cbf390"],
+        ["Fotos carnet y pasaporte", "documentos", "consulta", 6, null, false, 1, 8, 15, false, 0, "Fotos para cédula, pasaporte, visa y trámites.", ["Medidas según el trámite", "Impresión inmediata", "Archivo digital opcional"], "Impresas al momento", false, "1765005204268-631d9e0c6fe1"],
+        ["Ampliaciones y marcos", "impresion", "consulta", 8, "Desde", false, 1, 8, 15, false, 0, "Imprime tus mejores fotos en varios tamaños, con o sin marco.", ["Varios tamaños de papel", "Marcos a elegir", "Retoque básico incluido"], null, false, "1452457005517-a0dd81caca2a"],
+        ["Alquiler del estudio", "estudio", "reserva", 20, null, true, 2, 8, 120, false, 20, "Renta el estudio por horas para tus propias sesiones.", ["Fondos de papel y luces de estudio", "Espacio de trabajo y camerino", "Sin fotógrafo incluido"], null, false, "1768818928341-3b31b8965c6d"],
+      ];
+      const packages = PAQ.map(([name, kind, mode, price, price_prefix, hourly, min_hours, max_hours, duration_min, full_day, deposit_percent, description, includes, delivery_note, is_featured, foto], i) => ({
+        id: `seed-pk${i + 1}`, name, kind, mode, price, price_prefix, hourly, min_hours, max_hours, duration_min, full_day, deposit_percent,
+        description, includes, delivery_note, image_url: `https://images.unsplash.com/photo-${foto}?auto=format&fit=crop&w=800&q=75`,
+        is_featured, is_active: true, sort_order: i + 1,
+      }));
+      return [
+        { tabla: "photo_works", propietario: "photo_profile_id", filas: works },
+        { tabla: "photo_packages", propietario: "photo_profile_id", filas: packages },
+      ];
+    },
+    copy: {
+      jobTitle: "Fotografía profesional",
+      bio: "Fotografía profesional en {{ciudad}}. Mira el portafolio, elige tu paquete y reserva tu sesión desde este perfil.",
+      aboutMe: "En {{nombre}} contamos historias con imágenes: bodas, retratos, familia, eventos y fotografía de producto. Mira el portafolio, elige un paquete y reserva tu sesión o pide tu cotización desde este perfil.",
+    },
+  },
+  {
     clave: "profesionales", theme: "default", demo: "01", etiqueta: "PROFESIONAL",
     perfil: (d) => ({
       ...pick(d, [...ESTILO, "coverImageURL"]),
@@ -581,7 +667,7 @@ const SOLO = process.env.SOLO ? process.env.SOLO.split(",").map((s) => s.trim())
 const salida = [];
 for (const p of paquetes) {
   if (SOLO && !SOLO.includes(p.clave)) continue;
-  const d = D[p.demo];
+  const d = p.demo ? D[p.demo] : {};   // un paquete sin demo (p. ej. «fotografia») se escribe a mano
   if (!d) throw new Error(`Falta la demo ${p.demo} (¿están los setup_demo_*.sql en la carpeta del proyecto?)`);
   const extra = { "01": ["Villacís Consultores", "Mateo Villacís"], "02": ["Navaja & Cuero"], "03": ["Brasa & Mar"], "04": ["Cumbre"], "05": ["Los Desvelados"], "06": ["Huellitas"], "07": ["Vitalis"], "08": ["Cimientos"], "09": ["Estampa Total", "Club Mayorista Estampa"], "10": ["Titán"], "11": ["Costa Rosa"], "12": ["El Rincón de Papel", "Rincón de Papel"] };
   const marcas = [d.displayName, d.company, ...(extra[p.demo] ?? [])].filter(Boolean).sort((a, b) => b.length - a.length);
@@ -590,7 +676,7 @@ for (const p of paquetes) {
   if (perfil.galleryImageURLs?.length) perfil.galleryTitle = GALERIA_TITULO;
   const tablas = sinMarca(p.tablas ? p.tablas(d, F[p.demo]) : [], marcas);
   const paquete = {
-    clave: p.clave, theme: p.theme, fuente: `setup_demo_${p.demo}`,
+    clave: p.clave, theme: p.theme, fuente: p.demo ? `setup_demo_${p.demo}` : "contenido escrito a mano",
     logo: { etiqueta: p.etiqueta, ...paletaLogo({ fondo: perfil.backgroundColor ?? d.backgroundColor, acento: perfil.buttonColor ?? d.buttonColor, texto: perfil.textColor ?? d.textColor }) },
     copy: p.copy, perfil,
   };
@@ -667,7 +753,8 @@ INSERT INTO public.koda_rubro_plantilla (rubro, theme, nota) VALUES
   ('musicos',       'stage',   'Plantilla Artista: músicos, bandas, DJ, estudios y escuelas de música.'),
   ('sublimados',    'sublima', 'Plantilla Sublimados: sublimación, bordados, serigrafía, imprentas y uniformes.'),
   ('profesionales', 'default', 'Plantilla Estándar: profesionales independientes (fotógrafos, coaches, psicólogos, consultores).'),
-  ('librerias',     'books',   'Plantilla Librería: librerías y papelerías (catálogo con ISBN y stock, pedidos con apartado).')
+  ('librerias',     'books',   'Plantilla Librería: librerías y papelerías (catálogo con ISBN y stock, pedidos con apartado).'),
+  ('fotografia',    'photo',   'Plantilla Fotografía: fotógrafos y estudios fotográficos (portafolio, paquetes, reservas con agenda, galería privada).')
 ON CONFLICT (rubro) DO NOTHING;
 
 -- VERIFICACIÓN (opcional)
@@ -677,7 +764,9 @@ if (SOLO) {
   const nombreSql = `setup_koda_${SOLO.join("_")}.sql`;
   const reglas = SOLO.includes("librerias")
     ? `\n-- Qué plantilla le toca al rubro NUEVO «librerias» de KODA (no pisa lo que ya hayas cambiado a mano).\nINSERT INTO public.koda_rubro_plantilla (rubro, theme, nota) VALUES\n  ('librerias', 'books', 'Plantilla Librería: librerías y papelerías (catálogo con ISBN y stock, pedidos con apartado).')\nON CONFLICT (rubro) DO NOTHING;\n`
-    : "";
+    : SOLO.includes("fotografia")
+      ? `\n-- Qué plantilla le toca a un rubro «fotografia» de KODA, si algún día lo usa (hoy los fotógrafos se asignan por categoría o nombre; no pisa lo que ya hayas cambiado a mano).\nINSERT INTO public.koda_rubro_plantilla (rubro, theme, nota) VALUES\n  ('fotografia', 'photo', 'Plantilla Fotografía: fotógrafos y estudios fotográficos (portafolio, paquetes, reservas con agenda, galería privada).')\nON CONFLICT (rubro) DO NOTHING;\n`
+      : "";
   const subconjunto = `-- Paquete(s) ${SOLO.join(", ")} del banco de recursos — subconjunto de setup_koda_recursos.sql.\n-- Requiere que koda_recursos_nicho y koda_rubro_plantilla ya existan (Fase 2). Idempotente.\n-- Generado con: SOLO=${SOLO.join(",")} node supabase/koda-recursos/build-recursos.mjs\n\n${filasSql}\n${reglas}\n-- VERIFICACIÓN\nSELECT clave, theme, jsonb_array_length(coalesce(pack->'tablas'->0->'filas', '[]'::jsonb)) AS filas_tabla FROM public.koda_recursos_nicho ORDER BY clave;\n`;
   fs.writeFileSync(path.join(raiz, nombreSql), subconjunto);
   console.log(`SQL (solo ${SOLO.join(", ")}): ${path.join(raiz, nombreSql)} (${(subconjunto.length / 1024).toFixed(1)} KB)`);

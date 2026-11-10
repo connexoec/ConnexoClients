@@ -26,10 +26,10 @@ export interface KitTheme {
   onAccent: string;      // texto sobre el acento
   titleFont: string;
   bodyFont: string;
-  /** gym: barra inclinada a la izquierda · hotel: ornamento en rombo · librería: florón ❦. */
-  heading: 'slash' | 'ornament' | 'fleuron';
-  /** Forma del logo: gym cuadrado con corte, hotel redondo, librería en arco (ventana de biblioteca). */
-  logo: 'square' | 'round' | 'arch';
+  /** gym: barra inclinada a la izquierda · hotel: ornamento en rombo · librería: florón ❦ · fotografía: visor (diafragma entre dos líneas). */
+  heading: 'slash' | 'ornament' | 'fleuron' | 'viewfinder';
+  /** Forma del logo: gym cuadrado con corte, hotel redondo, librería en arco (ventana de biblioteca), fotografía en marco de visor. */
+  logo: 'square' | 'round' | 'arch' | 'frame';
 }
 
 const KitContext = createContext<KitTheme | null>(null);
@@ -127,6 +127,21 @@ export const SectionHeading: React.FC<{ children: React.ReactNode; kicker?: stri
           <span className="h-px w-12" style={{ background: `linear-gradient(90deg, transparent, ${k.accent})` }} />
           <span className="text-[15px] leading-none" style={{ color: k.accent, fontFamily: k.titleFont }}>❦</span>
           <span className="h-px w-12" style={{ background: `linear-gradient(270deg, transparent, ${k.accent})` }} />
+        </div>
+      </div>
+    );
+  }
+  if (k.heading === 'viewfinder') {
+    return (
+      <div className="text-center mb-7">
+        {kicker && <p className="text-[10px] font-semibold uppercase tracking-[0.42em] mb-2" style={{ color: k.accentLight }}>{kicker}</p>}
+        <h2 className="text-[27px] leading-none font-semibold text-white" style={{ fontFamily: k.titleFont }}>{children}</h2>
+        <div className="mt-3.5 flex items-center justify-center gap-3" aria-hidden>
+          <span className="h-px w-14" style={{ background: `linear-gradient(90deg, transparent, ${k.accent})` }} />
+          <span className="block w-3.5 h-3.5 rounded-full border-2 relative" style={{ borderColor: k.accent }}>
+            <span className="absolute inset-[2px] rounded-full" style={{ background: k.accent }} />
+          </span>
+          <span className="h-px w-14" style={{ background: `linear-gradient(270deg, transparent, ${k.accent})` }} />
         </div>
       </div>
     );
@@ -398,10 +413,19 @@ export const ProfileHero: React.FC<HeroProps> = ({
 
       <div className="px-4 -mt-16 relative space-y-9">
         <header className="text-center">
-          <div className={`inline-block p-1.5 mb-4 ${k.logo === 'round' ? 'rounded-full' : k.logo === 'arch' ? 'rounded-t-[56px] rounded-b-[20px]' : 'rounded-[22px]'}`}
+          <div className={`inline-block p-1.5 mb-4 relative ${k.logo === 'round' ? 'rounded-full' : k.logo === 'arch' ? 'rounded-t-[56px] rounded-b-[20px]' : k.logo === 'frame' ? 'rounded-md' : 'rounded-[22px]'}`}
             style={{ background: k.surface, border: `1px solid ${k.accent}44`, boxShadow: '0 16px 44px -14px rgba(0,0,0,0.75)' }}>
             <img src={profile?.logoURL || profile?.profilePhotoURL || 'https://via.placeholder.com/150'} alt={profile?.displayName}
-              className={`w-24 h-24 object-cover ${k.logo === 'round' ? 'rounded-full' : k.logo === 'arch' ? 'rounded-t-[50px] rounded-b-[14px]' : 'rounded-2xl'}`} />
+              className={`w-24 h-24 object-cover ${k.logo === 'round' ? 'rounded-full' : k.logo === 'arch' ? 'rounded-t-[50px] rounded-b-[14px]' : k.logo === 'frame' ? 'rounded-[3px]' : 'rounded-2xl'}`} />
+            {k.logo === 'frame' && (['tl', 'tr', 'bl', 'br'] as const).map(c => (
+              <span key={c} aria-hidden className="absolute w-3.5 h-3.5 pointer-events-none"
+                style={{
+                  top: c[0] === 't' ? -5 : undefined, bottom: c[0] === 'b' ? -5 : undefined,
+                  left: c[1] === 'l' ? -5 : undefined, right: c[1] === 'r' ? -5 : undefined,
+                  borderColor: k.accent, borderStyle: 'solid', borderWidth: 0,
+                  [`border${c[0] === 't' ? 'Top' : 'Bottom'}Width`]: 2, [`border${c[1] === 'l' ? 'Left' : 'Right'}Width`]: 2,
+                } as React.CSSProperties} />
+            ))}
           </div>
           <h1 className="text-[26px] leading-tight font-semibold tracking-[0.04em]" style={{ fontFamily: k.titleFont, color: '#fff' }}>
             {profile?.displayName}

@@ -5609,5 +5609,655 @@
         ]
       }
     ]
+  },
+  {
+    "clave": "fotografia",
+    "theme": "photo",
+    "fuente": "contenido escrito a mano",
+    "logo": {
+      "etiqueta": "FOTOGRAFÍA",
+      "fondo": "#0b0b0d",
+      "acento": "#ff6a56",
+      "texto": "#ececee"
+    },
+    "copy": {
+      "jobTitle": "Fotografía profesional",
+      "bio": "Fotografía profesional en {{ciudad}}. Mira el portafolio, elige tu paquete y reserva tu sesión desde este perfil.",
+      "aboutMe": "En {{nombre}} contamos historias con imágenes: bodas, retratos, familia, eventos y fotografía de producto. Mira el portafolio, elige un paquete y reserva tu sesión o pide tu cotización desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#0b0b0d",
+      "buttonColor": "#ff6a56",
+      "buttonTextColor": "#1a0805",
+      "textColor": "#ececee",
+      "fontFamily": "'Space Grotesk', sans-serif",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "",
+          "closeTime": ""
+        }
+      ],
+      "photo_settings": {
+        "bookingEnabled": true,
+        "quotesEnabled": true,
+        "galleriesEnabled": true,
+        "bookingDaysAhead": 60,
+        "minNoticeHours": 24,
+        "slotMinutes": 60,
+        "cancelHours": 48,
+        "workingHours": [
+          {
+            "day": 0,
+            "isOpen": false,
+            "openTime": "09:00",
+            "closeTime": "18:00"
+          },
+          {
+            "day": 1,
+            "isOpen": true,
+            "openTime": "09:00",
+            "closeTime": "18:00"
+          },
+          {
+            "day": 2,
+            "isOpen": true,
+            "openTime": "09:00",
+            "closeTime": "18:00"
+          },
+          {
+            "day": 3,
+            "isOpen": true,
+            "openTime": "09:00",
+            "closeTime": "18:00"
+          },
+          {
+            "day": 4,
+            "isOpen": true,
+            "openTime": "09:00",
+            "closeTime": "18:00"
+          },
+          {
+            "day": 5,
+            "isOpen": true,
+            "openTime": "09:00",
+            "closeTime": "18:00"
+          },
+          {
+            "day": 6,
+            "isOpen": true,
+            "openTime": "09:00",
+            "closeTime": "14:00"
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo una sesión?",
+          "answer": "Elige tu paquete en este perfil, escoge un día y una hora disponibles y envía tu solicitud. Recibirás un código para ver el estado de tu reserva.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Cómo recibo mis fotos?",
+          "answer": "Tus fotos editadas llegan en una galería privada en línea, con un código y una clave que te enviamos. Ahí marcas tus favoritas y las descargas.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo pido una cotización?",
+          "answer": "Para bodas, eventos y proyectos a medida usa «Pedir cotización» o escríbenos por WhatsApp desde este perfil y te enviamos una propuesta.",
+          "order": 3
+        },
+        {
+          "id": "faq_4",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 4
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1471341971476-ae15ff5dd4ea?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1617463874381-85b513b3e991?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1777322615136-2f1d5d636cc4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1664817550969-5e76adc4a3fe?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1786325492057-e45a9aea8c8a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1586232702178-f044c5f4d4b7?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1615458509636-856366d3396e?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "galleryTitle": "Galería"
+    },
+    "tablas": [
+      {
+        "tabla": "photo_works",
+        "propietario": "photo_profile_id",
+        "filas": [
+          {
+            "id": "seed-pw1",
+            "title": "Bodas al aire libre",
+            "category": "Bodas",
+            "description": "Luz natural, detalles y momentos espontáneos de la ceremonia y la celebración.",
+            "cover_url": "https://images.unsplash.com/photo-1604017011826-d3b4c23f8914?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1604017011826-d3b4c23f8914?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1533091090875-1ff4acc497dd?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1622277430358-f4d134452e2e?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1783579084824-8eebb7a7f116?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1769038950019-e8d022aa0cdb?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1617724975854-70b5d0cedb0a?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": true,
+            "is_visible": true,
+            "sort_order": 1
+          },
+          {
+            "id": "seed-pw2",
+            "title": "Quince años",
+            "category": "Quinceañeras",
+            "description": "Un día especial contado con retratos, vestido y celebración.",
+            "cover_url": "https://images.unsplash.com/photo-1763625640030-7aa962b205f4?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1763625640030-7aa962b205f4?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1775871600190-f18ad6f54c45?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1763625639811-d8c2a993ae6b?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1775871600288-6ffbbb0d3551?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1775871301977-e511cdec016a?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1775871302079-490ae3572b14?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": false,
+            "is_visible": true,
+            "sort_order": 2
+          },
+          {
+            "id": "seed-pw3",
+            "title": "Retratos de estudio",
+            "category": "Retratos",
+            "description": "Retratos individuales con luz controlada y guía de poses.",
+            "cover_url": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1606122017369-d782bbb78f32?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1788013869458-5c48de5a357b?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1506863530036-1efeddceb993?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1603775020644-eb8decd79994?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1674932668403-33398b81c92f?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1536766768598-e09213fdcf22?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": false,
+            "is_visible": true,
+            "sort_order": 3
+          },
+          {
+            "id": "seed-pw4",
+            "title": "Sesiones de pareja",
+            "category": "Retratos",
+            "description": "Sesiones en exteriores para parejas, aniversarios y compromisos.",
+            "cover_url": "https://images.unsplash.com/photo-1591969851586-adbbd4accf81?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1591969851586-adbbd4accf81?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1540076156429-35ffe82b7870?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1627964464837-6328f5931576?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1563808599481-34a342e44508?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1622503958522-9f847e7e18de?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1560745155-a978f7ef4d06?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1617788472008-1e524a74cf25?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": false,
+            "is_visible": true,
+            "sort_order": 4
+          },
+          {
+            "id": "seed-pw5",
+            "title": "Familia en exteriores",
+            "category": "Familia",
+            "description": "Fotos de familia relajadas, con niños y mascotas, al aire libre.",
+            "cover_url": "https://images.unsplash.com/photo-1588979355313-6711a095465f?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1588979355313-6711a095465f?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1761839258657-457dda39b5cc?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1761839259484-4741afbbdcbf?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1602255680702-c47261041a97?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1611024847487-e26177381a3f?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1559734840-f9509ee5677f?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": false,
+            "is_visible": true,
+            "sort_order": 5
+          },
+          {
+            "id": "seed-pw6",
+            "title": "Recién nacidos",
+            "category": "Maternidad y recién nacidos",
+            "description": "Sesiones tranquilas y delicadas para los primeros días.",
+            "cover_url": "https://images.unsplash.com/photo-1610901158532-d246c011729e?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1610901158532-d246c011729e?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1610901137736-d7cc46657b11?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1583007054045-800d870b8249?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1583086762675-5a88bcc72548?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1649880210584-3365f4c4c08b?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1773243086679-20c427d28092?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1679919996303-1824ae520235?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": false,
+            "is_visible": true,
+            "sort_order": 6
+          },
+          {
+            "id": "seed-pw7",
+            "title": "Retratos corporativos",
+            "category": "Corporativo",
+            "description": "Retratos profesionales para perfiles, páginas web y equipos de trabajo.",
+            "cover_url": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1781888681811-332968760c2a?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1760543998147-117ae5649c5c?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1685760259914-ee8d2c92d2e0?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": false,
+            "is_visible": true,
+            "sort_order": 7
+          },
+          {
+            "id": "seed-pw8",
+            "title": "Fotografía de producto",
+            "category": "Producto",
+            "description": "Fotos limpias y atractivas para catálogos, tiendas en línea y redes.",
+            "cover_url": "https://images.unsplash.com/photo-1763987300634-7b0822cbf390?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1763987300634-7b0822cbf390?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1771759754790-9c5ce78195b8?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1763970586854-62e14f07ae35?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1764694187688-454d172e5ca0?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1615900119312-2acd3a71f3aa?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": false,
+            "is_visible": true,
+            "sort_order": 8
+          },
+          {
+            "id": "seed-pw9",
+            "title": "Eventos y celebraciones",
+            "category": "Eventos",
+            "description": "Cobertura de eventos sociales y corporativos: ambiente, detalles y personas.",
+            "cover_url": "https://images.unsplash.com/photo-1768508951262-42931f7ad924?auto=format&fit=crop&w=1200&q=75",
+            "images": [
+              "https://images.unsplash.com/photo-1768508951262-42931f7ad924?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1653821355736-0c2598d0a63e?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1665672051874-a1d1541b452c?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1785167291390-34f4862729b5?auto=format&fit=crop&w=1200&q=75",
+              "https://images.unsplash.com/photo-1779374506292-e29be1e83991?auto=format&fit=crop&w=1200&q=75"
+            ],
+            "is_featured": false,
+            "is_visible": true,
+            "sort_order": 9
+          }
+        ]
+      },
+      {
+        "tabla": "photo_packages",
+        "propietario": "photo_profile_id",
+        "filas": [
+          {
+            "id": "seed-pk1",
+            "name": "Sesión de retrato",
+            "kind": "sesion",
+            "mode": "reserva",
+            "price": 45,
+            "price_prefix": null,
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 60,
+            "full_day": false,
+            "deposit_percent": 30,
+            "description": "Retratos individuales en estudio o exteriores, con guía de poses.",
+            "includes": [
+              "1 hora de sesión",
+              "Guía de poses y de vestuario",
+              "15 fotos editadas",
+              "Galería privada en línea"
+            ],
+            "delivery_note": "15 fotos editadas",
+            "image_url": "https://images.unsplash.com/photo-1606122017369-d782bbb78f32?auto=format&fit=crop&w=800&q=75",
+            "is_featured": true,
+            "is_active": true,
+            "sort_order": 1
+          },
+          {
+            "id": "seed-pk2",
+            "name": "Sesión de pareja",
+            "kind": "sesion",
+            "mode": "reserva",
+            "price": 65,
+            "price_prefix": null,
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 90,
+            "full_day": false,
+            "deposit_percent": 30,
+            "description": "Una sesión relajada para parejas, aniversarios o compromisos.",
+            "includes": [
+              "1 hora y media de sesión",
+              "Locación a elegir",
+              "25 fotos editadas",
+              "Galería privada en línea"
+            ],
+            "delivery_note": "25 fotos editadas",
+            "image_url": "https://images.unsplash.com/photo-1627964464837-6328f5931576?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 2
+          },
+          {
+            "id": "seed-pk3",
+            "name": "Sesión familiar",
+            "kind": "sesion",
+            "mode": "reserva",
+            "price": 80,
+            "price_prefix": null,
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 90,
+            "full_day": false,
+            "deposit_percent": 30,
+            "description": "Fotos de familia naturales, con niños y mascotas.",
+            "includes": [
+              "1 hora y media de sesión",
+              "Hasta 6 personas",
+              "25 fotos editadas",
+              "Galería privada en línea"
+            ],
+            "delivery_note": "25 fotos editadas",
+            "image_url": "https://images.unsplash.com/photo-1588979355313-6711a095465f?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 3
+          },
+          {
+            "id": "seed-pk4",
+            "name": "Recién nacido y maternidad",
+            "kind": "sesion",
+            "mode": "reserva",
+            "price": 95,
+            "price_prefix": null,
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 120,
+            "full_day": false,
+            "deposit_percent": 40,
+            "description": "Sesión tranquila y cuidadosa para la familia que crece.",
+            "includes": [
+              "2 horas de sesión",
+              "Accesorios y fondos incluidos",
+              "20 fotos editadas",
+              "Galería privada en línea"
+            ],
+            "delivery_note": "20 fotos editadas",
+            "image_url": "https://images.unsplash.com/photo-1610901158532-d246c011729e?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 4
+          },
+          {
+            "id": "seed-pk5",
+            "name": "Quince años",
+            "kind": "sesion",
+            "mode": "reserva",
+            "price": 160,
+            "price_prefix": "Desde",
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 180,
+            "full_day": false,
+            "deposit_percent": 40,
+            "description": "Retratos del gran día en estudio y exteriores.",
+            "includes": [
+              "3 horas de sesión",
+              "Cambios de vestuario",
+              "40 fotos editadas",
+              "Galería privada en línea"
+            ],
+            "delivery_note": "40 fotos editadas",
+            "image_url": "https://images.unsplash.com/photo-1775871600190-f18ad6f54c45?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 5
+          },
+          {
+            "id": "seed-pk6",
+            "name": "Cobertura de boda",
+            "kind": "evento",
+            "mode": "cotizacion",
+            "price": 600,
+            "price_prefix": "Desde",
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 60,
+            "full_day": true,
+            "deposit_percent": 30,
+            "description": "Cobertura fotográfica de tu boda, de los preparativos a la fiesta.",
+            "includes": [
+              "Cobertura del día completo",
+              "Fotos editadas de toda la jornada",
+              "Galería privada en línea",
+              "Pre-boda opcional"
+            ],
+            "delivery_note": "Galería de toda la jornada",
+            "image_url": "https://images.unsplash.com/photo-1604017011826-d3b4c23f8914?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 6
+          },
+          {
+            "id": "seed-pk7",
+            "name": "Cobertura de eventos por horas",
+            "kind": "evento",
+            "mode": "cotizacion",
+            "price": 40,
+            "price_prefix": null,
+            "hourly": true,
+            "min_hours": 2,
+            "max_hours": 8,
+            "duration_min": 120,
+            "full_day": false,
+            "deposit_percent": 0,
+            "description": "Fotografía de cumpleaños, reuniones y eventos corporativos, por horas.",
+            "includes": [
+              "Fotógrafo en el evento",
+              "Fotos editadas",
+              "Galería privada en línea"
+            ],
+            "delivery_note": "Fotos editadas",
+            "image_url": "https://images.unsplash.com/photo-1768508951262-42931f7ad924?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 7
+          },
+          {
+            "id": "seed-pk8",
+            "name": "Fotos corporativas",
+            "kind": "sesion",
+            "mode": "reserva",
+            "price": 55,
+            "price_prefix": null,
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 45,
+            "full_day": false,
+            "deposit_percent": 0,
+            "description": "Retrato profesional para tu perfil, tu web o tu equipo.",
+            "includes": [
+              "45 minutos de sesión",
+              "Fondo neutro",
+              "5 fotos editadas",
+              "Galería privada en línea"
+            ],
+            "delivery_note": "5 fotos editadas",
+            "image_url": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 8
+          },
+          {
+            "id": "seed-pk9",
+            "name": "Fotografía de producto",
+            "kind": "sesion",
+            "mode": "cotizacion",
+            "price": 80,
+            "price_prefix": "Desde",
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 120,
+            "full_day": false,
+            "deposit_percent": 0,
+            "description": "Fotos de tus productos para catálogo, tienda en línea y redes.",
+            "includes": [
+              "Fondo blanco o ambientado",
+              "Fotos editadas por producto",
+              "Galería privada en línea"
+            ],
+            "delivery_note": "Fotos editadas por producto",
+            "image_url": "https://images.unsplash.com/photo-1763987300634-7b0822cbf390?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 9
+          },
+          {
+            "id": "seed-pk10",
+            "name": "Fotos carnet y pasaporte",
+            "kind": "documentos",
+            "mode": "consulta",
+            "price": 6,
+            "price_prefix": null,
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 15,
+            "full_day": false,
+            "deposit_percent": 0,
+            "description": "Fotos para cédula, pasaporte, visa y trámites.",
+            "includes": [
+              "Medidas según el trámite",
+              "Impresión inmediata",
+              "Archivo digital opcional"
+            ],
+            "delivery_note": "Impresas al momento",
+            "image_url": "https://images.unsplash.com/photo-1765005204268-631d9e0c6fe1?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 10
+          },
+          {
+            "id": "seed-pk11",
+            "name": "Ampliaciones y marcos",
+            "kind": "impresion",
+            "mode": "consulta",
+            "price": 8,
+            "price_prefix": "Desde",
+            "hourly": false,
+            "min_hours": 1,
+            "max_hours": 8,
+            "duration_min": 15,
+            "full_day": false,
+            "deposit_percent": 0,
+            "description": "Imprime tus mejores fotos en varios tamaños, con o sin marco.",
+            "includes": [
+              "Varios tamaños de papel",
+              "Marcos a elegir",
+              "Retoque básico incluido"
+            ],
+            "delivery_note": null,
+            "image_url": "https://images.unsplash.com/photo-1452457005517-a0dd81caca2a?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 11
+          },
+          {
+            "id": "seed-pk12",
+            "name": "Alquiler del estudio",
+            "kind": "estudio",
+            "mode": "reserva",
+            "price": 20,
+            "price_prefix": null,
+            "hourly": true,
+            "min_hours": 2,
+            "max_hours": 8,
+            "duration_min": 120,
+            "full_day": false,
+            "deposit_percent": 20,
+            "description": "Renta el estudio por horas para tus propias sesiones.",
+            "includes": [
+              "Fondos de papel y luces de estudio",
+              "Espacio de trabajo y camerino",
+              "Sin fotógrafo incluido"
+            ],
+            "delivery_note": null,
+            "image_url": "https://images.unsplash.com/photo-1768818928341-3b31b8965c6d?auto=format&fit=crop&w=800&q=75",
+            "is_featured": false,
+            "is_active": true,
+            "sort_order": 12
+          }
+        ]
+      }
+    ]
   }
 ]

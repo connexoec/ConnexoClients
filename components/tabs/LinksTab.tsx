@@ -912,7 +912,7 @@ export const LinksTab: React.FC<LinksTabProps> = ({
                 En restaurantes (gastro) el menú se gestiona en "Menú y Mesas".
                 En barbería (barber) los servicios se gestionan en la pestaña "Servicios".
                 Ocultamos esta sección para no duplicarla en esos temas. */}
-            {(profileData?.plan === 'pro' || profileData?.plan === 'ultra') && profileData?.theme !== 'gastro' && profileData?.theme !== 'petcare' && profileData?.theme !== 'medical' && profileData?.theme !== 'barber' && profileData?.theme !== 'ecom' && profileData?.theme !== 'sublima' && profileData?.theme !== 'gym' && profileData?.theme !== 'hotel' && profileData?.theme !== 'books' && (
+            {(profileData?.plan === 'pro' || profileData?.plan === 'ultra') && profileData?.theme !== 'gastro' && profileData?.theme !== 'petcare' && profileData?.theme !== 'medical' && profileData?.theme !== 'barber' && profileData?.theme !== 'ecom' && profileData?.theme !== 'sublima' && profileData?.theme !== 'gym' && profileData?.theme !== 'hotel' && profileData?.theme !== 'books' && profileData?.theme !== 'photo' && (
                 <section className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                     <Card className="!p-6 bg-[#210900] rounded-2xl border border-white/5 shadow-2xl overflow-hidden">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-5">
