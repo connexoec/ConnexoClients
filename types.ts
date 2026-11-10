@@ -772,6 +772,51 @@ export interface GymSettings {
   timezone?: string;
 }
 
+// ── Plantilla Artista — CLASES / ACADEMIA (stage_classes, stage_class_bookings; setup_stage_classes.sql) ──
+export type StageClassLevel = 'todos' | 'principiante' | 'intermedio' | 'avanzado';
+
+// Una clase que se repite cada semana. day_of_week: 0 = Domingo … 6 = Sábado.
+export interface StageClass {
+  id: string;
+  stage_profile_id: string;
+  name: string;
+  discipline?: string | null;         // instrumento o disciplina (Guitarra, Canto…)
+  description?: string | null;
+  day_of_week: number;
+  start_time: string;                 // "HH:MM"
+  end_time?: string | null;
+  teacher_name?: string | null;
+  capacity?: number | null;           // null = sin aforo
+  level: StageClassLevel;
+  room?: string | null;
+  is_active: boolean;
+}
+
+export interface StageClassBooking {
+  id: string;
+  stage_profile_id: string;
+  class_id?: string | null;
+  class_name: string;
+  class_date: string;                 // "YYYY-MM-DD"
+  start_time?: string | null;
+  teacher_name?: string | null;
+  customer_name: string;
+  customer_phone?: string | null;
+  customer_email?: string | null;
+  status: 'reservada' | 'asistio' | 'no_asistio' | 'cancelada';
+  confirmation_code: string;
+  notes?: string | null;
+  created_at?: string;
+}
+
+// Ajustes de las clases (columna profiles.stage_settings jsonb, lectura pública).
+export interface StageSettings {
+  bookingEnabled?: boolean;           // reservas de cupo (ULTRA; default sí)
+  bookingDaysAhead?: number;          // cuántos días hacia adelante se reserva (default 14)
+  cancelHours?: number;               // horas de anticipación para cancelar (default 2)
+  timezone?: string;
+}
+
 // ── Plantilla Hotel — motor aislado hotel_* ───────────────────────────────────
 export interface HotelRoom {
   id: string;
@@ -1169,6 +1214,7 @@ export interface Profile {
   gym_settings?: GymSettings;       // columna profiles.gym_settings jsonb
   hotel_settings?: HotelSettings;   // columna profiles.hotel_settings jsonb
   books_settings?: BooksSettings;   // columna profiles.books_settings jsonb (librería)
+  stage_settings?: StageSettings;   // columna profiles.stage_settings jsonb (clases de Artista)
 
   clubName?: string;    // Nombre del club de fidelidad (gastro); default "Club Secreto"
   clubTagline?: string; // Eslogan del club de fidelidad (gastro)
