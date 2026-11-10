@@ -22,6 +22,14 @@
 //                                                  terminadas y, a los 30 días, borra datos (solo con KODA_WA_PURGA=1). Lo llama el cron de Vercel
 //   { action: 'suscribir', waba_ids, aplicar? } → ver/suscribir la app de Meta a una cuenta de WhatsApp (webhooks)
 //
+// BANDEJA DE KODA (pantalla «Bandeja» del propietario, KODA migración 0016): todo lo que Meta avisa del número de Connexo
+// (mensajes y avisos de entrega) se reenvía a la función `koda-wa-inbox` de KODA, SOLO si es de WHATSAPP_PHONE_NUMBER_ID:
+// jamás sale de aquí algo de otro número (p. ej. un celular personal vinculado al portafolio). Y, para que KODA pueda responder:
+//   { action: 'responder', to, texto, client_id?, context_wamid? } → texto libre (ventana de 24 h); devuelve { wamid }
+//   { action: 'media', media_id }               → baja el archivo de un cliente de Meta (base64, máx. 15 MB)
+//   { action: 'historial_saludos' }             → saludos ya enviados (wamid, celular, hora) para los chats de KODA
+// Opcional: KODA_INBOX_URL (por defecto la función koda-wa-inbox del proyecto de KODA).
+//
 // Secretos (supabase secrets set …):
 //   KODA_BRIDGE_SECRET          el mismo de kodaIntake
 //   WHATSAPP_TOKEN              token PERMANENTE del usuario del sistema de Meta (whatsapp_business_messaging)
@@ -40,6 +48,7 @@
 //
 // Requiere haber ejecutado setup_koda_bridge.sql y setup_koda_whatsapp.sql.
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { Buffer } from "node:buffer";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -119,6 +128,9 @@ function explicarMeta(code: number | null, titulo: string): { texto: string; fat
     case 131030: return { texto: "Ese número no está en la lista permitida (la cuenta de WhatsApp sigue en modo prueba).", fatal: false };
     case 131026: return { texto: "Ese número no tiene WhatsApp o no puede recibir el mensaje.", fatal: false };
     case 131049: return { texto: "Meta frenó este mensaje de marketing (límite de frecuencia/calidad para ese número).", fatal: false };
+    case 131047: return { texto: "Pasaron más de 24 horas desde el último mensaje del cliente: WhatsApp solo permite enviarle una plantilla aprobada.", fatal: false };
+    case 131051: return { texto: "Tipo de mensaje no compatible.", fatal: false };
+    case 131053: return { texto: "Meta no pudo procesar el archivo.", fatal: false };
     case 131048: case 130429: case 131056: return { texto: "Meta pide bajar el ritmo de envío (límite de velocidad). Reintenta más tarde.", fatal: false };
     case 132000: case 132012: case 132005: case 132007:
       // Meta dice que el cuerpo espera 0 variables: el «{{}}» de la plantilla es texto literal, no una variable.
@@ -233,6 +245,68 @@ function enviarTexto(c: Config, aNumero: string, cuerpo: string): Promise<string
   return llamarMeta(c, { to: aNumero, type: "text", text: { body: cuerpo, preview_url: true } });
 }
 
+// ── Bandeja de KODA ─────────────────────────────────────────────────────────
+const KODA_INBOX_POR_DEFECTO = "https://keudcycnwjuneaclezjk.supabase.co/functions/v1/koda-wa-inbox";
+
+/** Error de una llamada a KODA. `status` = código HTTP si KODA respondió (4xx = no se reintenta); null si no hubo respuesta. */
+class ErrorBandeja extends Error {
+  constructor(message: string, public status: number | null) { super(message); }
+}
+
+async function llamarBandeja(body: Json, timeoutMs: number): Promise<Json> {
+  const secret = Deno.env.get("KODA_BRIDGE_SECRET") ?? "";
+  if (!secret) throw new ErrorBandeja("Falta KODA_BRIDGE_SECRET.", 400);
+  const url = Deno.env.get("KODA_INBOX_URL") ?? KODA_INBOX_POR_DEFECTO;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-koda-secret": secret },
+      body: JSON.stringify({ v: VERSION_CONTRATO, ...body }),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    const data: Json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new ErrorBandeja(String(data?.error ?? `KODA respondió ${res.status}.`), res.status);
+    return data;
+  } catch (e) {
+    if (e instanceof ErrorBandeja) throw e;
+    throw new ErrorBandeja(e instanceof DOMException && e.name === "TimeoutError" ? "KODA tardó demasiado en responder." : `No se pudo contactar a KODA: ${e instanceof Error ? e.message : String(e)}`, null);
+  }
+}
+
+/**
+ * Deja del webhook de Meta SOLO lo del número de Connexo (`phone_number_id`). Sin ese número configurado no pasa nada:
+ * el reenvío falla seguro y nunca se cuela un chat de otro número.
+ */
+function soloMiNumero(payload: unknown, phoneId: string): Json | null {
+  if (!phoneId) return null;
+  const p = (payload ?? {}) as Json;
+  const entry: Json[] = [];
+  for (const e of Array.isArray(p.entry) ? p.entry : []) {
+    const changes = (Array.isArray(e?.changes) ? e.changes : []).filter(
+      (ch: Json) => String(ch?.value?.metadata?.phone_number_id ?? "") === phoneId,
+    );
+    if (changes.length) entry.push({ ...e, changes });
+  }
+  return entry.length ? { ...p, entry } : null;
+}
+
+/**
+ * Reenvía a la bandeja de KODA. Devuelve el error SOLO si conviene que Meta reintente (red caída, tiempo agotado o 5xx de
+ * KODA): todo es idempotente allá, así que reintentar no duplica. Un 4xx (secreto mal puesto) se anota y no se reintenta.
+ */
+async function reenviarABandeja(c: Config, payload: unknown): Promise<unknown | null> {
+  const filtrado = soloMiNumero(payload, c.phoneId);
+  if (!filtrado) return null;
+  try {
+    await llamarBandeja({ action: "eventos", phone_id: c.phoneId, payload: filtrado }, 15_000);
+    return null;
+  } catch (e) {
+    const status = e instanceof ErrorBandeja ? e.status : null;
+    console.error("[kodaWhatsApp] bandeja de KODA:", e instanceof Error ? e.message : e);
+    return status !== null && status >= 400 && status < 500 ? null : e;
+  }
+}
+
 // ── Acción: cupo ────────────────────────────────────────────────────────────
 async function cupo(db: Admin, c: Config): Promise<Json> {
   const { data, error } = await db.rpc("koda_wa_cupo", { p_limite: c.limite });
@@ -343,6 +417,7 @@ async function enviar(db: Admin, body: Json): Promise<Response> {
   }
 
   let abortar: string | null = null;     // un fallo que afecta a TODOS (token vencido, plantilla pausada…)
+  const saludosEnviados: Json[] = [];    // para que los chats de la bandeja de KODA empiecen con el saludo
   await enParalelo(reservados, CONCURRENCIA, async (r) => {
     const base = { envio_id: r.koda_envio_id };
     if (abortar) {
@@ -355,6 +430,7 @@ async function enviar(db: Admin, body: Json): Promise<Response> {
       // El mensaje YA salió: aunque no se pueda guardar su id, no se revierte (sería un doble envío).
       const g = await db.from("koda_prospectos").update({ wa_message_id: wamid, updated_at: new Date().toISOString() }).eq("id", r.id);
       if (g.error) console.error("[kodaWhatsApp] no se guardó wa_message_id:", g.error.message);
+      saludosEnviados.push({ wa_id: r.whatsapp.slice(1), wamid, nombre: nombreCorto(r.nombre ?? ""), plantilla: c.plantilla, ts: new Date().toISOString() });
       resultados.push({ ...base, resultado: "enviado" });
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -363,6 +439,12 @@ async function enviar(db: Admin, body: Json): Promise<Response> {
       resultados.push({ ...base, resultado: "error", motivo: msg });
     }
   });
+
+  // Mejor esfuerzo: si KODA no responde, el saludo igual salió y `historial_saludos` lo trae después.
+  if (saludosEnviados.length) {
+    await llamarBandeja({ action: "saludos", items: saludosEnviados }, 20_000)
+      .catch((e) => console.error("[kodaWhatsApp] saludos a la bandeja:", e instanceof Error ? e.message : e));
+  }
 
   return json({
     ok: true,
@@ -634,6 +716,9 @@ async function webhook(db: Admin, body: Json): Promise<Response> {
   const eventos: Evento[] = [];
   let primerError: unknown = null;
 
+  // La bandeja de KODA arranca primero y en paralelo: un botón tocado («¡Sí, enviar demo!») no espera a KODA.
+  const bandeja = reenviarABandeja(c, payload);
+
   for (const entry of payload?.entry ?? []) {
     for (const ch of entry.changes ?? []) {
       for (const m of ch.value?.messages ?? []) {
@@ -654,6 +739,9 @@ async function webhook(db: Admin, body: Json): Promise<Response> {
       }
     }
   }
+  // Si la bandeja de KODA no pudo guardarlo (y conviene reintentar), se responde 500 igual que con un fallo transitorio.
+  const errorBandeja = await bandeja;
+  if (errorBandeja) primerError ??= errorBandeja;
   // `eventos` viaja de vuelta para que el webhook de Vercel los publique en Discord en lugar de la línea cruda.
   const hechos = eventos.map((e) => e.clave);
   // Un fallo transitorio devuelve 500: Meta reintenta y todo lo anterior es idempotente.
@@ -824,6 +912,119 @@ async function suscribir(body: Json): Promise<Response> {
   return json({ ok: true, aplicado: aplicar, resultados });
 }
 
+// ── Bandeja de KODA: responder, bajar archivos, historial de saludos ────────
+const MAX_BYTES_ARCHIVO = 15 * 1024 * 1024;
+const MAX_TEXTO_RESPUESTA = 4096;
+
+/**
+ * Responde con texto libre (solo vale dentro de las 24 h del último mensaje del cliente; Meta lo valida y lo explica).
+ * Códigos: 200 = Meta lo aceptó ({ wamid }); 422 = Meta lo RECHAZÓ (definitivo: no salió, KODA lo marca fallido);
+ * 502 = no se sabe (tiempo agotado o caída): KODA lo deja «enviando» porque pudo salir.
+ * `client_id` viaja en `biz_opaque_callback_data` y Meta lo devuelve en los avisos de estado: así KODA reconoce la respuesta
+ * aunque no alcance a guardar el id.
+ */
+async function responder(body: Json): Promise<Response> {
+  const c = config();
+  if (!configurado(c)) return json({ error: "El WhatsApp de Connexo no está configurado (faltan WHATSAPP_TOKEN / WHATSAPP_PHONE_NUMBER_ID)." }, 503);
+  const to = String(body.to ?? "");
+  if (!/^\d{8,15}$/.test(to)) return json({ error: "Número inválido." }, 400);
+  const texto = typeof body.texto === "string" ? body.texto.trim() : "";
+  const tipo = ["image", "audio", "video", "document"].includes(body.tipo) ? String(body.tipo) : "text";
+  const client = typeof body.client_id === "string" && /^[A-Za-z0-9_-]{8,64}$/.test(body.client_id) ? body.client_id : null;
+  const ctx = typeof body.context_wamid === "string" && /^wamid\.[A-Za-z0-9+/=_.-]{4,300}$/.test(body.context_wamid) ? body.context_wamid : null;
+
+  // Cuerpo del mensaje según el tipo. Los archivos viajan por ENLACE: KODA los deja en su almacenamiento privado y firma un
+  // enlace de corta vida que Meta baja al instante. Solo se aceptan enlaces del almacenamiento de KODA (nada de URLs ajenas).
+  let contenido: Json;
+  if (tipo === "text") {
+    if (!texto) return json({ error: "Escribe un mensaje." }, 400);
+    if (texto.length > MAX_TEXTO_RESPUESTA) return json({ error: `El mensaje supera los ${MAX_TEXTO_RESPUESTA} caracteres de WhatsApp.` }, 400);
+    contenido = { type: "text", text: { body: texto, preview_url: true } };
+  } else {
+    const link = typeof body.link === "string" ? body.link : "";
+    let origen = "";
+    try { origen = `${new URL(Deno.env.get("KODA_INBOX_URL") ?? KODA_INBOX_POR_DEFECTO).origin}/storage/v1/`; } catch { /* sin origen */ }
+    if (!origen || !link.startsWith(origen)) return json({ error: "El enlace del archivo no es válido." }, 400);
+    if (texto.length > 1024) return json({ error: "El pie del archivo supera los 1024 caracteres de WhatsApp." }, 400);
+    const nombre = typeof body.nombre === "string" ? body.nombre.replace(/[\r\n\t\\/]+/g, " ").trim().slice(0, 120) : "";
+    if (tipo === "image") contenido = { type: "image", image: { link, ...(texto ? { caption: texto } : {}) } };
+    else if (tipo === "video") contenido = { type: "video", video: { link, ...(texto ? { caption: texto } : {}) } };
+    else if (tipo === "audio") contenido = { type: "audio", audio: { link } };
+    else contenido = { type: "document", document: { link, filename: nombre || "archivo", ...(texto ? { caption: texto } : {}) } };
+  }
+  try {
+    const wamid = await llamarMeta(c, {
+      to,
+      ...contenido,
+      ...(client ? { biz_opaque_callback_data: client } : {}),
+      ...(ctx ? { context: { message_id: ctx } } : {}),
+    });
+    return json({ ok: true, wamid });
+  } catch (e) {
+    if (e instanceof MetaError) return json({ error: e.message, codigo: e.code, fatal: e.fatal }, e.code !== null ? 422 : 502);
+    return json({ error: e instanceof Error ? e.message : String(e) }, 502);
+  }
+}
+
+/** Baja un archivo que mandó un cliente (los enlaces de Meta caducan a los minutos y llevan el token). */
+async function media(body: Json): Promise<Response> {
+  const c = config();
+  if (!configurado(c)) return json({ error: "El WhatsApp de Connexo no está configurado." }, 503);
+  const id = String(body.media_id ?? "");
+  if (!/^\d{5,30}$/.test(id)) return json({ error: "media_id inválido." }, 400);
+
+  const info = await graph(c, "GET", id);
+  if (!info.ok) {
+    const msg = String(info.data?.error?.message ?? "Meta no encontró el archivo").slice(0, 200);
+    return json({ error: `Meta no entregó el archivo (${msg}). Los archivos duran 30 días.` }, 404);
+  }
+  const url = String(info.data?.url ?? "");
+  if (!url.startsWith("https://")) return json({ error: "Meta no devolvió un enlace válido." }, 502);
+  const tam = Number(info.data?.file_size ?? 0);
+  if (tam > MAX_BYTES_ARCHIVO) return json({ error: "El archivo supera los 15 MB." }, 413);
+
+  try {
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${c.token}` }, signal: AbortSignal.timeout(45_000) });
+    if (!res.ok) return json({ error: `Meta respondió ${res.status} al bajar el archivo.` }, 502);
+    const buf = await res.arrayBuffer();
+    if (buf.byteLength === 0) return json({ error: "El archivo llegó vacío." }, 502);
+    if (buf.byteLength > MAX_BYTES_ARCHIVO) return json({ error: "El archivo supera los 15 MB." }, 413);
+    return json({ ok: true, mime: String(info.data?.mime_type ?? res.headers.get("content-type") ?? ""), bytes: Buffer.from(buf).toString("base64") });
+  } catch (e) {
+    return json({ error: `No se pudo bajar el archivo: ${e instanceof Error ? e.message : String(e)}` }, 502);
+  }
+}
+
+/** Los saludos ya enviados (id de Meta, celular y hora), para que cada chat de la bandeja de KODA empiece con el suyo. */
+async function historialSaludos(db: Admin): Promise<Response> {
+  const c = config();
+  const { data, error } = await db.from("koda_prospectos")
+    .select("id, whatsapp, wa_message_id, wa_enviado_at, wa_respuesta, wa_respuesta_at, negocio")
+    .not("wa_message_id", "is", null).not("wa_enviado_at", "is", null)
+    .order("wa_enviado_at", { ascending: false }).limit(500);
+  if (error) return json({ error: error.message }, 500);
+  const validos = (data ?? []).filter((f) => typeof f.whatsapp === "string" && WHATSAPP_RE.test(f.whatsapp));
+  const items = validos.map((f) => ({
+    wa_id: String(f.whatsapp).slice(1),
+    wamid: f.wa_message_id as string,
+    nombre: nombreCorto(String(f.negocio?.nombre ?? "")),
+    plantilla: c.plantilla,
+    ts: f.wa_enviado_at as string,
+  }));
+  // Lo que ya respondieron por botón o por texto de baja (Connexo lo guardó con su hora): en la bandeja de KODA entra como
+  // mensaje del cliente, así el chat tiene contexto y se sabe cuándo escribió por última vez (ventana de 24 h).
+  const TEXTO_RESPUESTA: Record<string, string> = { si: "¡Sí, enviar demo!", luego: "Ver más tarde", baja: "Pidió no recibir más mensajes" };
+  const respuestas = validos
+    .filter((f) => f.wa_respuesta && TEXTO_RESPUESTA[String(f.wa_respuesta)] && f.wa_respuesta_at)
+    .map((f) => ({
+      wa_id: String(f.whatsapp).slice(1),
+      wamid: `hist:${f.id}:${f.wa_respuesta}`,
+      texto: TEXTO_RESPUESTA[String(f.wa_respuesta)],
+      ts: f.wa_respuesta_at as string,
+    }));
+  return json({ ok: true, items, respuestas });
+}
+
 // ── Entrada ─────────────────────────────────────────────────────────────────
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -843,6 +1044,9 @@ Deno.serve(async (req: Request) => {
     if (body.action === "webhook") return await webhook(db, body);
     if (body.action === "suscribir") return await suscribir(body);
     if (body.action === "ciclo") return await ciclo(db, body);
+    if (body.action === "responder") return await responder(body);
+    if (body.action === "media") return await media(body);
+    if (body.action === "historial_saludos") return await historialSaludos(db);
     return json({ error: "Acción desconocida." }, 400);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);
