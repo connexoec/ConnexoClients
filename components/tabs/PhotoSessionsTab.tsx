@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { supabase } from '../../src/lib/supabase';
 import type { PhotoBooking, PhotoBlock, PhotoPackage, PhotoQuote, PhotoSettings, PhotoWorkingDay, PhotoBookingStatus, PhotoPaymentStatus, PhotoQuoteStatus } from '../../types';
 import { FaCalendarCheck, FaPlus, FaTrash, FaWhatsapp, FaMapMarkerAlt, FaUserAlt, FaCamera, FaBan } from 'react-icons/fa';
@@ -6,6 +6,10 @@ import {
   useOwnerTable, useJsonSettings, AdminModal, Field, adminInput, Spinner, MissingSqlNotice, Kpi, PlanLock, ping, waLink, money, fmtDate, todayLocal, addDaysLocal, isMissingSql,
 } from '../AdminKit';
 import { ACCENT, ON_ACCENT, btnPrimary, btnGhost, dangerBtn, TabHeader, Empty, Pills, SearchBox, Toggle, ago } from '../photo/PhotoAdminUi';
+import { DailyAgendaPanel } from '../DailyAgendaPanel';
+import { ExportRangePanel, fetchOwnerRange, type ExportColumn } from '../ExportRangePanel';
+import type { AgendaRow } from '../../src/lib/reminders';
+import type { DateRange } from '../../src/lib/exportRange';
 import { BOOKING_LABEL, PAY_LABEL, QUOTE_LABEL, LOCATION_LABEL, DEFAULT_HOURS, toMin, toHHMM, KIND_LABEL } from '../../src/lib/photoCommon';
 
 interface Props {
@@ -29,7 +33,7 @@ export const PhotoSessionsTab: React.FC<Props> = ({ user, profileData, setProfil
     <div className="space-y-6">
       <TabHeader icon={<FaCalendarCheck />} title="Sesiones" subtitle="Reservas de tus clientes, solicitudes de cotización y los días en que atiendes." />
       <Pills items={items} value={view} onChange={setView} />
-      {view === 'agenda' && isPro && <AgendaPanel user={user} showNotification={showNotification} />}
+      {view === 'agenda' && isPro && <AgendaPanel user={user} profileData={profileData} showNotification={showNotification} />}
       {view === 'cotizaciones' && <QuotesPanel user={user} showNotification={showNotification} />}
       {view === 'horario' && (isPro
         ? <SchedulePanel user={user} profileData={profileData} setProfileData={setProfileData} showNotification={showNotification} isUltra={plan === 'ultra'} />
@@ -41,7 +45,29 @@ export const PhotoSessionsTab: React.FC<Props> = ({ user, profileData, setProfil
 /* ═══ Agenda de reservas ═════════════════════════════════════════════════════ */
 type AgendaFilter = 'proximas' | 'pendientes' | 'realizadas' | 'canceladas' | 'todas';
 
-const AgendaPanel: React.FC<{ user: any; showNotification: Props['showNotification'] }> = ({ user, showNotification }) => {
+/** Columnas de la descarga en Excel de las sesiones (los teléfonos van como texto: Excel se comería el cero inicial). */
+const BOOKING_COLUMNS: ExportColumn<PhotoBooking>[] = [
+  { header: 'Fecha', get: b => b.session_date },
+  { header: 'Hora de inicio', get: b => (b.full_day ? 'Día completo' : b.start_time) },
+  { header: 'Hora de fin', get: b => (b.full_day ? '' : b.end_time) },
+  { header: 'Paquete', get: b => b.package_name },
+  { header: 'Tipo', get: b => (b.package_kind ? KIND_LABEL[b.package_kind] : '') },
+  { header: 'Cliente', get: b => b.customer_name },
+  { header: 'Teléfono', get: b => b.customer_phone || '' },
+  { header: 'Correo', get: b => b.customer_email || '' },
+  { header: 'Lugar', get: b => `${LOCATION_LABEL[b.location_kind] || ''}${b.location_text ? `: ${b.location_text}` : ''}` },
+  { header: 'Personas', get: b => b.people ?? null },
+  { header: 'Fotógrafo', get: b => b.photographer_name || '' },
+  { header: 'Total', get: b => Number(b.total) },
+  { header: 'Anticipo', get: b => Number(b.deposit_required) },
+  { header: 'Pago', get: b => PAY_LABEL[b.payment_status] || b.payment_status },
+  { header: 'Estado', get: b => BOOKING_LABEL[b.status] || b.status },
+  { header: 'Código de reserva', get: b => b.confirmation_code },
+  { header: 'Notas del cliente', get: b => b.notes || '' },
+  { header: 'Reservada el', get: b => (b.created_at ? new Date(b.created_at).toLocaleString('es-EC') : '') },
+];
+
+const AgendaPanel: React.FC<{ user: any; profileData: any; showNotification: Props['showNotification'] }> = ({ user, profileData, showNotification }) => {
   const t = useOwnerTable<PhotoBooking>({
     table: 'photo_bookings', ownerColumn: 'photo_profile_id', ownerId: user?.id, realtime: true, pollMs: 20000,
     order: [{ column: 'session_date' }, { column: 'start_time' }], onNew: () => ping(),
@@ -72,6 +98,17 @@ const AgendaPanel: React.FC<{ user: any; showNotification: Props['showNotificati
     if (s) list = list.filter(b => [b.customer_name, b.customer_phone, b.confirmation_code, b.package_name].join(' ').toLowerCase().includes(s));
     return list;
   }, [t.rows, filter, q, today]);
+
+  // Agenda del día (con el WhatsApp de un toque). Se arma con las reservas YA cargadas: no añade ninguna consulta.
+  const agendaRows = useMemo<AgendaRow[]>(() => t.rows.map(b => ({
+    id: b.id, date: b.session_date, time: b.full_day ? '' : b.start_time, name: b.customer_name, phone: b.customer_phone || '',
+    status: b.status, detail: [b.package_name, b.photographer_name].filter(Boolean).join(' · ') || undefined,
+  })), [t.rows]);
+  // Excel: el rango se pide al servidor (PostgREST corta en 1000 filas), sin tocar el filtro de la pantalla.
+  const fetchBookingRange = useCallback((range: DateRange) => fetchOwnerRange<PhotoBooking>({
+    table: 'photo_bookings', ownerColumn: 'photo_profile_id', ownerId: user.id, dateColumn: 'session_date', range,
+    orderBy: [{ column: 'session_date' }, { column: 'start_time' }],
+  }), [user?.id]);
 
   const patch = async (b: PhotoBooking, change: Partial<PhotoBooking>) => {
     t.setRows(rs => rs.map(x => (x.id === b.id ? { ...x, ...change } : x)));
@@ -110,11 +147,19 @@ const AgendaPanel: React.FC<{ user: any; showNotification: Props['showNotificati
         <Kpi label="Próximas" value={stats.upcoming} accent={ACCENT} />
         <Kpi label="Anticipos por cobrar" value={money(stats.deposits)} accent={ACCENT} tone={stats.deposits > 0 ? 'warn' : undefined} />
       </div>
+      <DailyAgendaPanel accent={ACCENT} noun="sesión" businessName={profileData?.displayName || profileData?.username} rows={agendaRows} table="photo_bookings" />
+
       <div className="flex flex-wrap items-center gap-3">
         <Pills items={[['proximas', 'Próximas'], ['pendientes', 'Por confirmar'], ['realizadas', 'Realizadas'], ['canceladas', 'Canceladas'], ['todas', 'Todas']]} value={filter} onChange={setFilter} />
         <SearchBox value={q} onChange={setQ} placeholder="Cliente, teléfono, código o paquete" />
         <button type="button" className={btnPrimary} style={{ background: ACCENT, color: ON_ACCENT }} onClick={() => setManual(true)}><FaPlus /> Agregar sesión</button>
       </div>
+
+      <ExportRangePanel<PhotoBooking>
+        accent={ACCENT} noun="sesiones" dateLabel="Fecha de la sesión" fileBase={`sesiones_${profileData?.username || 'fotografia'}`} sheetName="Sesiones"
+        localRows={t.rows} getDate={b => b.session_date} fetchRange={fetchBookingRange} columns={BOOKING_COLUMNS} showNotification={showNotification}
+        hint="Incluye cliente, contacto, paquete, lugar, fotógrafo, total, anticipo, pago y estado de cada sesión."
+      />
 
       {shown.length === 0 ? (
         <Empty emoji="🗓️">{filter === 'proximas' ? 'No tienes sesiones próximas. Cuando alguien reserve desde tu perfil aparecerá aquí con aviso al celular.' : 'No hay reservas con ese filtro.'}</Empty>
