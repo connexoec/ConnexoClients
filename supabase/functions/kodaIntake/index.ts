@@ -246,6 +246,24 @@ function usuarioDeRed(url: string, red: string): string | null {
   return m ? m[1].replace(/^@/, "") : null;
 }
 
+/**
+ * Ciudad para los textos del perfil («Café recién hecho en {{ciudad}}»). \`negocio.ciudad\` de KODA suele ser basura —el primer trozo de la
+ * dirección de Google («8VXG+P38», «Ofi 608», «Agustín Cueva y Ines Salcedo &»)—, y así quedaban textos como «Cuidamos tu salud en Ofi 608».
+ * La ciudad de verdad va al final de la dirección («…, Ibarra», «…, 170135 Quito»): se toma de ahí; si no se puede, mejor sin ciudad (la
+ * frase «en {{ciudad}}» desaparece) que con un dato roto.
+ */
+function ciudadDe(n: Json): string | null {
+  const LETRAS = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,29}$/;
+  const dir = str(n.direccion, 300);
+  if (dir) {
+    const partes = dir.split(",").map((p) => p.trim()).filter((p) => p && !/^ecuador$/i.test(p));
+    const ultima = (partes.at(-1) ?? "").replace(/^\d{4,}\s*/, "").replace(/\s*\d{4,}$/, "").trim();
+    if (partes.length > 1 && LETRAS.test(ultima) && !/\b(av|avenida|calle|y|oe|ne|no|n|s)\b\.?$/i.test(ultima)) return ultima;
+  }
+  const c = str(n.ciudad, 80);
+  return c && LETRAS.test(c) && !/\b(av|avenida|calle|pasaje|y|e|oe|ne|no|ofi|piso|local|km)\b/i.test(c) && !/\d/.test(c) ? c : null;
+}
+
 /** Las 7 redes del perfil: las reales de KODA y, donde falten, un enlace vacío. `propias` = cuántas son reales. */
 function armarRedes(theme: string, reales: Record<string, string>, username: string): { redes: Record<string, string>; propias: number } {
   const porUsuario = PLANTILLAS_REDES_POR_USUARIO.has(theme);
@@ -443,7 +461,7 @@ async function rellenarPerfil(
 ): Promise<Json> {
   const nombre = str(n.nombre, 120);
   if (!nombre) throw new Error("El negocio no tiene nombre.");
-  const ciudad = str(n.ciudad, 80);
+  const ciudad = ciudadDe(n);
   const paquete = await cargarPaquete(db, clave);
   const waKoda = str(n.whatsapp, 20);
   const vars: Vars = {
