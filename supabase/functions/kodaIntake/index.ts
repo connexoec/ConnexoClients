@@ -136,7 +136,30 @@ function claveDePack(rubro: string | null, categoria: string | null, nombre: str
   if (/pet.?(shop|store)|mascota/.test(cat)) return "mascotas";
   if (/inmobiliar|estate.?agent|real.?estate|bienes.?raices/.test(cat)) return "inmobiliaria";
   if (rubro === "belleza") return /barber/.test(cat) ? "barberia" : "belleza";
-  if (rubro === "salud") return /doctor|clinic|hospital|medic|physio|fisio|dentist|dental|odontolog/.test(cat) ? "clinica" : "salud";
+  // Regla del dueño (2026-11-13): a cada negocio, el contenido de SU subnicho (un café con cosas de café, un dentista con tratamientos
+  // dentales…), no el del rubro en general.
+  const texto = `${cat} ${sinAcentos(nombre ?? "").toLowerCase()}`;
+  if (rubro === "musicos" && /mariachi|serenata/.test(texto)) return "mariachi";
+  if (rubro === "restaurantes" || rubro === "cafe_bar") return subnichoGastro(rubro, cat, texto);
+  if (rubro === "salud") {
+    if (/nutri|dietist/.test(texto)) return "nutricion";
+    if (/psicolog|psicoterap|terapeut|psychologist|psychotherap|therapist|counsel/.test(texto)) return "psicologia";
+    if (/dental|dentist|odontolog|ortodon/.test(texto)) return "odontologia";
+    return /doctor|clinic|hospital|medic|physio|fisio/.test(cat) ? "clinica" : "salud";
+  }
+  return rubro;
+}
+
+/** Gastronomía: cafetería (cafés, desayunos, pastelería), bar (bares, pubs, discotecas) o la carta general del rubro. */
+function subnichoGastro(rubro: string, cat: string, texto: string): string {
+  const esRestaurante = /restaurant|grill|steak|pizz|seafood|sushi|parrill|asador|cevich|marisq/.test(cat);
+  if (/coffee|(^|_)cafe($|_)|cafeteria|tea.?house|bakery|pasteler|breakfast|brunch|desayun|panader/.test(cat)) return "cafeteria";
+  if (/(^|_)(bar|pub|night.?club|biergarten|lounge|brewery)($|_)|discoteca|cerveceria|cocktail|wine.?bar/.test(cat) && !esRestaurante) return "bar";
+  // Categoría genérica (un restaurante de Google que en realidad es un café, o un «bar» sin tipo): manda el NOMBRE.
+  if (!/ice.?cream|helader/.test(cat)) {
+    if (/\bcafe\b|cafeteria|cafecito|coffee|cafebreria|brunch|desayuno|pasteleria|panaderia|chocolater/.test(texto)) return "cafeteria";
+    if (!esRestaurante && /\bbar\b|\bpub\b|cerveceria|resto ?bar|lounge|discoteca|karaoke/.test(texto)) return "bar";
+  }
   return rubro;
 }
 
@@ -206,12 +229,62 @@ const TABLAS_SEMBRABLES = new Set([
 
 // Estas plantillas muestran una «prueba social» propia; en las demás la calificación va al final de la bio.
 const PLANTILLAS_CON_PRUEBA_SOCIAL = new Set(["gastro", "petcare", "medical"]);
+
+// Redes sociales (regla del dueño, 2026-11-13): el perfil se ve MÁS atractivo con TODOS los iconos llenos, así que lo que KODA no trae se
+// rellena con un enlace vacío (la portada de la red) para que el negocio vea, al abrir su prueba, todo lo que puede conectar.
+// Cada plantilla dibuja las redes a su manera: estas 9 pintan una fila de iconos desde `profiles.socialMedia` (las otras 4 —gym, hotel,
+// fotografía y librería— solo muestran la lista de `links`, y ahí van los enlaces de redes).
+const PLANTILLAS_CON_ICONOS_DE_REDES = new Set(["barber", "ecom", "gastro", "medical", "petcare", "default", "stage", "realty", "sublima"]);
+// De esas, estas arman la URL de Instagram, TikTok y X a partir del @usuario (instagram.com/<usuario>): con una URL completa el enlace
+// salía roto («instagram.com/https://instagram.com/…»). Stage, Realty y Sublima usan el enlace tal cual.
+const PLANTILLAS_REDES_POR_USUARIO = new Set(["barber", "ecom", "gastro", "medical", "petcare", "default"]);
+const REDES_ICONOS = ["instagram", "facebook", "tiktok", "youtube", "twitter", "linkedin", "website"] as const;
+
+function usuarioDeRed(url: string, red: string): string | null {
+  const re = red === "instagram" ? /instagram\.com\/([^/?#\s]+)/i : red === "tiktok" ? /tiktok\.com\/@?([^/?#\s]+)/i : /(?:twitter|x)\.com\/@?([^/?#\s]+)/i;
+  const m = url.match(re);
+  return m ? m[1].replace(/^@/, "") : null;
+}
+
+/** Las 7 redes del perfil: las reales de KODA y, donde falten, un enlace vacío. `propias` = cuántas son reales. */
+function armarRedes(theme: string, reales: Record<string, string>, username: string): { redes: Record<string, string>; propias: number } {
+  const porUsuario = PLANTILLAS_REDES_POR_USUARIO.has(theme);
+  const vacias: Record<string, string> = {
+    instagram: "https://instagram.com/", facebook: "https://facebook.com/", tiktok: "https://tiktok.com/", youtube: "https://youtube.com/",
+    twitter: "https://x.com/", linkedin: "https://linkedin.com/", website: `https://www.connexoapp.com/${username}`,
+  };
+  const redes: Record<string, string> = {};
+  let propias = 0;
+  for (const r of REDES_ICONOS) {
+    const real = reales[r];
+    if (porUsuario && (r === "instagram" || r === "tiktok" || r === "twitter")) {
+      const u = real ? usuarioDeRed(real, r) : null;
+      if (u) { redes[r] = u; propias++; } else redes[r] = "@";
+    } else if (real) { redes[r] = real; propias++; } else redes[r] = vacias[r];
+  }
+  return { redes, propias };
+}
 const HEX_RE = /^#[0-9a-f]{3,8}$/i;
 const PALABRAS_VACIAS = new Set(["de", "del", "la", "el", "los", "las", "y", "e", "en", "the", "and"]);
 
-/** Cambia {{nombre}}, {{ciudad}}, {{ubicacion}}, {{username}} y {{wa593}}; sin ciudad, «en {{ciudad}}» desaparece. */
+const DIAS_CORTOS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+const MESES_CORTOS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+/** Fecha de hoy + n días (hora de Ecuador, UTC-5) en texto corto: «Sáb 22 nov» (con año si es @F: «22 nov 2026»). */
+function fechaRelativa(dias: number, conAnio: boolean): string {
+  const d = new Date(Date.now() - 5 * 3600_000 + dias * 86400_000);
+  const base = `${d.getUTCDate()} ${MESES_CORTOS[d.getUTCMonth()]}`;
+  return conAnio ? `${base} ${d.getUTCFullYear()}` : `${DIAS_CORTOS[d.getUTCDay()]} ${base}`;
+}
+
+/**
+ * Cambia {{nombre}}, {{ciudad}}, {{ubicacion}}, {{username}} y {{wa593}}; sin ciudad, «en {{ciudad}}» desaparece.
+ * Las fechas de ejemplo de un paquete se escriben @D(9) (dentro de 9 días: «Sáb 22 nov») o @F(-30) (hace 30 días: «14 oct 2026»):
+ * así una gira de ejemplo siempre queda en el futuro y los lanzamientos en el pasado, sea cuando sea que se arme el borrador.
+ */
 function sustituir(valor: unknown, vars: Vars): unknown {
   if (typeof valor === "string") {
+    const fecha = valor.match(/^@([DF])\((-?\d{1,4})\)$/);
+    if (fecha) return fechaRelativa(Number(fecha[2]), fecha[1] === "F");
     if (!valor.includes("{{")) return valor;
     let s = valor.split("{{nombre}}").join(vars.nombre);
     s = vars.ciudad ? s.split("{{ciudad}}").join(vars.ciudad) : s.replace(/\s+en \{\{ciudad\}\}/g, "").split("{{ciudad}}").join("");
@@ -405,12 +478,15 @@ async function rellenarPerfil(
   const correo = str(n.email, 200)?.toLowerCase();
   if (correo && EMAIL_RE.test(correo)) poner("contactEmail", correo, "koda");
 
-  const redes: Record<string, string> = {};
+  const reales: Record<string, string> = {};
   for (const r of ["instagram", "facebook", "tiktok", "website"] as const) {
     const u = urlRed(n[r], r);
-    if (u) redes[r] = u;
+    if (u) reales[r] = u;
   }
-  if (Object.keys(redes).length) poner("socialMedia", redes, "koda");
+  if (PLANTILLAS_CON_ICONOS_DE_REDES.has(theme)) {
+    const { redes, propias } = armarRedes(theme, reales, username);
+    poner("socialMedia", redes, propias >= REDES_ICONOS.length ? "koda" : propias ? "mixto" : "banco");
+  }
 
   const descripcion = str(n.descripcion, 300);
   if (descripcion) poner("bio", descripcion, "koda");
@@ -437,10 +513,16 @@ async function rellenarPerfil(
   }
   const mapa = str(n.google_maps_url, 500);
   if (mapa && /^https?:\/\//i.test(mapa)) enlaces.push({ title: "Ubicación en Google Maps", url: mapa });
-  if (redes.instagram) enlaces.push({ title: "Síguenos en Instagram", url: redes.instagram });
-  if (redes.facebook) enlaces.push({ title: "Síguenos en Facebook", url: redes.facebook });
-  if (redes.tiktok) enlaces.push({ title: "Síguenos en TikTok", url: redes.tiktok });
-  if (redes.website) enlaces.push({ title: "Visita nuestra página web", url: redes.website });
+  // Las plantillas sin fila de iconos (gym, hotel, fotografía, librería) muestran SOLO los enlaces: ahí las 4 redes van siempre (con enlace vacío si KODA no la trae).
+  const sinIconos = !PLANTILLAS_CON_ICONOS_DE_REDES.has(theme);
+  const redEnlace = (clave: string, titulo: string, vacio: string) => {
+    if (reales[clave]) enlaces.push({ title: titulo, url: reales[clave] });
+    else if (sinIconos) enlaces.push({ title: titulo, url: vacio });
+  };
+  redEnlace("instagram", "Síguenos en Instagram", "https://instagram.com/");
+  redEnlace("facebook", "Síguenos en Facebook", "https://facebook.com/");
+  redEnlace("tiktok", "Síguenos en TikTok", "https://tiktok.com/");
+  redEnlace("website", "Visita nuestra página web", `https://www.connexoapp.com/${username}`);
 
   const { error: delErr } = await db.from("links").delete().eq("userId", uid);   // solo los de este borrador
   if (delErr) throw new Error(`enlaces: ${delErr.message}`);
@@ -486,8 +568,13 @@ async function faltantes(db: Admin, uid: string, paquete: Paquete | null): Promi
   if (!Array.isArray(p.galleryImageURLs) || p.galleryImageURLs.filter(Boolean).length < 3) f.add("galería (mínimo 3 fotos)");
   if (!Array.isArray(p.faqs) || p.faqs.length < 3) f.add("preguntas frecuentes");
   if (p.theme !== "stage" && vacia(p.businessHours)) f.add("horario");   // el artista no tiene horario de atención
-  const { data: enlaces } = await db.from("links").select("id").eq("userId", uid).limit(1);
+  const { data: enlaces } = await db.from("links").select("id").eq("userId", uid).limit(10);
   if (!enlaces?.length) f.add("enlaces");
+  // Redes: con fila de iconos, las 7 deben tener enlace (real o vacío); sin ella, la lista de enlaces debe traer las 4 redes.
+  if (PLANTILLAS_CON_ICONOS_DE_REDES.has(p.theme)) {
+    const sm = (p.socialMedia ?? {}) as Json;
+    if (REDES_ICONOS.some((r) => vacia(sm[r]))) f.add("redes sociales");
+  } else if ((enlaces?.length ?? 0) < 4) f.add("enlaces de redes");
 
   // Catálogo del perfil (platos, servicios, productos): lo que prometa el paquete y, como mínimo, 3.
   const productos: Json[] = Array.isArray(p.products) ? p.products : [];
@@ -686,7 +773,9 @@ async function rellenarBorrador(db: Admin, body: Json): Promise<Response> {
   if (error) return json({ error: error.message }, 500);
   if (!fila) return json({ error: "Ese envío no existe." }, 404);
   if (!fila.user_id || !fila.theme) return json({ error: "Ese envío no tiene cuenta borrador." }, 409);
-  if (fila.estado !== "borrador") return json({ error: `Solo se puede rellenar un borrador (estado actual: ${fila.estado}).` }, 409);
+  if (!["borrador", "aprobado", "wa_enviado"].includes(fila.estado)) {
+    return json({ error: `Solo se puede rellenar un borrador, aprobado o con saludo enviado: un perfil aceptado, vencido o descartado no se toca (estado actual: ${fila.estado}).` }, 409);
+  }
 
   const negocio: Json = fila.negocio ?? {};
   const clave = claveDePack(fila.rubro ?? null, str(negocio.categoria, 120), str(negocio.nombre, 120));

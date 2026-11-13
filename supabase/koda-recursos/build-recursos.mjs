@@ -121,9 +121,12 @@ const FOTOS = {
     cover: "1471341971476-ae15ff5dd4ea",
     galeria: ["1617463874381-85b513b3e991", "1777322615136-2f1d5d636cc4", "1664817550969-5e76adc4a3fe", "1786325492057-e45a9aea8c8a", "1586232702178-f044c5f4d4b7", "1615458509636-856366d3396e"],
   },
-  // Camiseta oficial, camiseta especial, póster, disco, vinilo.
-  musicos: { productos: ["1693443687750-611ad77f3aba", "1759572095384-1a7e646d0d4f", "1501612780327-45045538702b", "1602848596718-45693ff58c78", "1616714109948-c74fe5029a4d"] },
+  // Camiseta oficial, camiseta especial, camiseta de festival, póster, CD, vinilo, vinilo de edición limitada, membresía de fans.
+  musicos: { productos: ["1693443687750-611ad77f3aba", "1759572095384-1a7e646d0d4f", "1620799139834-6b8f844fbe61", "1501612780327-45045538702b", "1602848596718-45693ff58c78", "1616714109948-c74fe5029a4d", "1779842559943-3ff0f983ca77", "1533174072545-7a4b6ad7a6c3"] },
 };
+// Subnichos nuevos (2026-11-13): cafetería, bar, nutrición, psicología, odontología y mariachi. Las fotos salen de fotos-subnichos.json.
+const SUB = JSON.parse(fs.readFileSync(path.join(aqui, "fotos-subnichos.json"), "utf8"));
+for (const k of ["cafeteria", "bar", "nutricion", "psicologia", "odontologia", "mariachi"]) FOTOS[k] = SUB[k];
 function aplicarFotos(clave, perfil) {
   const f = FOTOS[clave];
   if (!f) return perfil;
@@ -433,25 +436,48 @@ const paquetes = [
     clave: "musicos", theme: "stage", demo: "05", etiqueta: "MÚSICA",
     perfil: (d) => ({
       ...pick(d, [...ESTILO, ...GALERIA, "borderColor"]),
-      // Merch genérico: nada de títulos de discos, giras ni fechas inventadas (serían promesas del artista).
-      products: catalogo("mus", [
+      // Plantilla Artista COMPLETA (regla del dueño, 2026-11-13: «está saliendo muy simple»): lanzamientos, gira con tickets, merch con
+      // membresía de fans y contratación. Todo es EJEMPLO con nombres genéricos (nada de discos, giras ni sedes inventadas); las fechas
+      // son relativas a cuando se arma el borrador (@D / @F, ver kodaIntake): la gira siempre queda en el futuro.
+      products: [
         ["Merch", "Camiseta oficial", "$15.00", "Algodón, con el diseño del proyecto."],
         ["Merch", "Camiseta edición especial", "$15.00", "Otro diseño del proyecto, en algodón."],
+        ["Merch", "Camiseta edición festival", "$18.00", "Diseño exclusivo de la gira. Tallas S a XL."],
         ["Merch", "Póster", "$8.00", "Impresión en papel couché, tamaño A3."],
         ["Música", "Disco físico", "$10.00", "Edición física de tu música."],
         ["Música", "Vinilo", "$22.00", "Edición en vinilo de tu música."],
-      ]),
+        ["Música", "Vinilo edición limitada", "$30.00", "Tirada corta, numerada, con descarga digital."],
+        ["Fans", "Membresía de fans", "$5.00", "Preventa de entradas, contenido exclusivo y descuento en el merch."],
+      ].map(([category, name, price, shortDescription], i) => ({
+        id: "mus_" + (i + 1), name, category, price, shortDescription, available: true,
+        ...(category === "Fans" ? { subscription: { monthly: { price: "$5.00", installments: 12 }, annual: { price: "$50.00", installments: 1 } } } : {}),
+      })),
       releases: [
-        { id: "rel_1", title: "Tu primer sencillo", platform: "Spotify", coverURL: d.releases[0].coverURL },
-        { id: "rel_2", title: "Tu próximo lanzamiento", platform: "YouTube", coverURL: d.releases[1].coverURL },
+        { id: "rel_1", title: "Tu primer sencillo", platform: "Spotify", url: "https://open.spotify.com/", coverURL: d.releases[0].coverURL, releaseDate: "@F(-12)" },
+        { id: "rel_2", title: "Tu álbum", platform: "Apple Music", url: "https://music.apple.com/", coverURL: d.releases[1].coverURL, releaseDate: "@F(-120)" },
+        { id: "rel_3", title: "Tu EP", platform: "YouTube", url: "https://www.youtube.com/", coverURL: d.releases[2].coverURL, releaseDate: "@F(-300)" },
+        { id: "rel_4", title: "Sesión en vivo", platform: "SoundCloud", url: "https://soundcloud.com/", coverURL: d.releases[3].coverURL, releaseDate: "@F(-520)" },
+      ],
+      tourDates: [
+        { id: "tour_1", date: "@D(9)", city: "{{ubicacion}}", venue: "Concierto de presentación · sala de conciertos", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20concierto", soldOut: false },
+        { id: "tour_2", date: "@D(16)", city: "{{ubicacion}}", venue: "Show en vivo · bar con música", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20show", soldOut: true },
+        { id: "tour_3", date: "@D(23)", city: "{{ubicacion}}", venue: "Festival de música · escenario principal", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20festival", soldOut: false },
+        { id: "tour_4", date: "@D(37)", city: "Gira nacional", venue: "Teatro de la ciudad", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20la%20gira", soldOut: false },
+        { id: "tour_5", date: "@D(58)", city: "Gira internacional", venue: "Sala de música en vivo", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20la%20gira", soldOut: false },
       ],
       bookingLink: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
-      faqs: faq("¿Cómo los contrato para un evento?", "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha y lugar."),
+      galleryTitle: "En vivo",
+      faqs: [
+        { id: "faq_1", question: "¿Cómo los contrato para un evento?", answer: "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha y lugar.", order: 1 },
+        { id: "faq_2", question: "¿Dónde compro entradas?", answer: "En la sección Tour: cada fecha tiene su botón de tickets.", order: 2 },
+        { id: "faq_3", question: "¿Hacen envíos del merch?", answer: "Escríbenos por WhatsApp desde este perfil y coordinamos tu pedido.", order: 3 },
+        { id: "faq_4", question: "¿Cómo escucho su música?", answer: "En la sección Lanzamientos: toca cualquier disco para abrirlo en tu plataforma favorita.", order: 4 },
+      ],
     }),
     copy: {
-      jobTitle: "Música · Artista",
-      bio: "Música en vivo en {{ciudad}}. Escúchanos y contáctanos para tu evento.",
-      aboutMe: "En {{nombre}} hacemos música con pasión. Conoce nuestro trabajo, escúchanos y escríbenos desde este perfil para contratarnos o colaborar.",
+      jobTitle: "Música en vivo · Artista",
+      bio: "Música en vivo en {{ciudad}}. Escucha nuestros lanzamientos, mira las próximas fechas y contáctanos para tu evento.",
+      aboutMe: "En {{nombre}} hacemos música con pasión y la llevamos al escenario. Escucha nuestros lanzamientos, consigue entradas para las próximas fechas, llévate el merch oficial y escríbenos desde este perfil para contratarnos o colaborar.",
     },
   },
   {
@@ -615,6 +641,223 @@ const paquetes = [
   },
 ];
 
+
+// ── Subnichos nuevos (2026-11-13) ───────────────────────────────────────────────────────────────────────────────────
+// Regla del dueño: «cuando una plantilla de gastro es para un café, llénale con cosas para cafés». Antes todo restaurante recibía la carta
+// de la demo (ceviches y parrilla), un dentista recibía pediatría y cardiología, y un mariachi la plantilla de una banda de rock. Cada subnicho
+// trae su propio catálogo, horario, textos y fotos; kodaIntake elige el paquete por categoría y nombre (claveDePack).
+const DIAS_ES = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+const DIAS_EN = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+/** Horario en los dos formatos del perfil. reglas = 7 pares [abre, cierra] (lunes→domingo) o null si cierra ese día. */
+function horarios(reglas) {
+  const abiertos = reglas.filter(Boolean);
+  const abre = abiertos.map((r) => r[0]).sort()[0];
+  const cierra = abiertos.map((r) => r[1]).sort().at(-1);
+  return {
+    showSchedule: true,
+    businessHours: DIAS_ES.map((day, i) => ({ day, isOpen: !!reglas[i], openTime: reglas[i]?.[0] ?? abre, closeTime: reglas[i]?.[1] ?? cierra })),
+    openingHours: Object.fromEntries(DIAS_EN.map((day, i) => [day, { isActive: !!reglas[i], start: reglas[i]?.[0] ?? abre, end: reglas[i]?.[1] ?? cierra }])),
+    _abre: abre, _cierra: cierra,
+  };
+}
+const quitarGuiones = ({ _abre, _cierra, ...h }) => h;
+const colores = (fondo, acento, texto, botonTexto) => ({ backgroundColor: fondo, buttonColor: acento, textColor: texto, buttonTextColor: botonTexto ?? fondo, borderColor: acento });
+const comoCatalogo = (prefijo, items) => catalogo(prefijo, items);
+
+/** Gastronomía de subnicho: estilo propio, horario, carta, y reservas de mesa como el resto de gastro. */
+const gastroSub = ({ clave, etiqueta, paleta, reglas, mesas, items, jobTitle, bio, aboutMe, faqs }) => ({
+  clave, theme: "gastro", demo: "03", etiqueta,
+  perfil: (d) => {
+    const h = horarios(reglas);
+    return {
+      ...pick(d, [...ESTILO, ...GALERIA, ...RESERVAS]),
+      ...colores(...paleta),
+      ...quitarGuiones(h),
+      reservationSettings: { maxPartySize: 10, openTime: h._abre, closeTime: h._cierra, daysAhead: 30, autoConfirm: false },
+      tableCount: mesas,
+      products: comoCatalogo(clave.slice(0, 3), items),
+      faqs,
+    };
+  },
+  copy: { jobTitle, bio, aboutMe },
+});
+const FAQ_MESA = faq("¿Cómo reservo una mesa?", "Desde este perfil: elige el día, la hora y el número de personas. Recibirás un código de confirmación.");
+
+paquetes.push(
+  gastroSub({
+    clave: "cafeteria", etiqueta: "CAFETERÍA", paleta: ["#100b08", "#d4a373", "#f7ecdf", "#1a0f08"], mesas: 12,
+    reglas: [["07:00", "20:00"], ["07:00", "20:00"], ["07:00", "20:00"], ["07:00", "20:00"], ["07:00", "21:00"], ["08:00", "21:00"], ["08:00", "18:00"]],
+    items: [
+      ["Café caliente", "Espresso", "$1.75", "Intenso y corto, con crema espesa."],
+      ["Café caliente", "Americano", "$2.00", "Espresso alargado con agua caliente."],
+      ["Café caliente", "Capuchino", "$2.75", "Espresso con leche vaporizada y espuma cremosa."],
+      ["Café caliente", "Latte", "$3.00", "Más leche, más suave, con arte en la espuma."],
+      ["Café caliente", "Moccacino", "$3.50", "Espresso con chocolate y leche vaporizada."],
+      ["Café frío", "Café helado", "$3.25", "Espresso con leche y hielo, bien frío."],
+      ["Café frío", "Cold brew", "$3.75", "Infusionado en frío durante 12 horas."],
+      ["Otras bebidas", "Chocolate caliente", "$3.00", "Chocolate espeso con malvaviscos."],
+      ["Otras bebidas", "Té chai latte", "$3.25", "Té especiado con leche vaporizada."],
+      ["Otras bebidas", "Batido de frutas", "$3.50", "Fruta fresca de temporada, sin azúcar añadida."],
+      ["Para comer", "Croissant de mantequilla", "$2.50", "Hojaldrado, recién horneado."],
+      ["Para comer", "Tostada de aguacate", "$5.50", "Pan artesanal, aguacate y huevo."],
+      ["Para comer", "Sándwich de pollo", "$5.00", "Pollo, queso y vegetales en pan fresco."],
+      ["Para comer", "Pancakes con frutas", "$6.00", "Tres pancakes con frutas y miel."],
+      ["Postres", "Cheesecake", "$4.50", "Cremoso, con salsa de frutos rojos."],
+      ["Postres", "Galletas con chispas de chocolate (3)", "$2.50", "Crujientes por fuera, suaves por dentro."],
+    ],
+    jobTitle: "Cafetería · Café de especialidad",
+    bio: "Café recién hecho, desayunos y postres en {{ciudad}}. Mira la carta y reserva tu mesa desde este perfil.",
+    aboutMe: "En {{nombre}} preparamos tu café como te gusta: granos seleccionados, bebidas calientes y frías, desayunos y algo dulce para acompañar. Conoce la carta, reserva tu mesa o pide para llevar desde este perfil.",
+    faqs: FAQ_MESA,
+  }),
+  gastroSub({
+    clave: "bar", etiqueta: "BAR", paleta: ["#0b0812", "#f59e0b", "#fdf2e0", "#1a0f02"], mesas: 16,
+    reglas: [null, ["17:00", "23:59"], ["17:00", "23:59"], ["17:00", "23:59"], ["17:00", "23:59"], ["17:00", "23:59"], ["17:00", "23:00"]],
+    items: [
+      ["Cócteles", "Mojito", "$6.50", "Ron, menta fresca, lima y soda."],
+      ["Cócteles", "Margarita", "$7.00", "Tequila, limón y sal en el borde."],
+      ["Cócteles", "Cóctel de la casa", "$7.50", "La receta que más piden, preparada al momento."],
+      ["Cócteles", "Gin tonic", "$7.50", "Ginebra, tónica y un toque cítrico."],
+      ["Cócteles", "Whisky en las rocas", "$8.00", "Servido con hielo grande."],
+      ["Cervezas y vinos", "Cerveza artesanal", "$4.50", "Fría, de barril."],
+      ["Cervezas y vinos", "Jarra de cerveza", "$9.00", "Para compartir entre amigos."],
+      ["Cervezas y vinos", "Copa de vino", "$5.00", "Tinto o blanco, a elección."],
+      ["Para picar", "Nachos con queso", "$7.00", "Totopos con queso fundido y salsas."],
+      ["Para picar", "Alitas BBQ (8 uds)", "$8.50", "Bañadas en salsa barbacoa."],
+      ["Para picar", "Hamburguesa de la casa", "$9.50", "Carne jugosa, queso y vegetales frescos."],
+      ["Para picar", "Papas fritas", "$4.00", "Crocantes, con salsas."],
+      ["Shots", "Shots (3 uds)", "$9.00", "Para brindar en grupo."],
+    ],
+    jobTitle: "Bar · Cócteles y música",
+    bio: "Cócteles, cerveza y buen ambiente en {{ciudad}}. Mira la carta y reserva tu mesa desde este perfil.",
+    aboutMe: "En {{nombre}} te esperamos con cócteles bien preparados, cerveza fría y algo para picar. Conoce la carta, reserva tu mesa para el grupo y llega directo a pasarla bien.",
+    faqs: FAQ_MESA,
+  }),
+);
+
+/** Salud de subnicho: plantilla Médica con servicios, catálogo y horario del subnicho. */
+const saludSub = ({ clave, etiqueta, paleta, reglas, servicios, items, jobTitle, bio, aboutMe, primera }) => ({
+  clave, theme: "medical", demo: "07", etiqueta,
+  perfil: (d) => {
+    const h = horarios(reglas);
+    return {
+      ...pick(d, [...ESTILO, ...GALERIA, ...RESERVAS]),
+      ...colores(...paleta),
+      ...quitarGuiones(h),
+      reservationSettings: { maxPartySize: 1, openTime: h._abre, closeTime: h._cierra, daysAhead: 45, autoConfirm: false },
+      tableCount: 3,
+      products: comoCatalogo(clave.slice(0, 3), items),
+      clinicServices: servicios,
+      faqs: faq(primera, "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación."),
+    };
+  },
+  copy: { jobTitle, bio, aboutMe },
+});
+const SEMANA_CONSULTA = [["08:00", "18:00"], ["08:00", "18:00"], ["08:00", "18:00"], ["08:00", "18:00"], ["08:00", "18:00"], ["09:00", "13:00"], null];
+
+paquetes.push(
+  saludSub({
+    clave: "nutricion", etiqueta: "NUTRICIÓN", paleta: ["#07130f", "#34d399", "#e9fbf3", "#052016"], reglas: SEMANA_CONSULTA,
+    servicios: ["Consulta nutricional", "Plan alimenticio", "Control de peso", "Nutrición deportiva", "Valoración corporal", "Seguimiento mensual", "Alimentación infantil", "Asesoría en línea"],
+    items: [
+      ["Consultas", "Primera consulta nutricional", "$30.00", "Revisamos tus hábitos, tu historial y tus objetivos."],
+      ["Consultas", "Consulta de control", "$20.00", "Seguimiento de tu avance y ajuste del plan."],
+      ["Consultas", "Consulta virtual", "$25.00", "Desde donde estés, por videollamada."],
+      ["Evaluación", "Valoración antropométrica", "$15.00", "Peso, talla, perímetros y composición corporal."],
+      ["Planes", "Plan alimenticio personalizado", "$35.00", "Menús a tu medida, fáciles de seguir."],
+      ["Planes", "Plan para bajar de peso", "$40.00", "Un plan realista, sin dietas extremas."],
+      ["Planes", "Plan para ganar masa muscular", "$40.00", "Alimentación para acompañar tu entrenamiento."],
+      ["Planes", "Nutrición deportiva", "$45.00", "Para mejorar tu rendimiento y tu recuperación."],
+      ["Planes", "Plan mensual con seguimiento", "$90.00", "Cuatro controles y soporte por WhatsApp."],
+      ["Educación", "Taller de alimentación saludable", "$25.00", "Aprende a comer mejor, en grupo o en tu empresa."],
+      ["Educación", "Menú semanal y lista de compras", "$12.00", "Todo listo para organizar tu semana."],
+    ],
+    jobTitle: "Nutrición y dietética",
+    bio: "Alimentación saludable y planes a tu medida en {{ciudad}}. Agenda tu consulta desde este perfil.",
+    aboutMe: "En {{nombre}} te acompañamos a comer mejor sin dietas imposibles: conocemos tu caso, armamos un plan alimenticio a tu medida y damos seguimiento a tu avance. Agenda tu primera consulta desde este perfil.",
+    primera: "¿Cómo agendo mi consulta nutricional?",
+  }),
+  saludSub({
+    clave: "psicologia", etiqueta: "PSICOLOGÍA", paleta: ["#0b0b19", "#a78bfa", "#eeeaff", "#12082a"], reglas: [["09:00", "19:00"], ["09:00", "19:00"], ["09:00", "19:00"], ["09:00", "19:00"], ["09:00", "18:00"], ["09:00", "13:00"], null],
+    servicios: ["Terapia individual", "Terapia de pareja", "Terapia familiar", "Psicología infantil", "Ansiedad y estrés", "Orientación vocacional", "Evaluación psicológica", "Sesiones en línea"],
+    items: [
+      ["Sesiones", "Primera sesión", "$35.00", "Nos conocemos y definimos juntos cómo trabajar."],
+      ["Sesiones", "Sesión individual", "$30.00", "Un espacio seguro para ti, 50 minutos."],
+      ["Sesiones", "Sesión en línea", "$28.00", "Por videollamada, desde tu casa."],
+      ["Sesiones", "Paquete de 4 sesiones", "$110.00", "Un proceso con continuidad y mejor precio."],
+      ["Terapias", "Terapia de pareja", "$45.00", "Para comunicarse mejor y resolver en conjunto."],
+      ["Terapias", "Terapia familiar", "$50.00", "Acompañamiento para toda la familia."],
+      ["Terapias", "Psicología infantil y adolescente", "$35.00", "Sesiones adaptadas a su edad."],
+      ["Evaluación", "Evaluación psicológica", "$60.00", "Pruebas e informe con recomendaciones."],
+      ["Evaluación", "Orientación vocacional", "$40.00", "Para elegir tu carrera con más claridad."],
+      ["Talleres", "Taller de manejo del estrés", "$20.00", "Herramientas prácticas, en grupo."],
+    ],
+    jobTitle: "Psicología y bienestar emocional",
+    bio: "Terapia y bienestar emocional en {{ciudad}}. Agenda tu sesión desde este perfil.",
+    aboutMe: "En {{nombre}} te ofrecemos un espacio seguro para trabajar lo que te preocupa, con sesiones individuales, de pareja y familiares, presenciales o en línea. Agenda tu primera sesión desde este perfil.",
+    primera: "¿Cómo agendo mi primera sesión?",
+  }),
+  saludSub({
+    clave: "odontologia", etiqueta: "ODONTOLOGÍA", paleta: ["#041218", "#22d3ee", "#e6faff", "#03222a"], reglas: [["08:30", "18:30"], ["08:30", "18:30"], ["08:30", "18:30"], ["08:30", "18:30"], ["08:30", "18:30"], ["09:00", "14:00"], null],
+    servicios: ["Limpieza dental", "Blanqueamiento", "Ortodoncia", "Endodoncia", "Implantes", "Odontopediatría", "Extracciones", "Estética dental"],
+    items: [
+      ["Consultas", "Consulta y diagnóstico", "$15.00", "Revisión completa y plan de tratamiento."],
+      ["Consultas", "Atención de urgencia dental", "$25.00", "Para dolor o golpes: te atendemos cuanto antes."],
+      ["Prevención", "Limpieza dental", "$30.00", "Eliminamos sarro y manchas, y pulimos."],
+      ["Prevención", "Radiografía dental", "$10.00", "Imagen para un diagnóstico preciso."],
+      ["Tratamientos", "Resina (calza)", "$35.00", "Restauramos tu diente con material del color natural."],
+      ["Tratamientos", "Endodoncia", "$120.00", "Tratamiento de conducto para salvar tu diente."],
+      ["Tratamientos", "Extracción simple", "$30.00", "Con anestesia y cuidados posteriores."],
+      ["Estética", "Blanqueamiento dental", "$120.00", "Unos tonos más claros en una sesión."],
+      ["Estética", "Diseño de sonrisa", "$150.00", "Carillas y ajustes para una sonrisa armónica."],
+      ["Ortodoncia", "Ortodoncia con brackets (valoración)", "$25.00", "Evaluamos tu caso y te explicamos las opciones."],
+      ["Implantes", "Valoración de implantes", "$20.00", "Estudio para reponer piezas faltantes."],
+      ["Niños", "Odontopediatría", "$20.00", "Control y cuidado dental infantil."],
+    ],
+    jobTitle: "Odontología · Clínica dental",
+    bio: "Cuidado dental para toda la familia en {{ciudad}}. Agenda tu cita desde este perfil.",
+    aboutMe: "En {{nombre}} cuidamos tu sonrisa con tratamientos preventivos, estéticos y de rehabilitación, para niños y adultos. Conoce nuestros servicios y agenda tu cita desde este perfil.",
+    primera: "¿Cómo agendo mi cita dental?",
+  }),
+);
+
+// Mariachi: plantilla Artista con paquetes de serenata como catálogo, repertorio como «lanzamientos» y agenda de ejemplo.
+paquetes.push({
+  clave: "mariachi", theme: "stage", demo: "05", etiqueta: "MARIACHI",
+  perfil: (d) => ({
+    ...pick(d, [...ESTILO, ...GALERIA, "borderColor"]),
+    ...colores("#130905", "#e0a526", "#fdeccf", "#1f1203"),
+    products: [
+      ["Serenatas", "Serenata exprés (5 canciones)", "$40.00", "Rápida y llena de emoción, a domicilio."],
+      ["Serenatas", "Serenata clásica (10 canciones)", "$70.00", "El repertorio ranchero que todos piden."],
+      ["Serenatas", "Serenata premium (15 canciones)", "$110.00", "Con dedicatoria, boleros y baladas a elección."],
+      ["Eventos", "Mariachi para eventos (1 hora)", "$250.00", "Cumpleaños, aniversarios y fiestas."],
+      ["Eventos", "Música para bodas", "$320.00", "Ceremonia y recepción con repertorio a tu medida."],
+      ["Eventos", "Show para empresas", "$400.00", "Un espectáculo para tu evento corporativo."],
+    ].map(([category, name, price, shortDescription], i) => ({ id: "mar_" + (i + 1), name, category, price, shortDescription, available: true })),
+    releases: [
+      { id: "rel_1", title: "Repertorio ranchero", platform: "Spotify", url: "https://open.spotify.com/", releaseDate: "@F(-20)" },
+      { id: "rel_2", title: "Boleros y baladas", platform: "Spotify", url: "https://open.spotify.com/", releaseDate: "@F(-60)" },
+      { id: "rel_3", title: "Serenata en vivo", platform: "YouTube", url: "https://www.youtube.com/", releaseDate: "@F(-90)" },
+      { id: "rel_4", title: "Música para bodas", platform: "YouTube", url: "https://www.youtube.com/", releaseDate: "@F(-150)" },
+    ],
+    tourDates: [
+      { id: "tour_1", date: "@D(2)", city: "{{ubicacion}}", venue: "Serenata a domicilio · cupo disponible", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20reservar%20una%20serenata", soldOut: false },
+      { id: "tour_2", date: "@D(4)", city: "{{ubicacion}}", venue: "Evento privado · agenda llena", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20reservar%20una%20serenata", soldOut: true },
+      { id: "tour_3", date: "@D(7)", city: "{{ubicacion}}", venue: "Boda · cupo disponible", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20el%20mariachi%20para%20mi%20boda", soldOut: false },
+      { id: "tour_4", date: "@D(12)", city: "{{ubicacion}}", venue: "Fiesta de cumpleaños · cupo disponible", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20el%20mariachi%20para%20un%20cumplea%C3%B1os", soldOut: false },
+    ],
+    bookingLink: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratar%20el%20mariachi%20para%20un%20evento",
+    galleryTitle: "En vivo",
+    faqs: faq("¿Cómo contrato una serenata?", "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha, hora y lugar."),
+  }),
+  copy: {
+    jobTitle: "Mariachi · Serenatas y eventos",
+    bio: "Mariachi para serenatas, bodas y fiestas en {{ciudad}}. Mira los paquetes y contrátanos desde este perfil.",
+    aboutMe: "En {{nombre}} llevamos la música ranchera a tu serenata, boda o fiesta. Elige tu paquete, revisa las fechas disponibles y reserva por WhatsApp desde este perfil.",
+  },
+});
+
 // ── Academia de música: la plantilla Artista CON horario de clases (stage_classes) ──────────────────────────
 // Variante del paquete «musicos» para escuelas y academias (claveDePack en kodaIntake la elige por categoría/nombre): mismo
 // look, fotos y merch, más un horario semanal de ejemplo con cupos (todo EJEMPLO: sin nombres de profesores, precios ni promesas).
@@ -643,6 +886,18 @@ FOTOS.academia_musica = FOTOS.musicos;
     perfil: (d) => ({
       ...base.perfil(d),
       stage_settings: { bookingEnabled: true, bookingDaysAhead: 14, cancelHours: 2, timezone: "America/Guayaquil" },
+      // En una academia, «lanzamientos» son las presentaciones de los alumnos y «tour» los recitales y eventos (ejemplos genéricos).
+      releases: [
+        { id: "rel_1", title: "Recital de fin de ciclo", platform: "YouTube", url: "https://www.youtube.com/", coverURL: d.releases[0].coverURL, releaseDate: "@F(-30)" },
+        { id: "rel_2", title: "Presentación de alumnos", platform: "YouTube", url: "https://www.youtube.com/", coverURL: d.releases[1].coverURL, releaseDate: "@F(-90)" },
+        { id: "rel_3", title: "Ensamble de la academia", platform: "Spotify", url: "https://open.spotify.com/", coverURL: d.releases[2].coverURL, releaseDate: "@F(-150)" },
+        { id: "rel_4", title: "Concierto de aniversario", platform: "YouTube", url: "https://www.youtube.com/", coverURL: d.releases[3].coverURL, releaseDate: "@F(-300)" },
+      ],
+      tourDates: [
+        { id: "tour_1", date: "@D(10)", city: "{{ubicacion}}", venue: "Clase abierta · sede de la academia", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20asistir%20a%20la%20clase%20abierta", soldOut: false },
+        { id: "tour_2", date: "@D(24)", city: "{{ubicacion}}", venue: "Recital de alumnos · auditorio", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20recital", soldOut: false },
+        { id: "tour_3", date: "@D(45)", city: "{{ubicacion}}", venue: "Concierto del ensamble · sala de conciertos", ticketURL: "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20concierto", soldOut: false },
+      ],
       faqs: faq("¿Cómo reservo una clase?", "En la sección Clases elige el día y la clase, y reserva tu cupo. Recibirás un código para consultarlo o cancelarlo."),
     }),
     tablas: () => [{
@@ -697,7 +952,7 @@ for (const p of paquetes) {
 const turbio = /navaja|cuero|brasa|huellitas|vitalis|cimientos|tit[aá]n|costa rosa|cumbre|estampa total|desvelados|villac[ií]s|quito|guayaquil|cuenca|urdesa|floresta|cumbay|carolina|mariscal|samborond|salinas|tumbaco|chillos|\.test|connexo|club |banco|@|diego|andr[eé]s|valeria|camila|roberto|silvana|andrea|mateo/i;
 let alertas = 0;
 const revisar = (v, ruta) => {
-  if (typeof v === "string") { if (turbio.test(v) && !/^https?:\/\/images\.unsplash\.com/.test(v)) { console.log(`  ⚠ ${ruta}: ${v.slice(0, 100)}`); alertas++; } }
+  if (typeof v === "string") { if (turbio.test(v) && !/^https?:\/\/images\.unsplash\.com/.test(v) && !/^@[DF]\(-?\d+\)$/.test(v) && v !== "America/Guayaquil") { console.log(`  ⚠ ${ruta}: ${v.slice(0, 100)}`); alertas++; } }
   else if (Array.isArray(v)) v.forEach((x, i) => revisar(x, `${ruta}[${i}]`));
   else if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) revisar(x, `${ruta}.${k}`);
 };

@@ -4671,123 +4671,6 @@
     ]
   },
   {
-    "clave": "musicos",
-    "theme": "stage",
-    "fuente": "setup_demo_05",
-    "logo": {
-      "etiqueta": "MÚSICA",
-      "fondo": "#07060d",
-      "acento": "#b874f8",
-      "texto": "#f0e6ff"
-    },
-    "copy": {
-      "jobTitle": "Música · Artista",
-      "bio": "Música en vivo en {{ciudad}}. Escúchanos y contáctanos para tu evento.",
-      "aboutMe": "En {{nombre}} hacemos música con pasión. Conoce nuestro trabajo, escúchanos y escríbenos desde este perfil para contratarnos o colaborar."
-    },
-    "perfil": {
-      "backgroundColor": "#07060d",
-      "buttonColor": "#b874f8",
-      "buttonTextColor": "#07060d",
-      "textColor": "#f0e6ff",
-      "borderColor": "#a855f7",
-      "coverImageURL": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=1400&q=75",
-      "galleryMode": "grid",
-      "galleryImageURLs": [
-        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1603910234616-3b5f4a6be2b4?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1768405031181-33bb016e2fbb?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=75"
-      ],
-      "albums": [],
-      "products": [
-        {
-          "id": "mus_1",
-          "name": "Camiseta oficial",
-          "category": "Merch",
-          "price": "$15.00",
-          "shortDescription": "Algodón, con el diseño del proyecto.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1693443687750-611ad77f3aba?auto=format&fit=crop&w=800&q=75"
-        },
-        {
-          "id": "mus_2",
-          "name": "Camiseta edición especial",
-          "category": "Merch",
-          "price": "$15.00",
-          "shortDescription": "Otro diseño del proyecto, en algodón.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1759572095384-1a7e646d0d4f?auto=format&fit=crop&w=800&q=75"
-        },
-        {
-          "id": "mus_3",
-          "name": "Póster",
-          "category": "Merch",
-          "price": "$8.00",
-          "shortDescription": "Impresión en papel couché, tamaño A3.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1501612780327-45045538702b?auto=format&fit=crop&w=800&q=75"
-        },
-        {
-          "id": "mus_4",
-          "name": "Disco físico",
-          "category": "Música",
-          "price": "$10.00",
-          "shortDescription": "Edición física de tu música.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1602848596718-45693ff58c78?auto=format&fit=crop&w=800&q=75"
-        },
-        {
-          "id": "mus_5",
-          "name": "Vinilo",
-          "category": "Música",
-          "price": "$22.00",
-          "shortDescription": "Edición en vinilo de tu música.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=800&q=75"
-        }
-      ],
-      "releases": [
-        {
-          "id": "rel_1",
-          "title": "Tu primer sencillo",
-          "platform": "Spotify",
-          "coverURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=600&q=75"
-        },
-        {
-          "id": "rel_2",
-          "title": "Tu próximo lanzamiento",
-          "platform": "YouTube",
-          "coverURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=600&q=75"
-        }
-      ],
-      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo los contrato para un evento?",
-          "answer": "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha y lugar.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ],
-      "galleryTitle": "Galería"
-    }
-  },
-  {
     "clave": "librerias",
     "theme": "books",
     "fuente": "setup_demo_12",
@@ -5298,317 +5181,6 @@
       ],
       "galleryTitle": "Galería"
     }
-  },
-  {
-    "clave": "academia_musica",
-    "theme": "stage",
-    "fuente": "setup_demo_05",
-    "logo": {
-      "etiqueta": "ACADEMIA",
-      "fondo": "#07060d",
-      "acento": "#b874f8",
-      "texto": "#f0e6ff"
-    },
-    "copy": {
-      "jobTitle": "Academia de música · Clases",
-      "bio": "Clases de música en {{ciudad}}. Mira el horario y reserva tu cupo desde este perfil.",
-      "aboutMe": "En {{nombre}} aprendes música con clases para todos los niveles. Conoce nuestro horario semanal, reserva tu cupo desde este perfil y escríbenos si tienes preguntas."
-    },
-    "perfil": {
-      "backgroundColor": "#07060d",
-      "buttonColor": "#b874f8",
-      "buttonTextColor": "#07060d",
-      "textColor": "#f0e6ff",
-      "borderColor": "#a855f7",
-      "coverImageURL": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=1400&q=75",
-      "galleryMode": "grid",
-      "galleryImageURLs": [
-        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1603910234616-3b5f4a6be2b4?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1768405031181-33bb016e2fbb?auto=format&fit=crop&w=800&q=75",
-        "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=75"
-      ],
-      "albums": [],
-      "products": [
-        {
-          "id": "mus_1",
-          "name": "Camiseta oficial",
-          "category": "Merch",
-          "price": "$15.00",
-          "shortDescription": "Algodón, con el diseño del proyecto.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1693443687750-611ad77f3aba?auto=format&fit=crop&w=800&q=75"
-        },
-        {
-          "id": "mus_2",
-          "name": "Camiseta edición especial",
-          "category": "Merch",
-          "price": "$15.00",
-          "shortDescription": "Otro diseño del proyecto, en algodón.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1759572095384-1a7e646d0d4f?auto=format&fit=crop&w=800&q=75"
-        },
-        {
-          "id": "mus_3",
-          "name": "Póster",
-          "category": "Merch",
-          "price": "$8.00",
-          "shortDescription": "Impresión en papel couché, tamaño A3.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1501612780327-45045538702b?auto=format&fit=crop&w=800&q=75"
-        },
-        {
-          "id": "mus_4",
-          "name": "Disco físico",
-          "category": "Música",
-          "price": "$10.00",
-          "shortDescription": "Edición física de tu música.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1602848596718-45693ff58c78?auto=format&fit=crop&w=800&q=75"
-        },
-        {
-          "id": "mus_5",
-          "name": "Vinilo",
-          "category": "Música",
-          "price": "$22.00",
-          "shortDescription": "Edición en vinilo de tu música.",
-          "available": true,
-          "imageURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=800&q=75"
-        }
-      ],
-      "releases": [
-        {
-          "id": "rel_1",
-          "title": "Tu primer sencillo",
-          "platform": "Spotify",
-          "coverURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=600&q=75"
-        },
-        {
-          "id": "rel_2",
-          "title": "Tu próximo lanzamiento",
-          "platform": "YouTube",
-          "coverURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=600&q=75"
-        }
-      ],
-      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
-      "faqs": [
-        {
-          "id": "faq_1",
-          "question": "¿Cómo reservo una clase?",
-          "answer": "En la sección Clases elige el día y la clase, y reserva tu cupo. Recibirás un código para consultarlo o cancelarlo.",
-          "order": 1
-        },
-        {
-          "id": "faq_2",
-          "question": "¿Dónde están ubicados?",
-          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
-          "order": 2
-        },
-        {
-          "id": "faq_3",
-          "question": "¿Cómo puedo contactarlos?",
-          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
-          "order": 3
-        }
-      ],
-      "stage_settings": {
-        "bookingEnabled": true,
-        "bookingDaysAhead": 14,
-        "cancelHours": 2,
-        "timezone": "America/Guayaquil"
-      },
-      "galleryTitle": "Galería"
-    },
-    "tablas": [
-      {
-        "tabla": "stage_classes",
-        "propietario": "stage_profile_id",
-        "filas": [
-          {
-            "id": "seed-sc1",
-            "name": "Guitarra inicial",
-            "discipline": "Guitarra",
-            "description": null,
-            "day_of_week": 1,
-            "start_time": "17:00",
-            "end_time": "18:00",
-            "teacher_name": "Profesor 1",
-            "capacity": 8,
-            "level": "principiante",
-            "room": "Aula 1",
-            "is_active": true,
-            "sort_order": 1
-          },
-          {
-            "id": "seed-sc2",
-            "name": "Canto",
-            "discipline": "Canto",
-            "description": null,
-            "day_of_week": 1,
-            "start_time": "18:30",
-            "end_time": "19:30",
-            "teacher_name": "Profesor 2",
-            "capacity": 10,
-            "level": "todos",
-            "room": "Aula 2",
-            "is_active": true,
-            "sort_order": 2
-          },
-          {
-            "id": "seed-sc3",
-            "name": "Piano",
-            "discipline": "Piano",
-            "description": null,
-            "day_of_week": 2,
-            "start_time": "16:00",
-            "end_time": "17:00",
-            "teacher_name": "Profesor 3",
-            "capacity": 6,
-            "level": "principiante",
-            "room": "Aula 3",
-            "is_active": true,
-            "sort_order": 3
-          },
-          {
-            "id": "seed-sc4",
-            "name": "Lenguaje musical",
-            "discipline": "Teoría",
-            "description": null,
-            "day_of_week": 2,
-            "start_time": "18:00",
-            "end_time": "19:00",
-            "teacher_name": "Profesor 2",
-            "capacity": 12,
-            "level": "todos",
-            "room": "Aula 2",
-            "is_active": true,
-            "sort_order": 4
-          },
-          {
-            "id": "seed-sc5",
-            "name": "Guitarra inicial",
-            "discipline": "Guitarra",
-            "description": null,
-            "day_of_week": 3,
-            "start_time": "17:00",
-            "end_time": "18:00",
-            "teacher_name": "Profesor 1",
-            "capacity": 8,
-            "level": "principiante",
-            "room": "Aula 1",
-            "is_active": true,
-            "sort_order": 5
-          },
-          {
-            "id": "seed-sc6",
-            "name": "Batería",
-            "discipline": "Batería",
-            "description": null,
-            "day_of_week": 3,
-            "start_time": "18:30",
-            "end_time": "19:30",
-            "teacher_name": "Profesor 4",
-            "capacity": 4,
-            "level": "intermedio",
-            "room": "Aula 4",
-            "is_active": true,
-            "sort_order": 6
-          },
-          {
-            "id": "seed-sc7",
-            "name": "Piano",
-            "discipline": "Piano",
-            "description": null,
-            "day_of_week": 4,
-            "start_time": "16:00",
-            "end_time": "17:00",
-            "teacher_name": "Profesor 3",
-            "capacity": 6,
-            "level": "principiante",
-            "room": "Aula 3",
-            "is_active": true,
-            "sort_order": 7
-          },
-          {
-            "id": "seed-sc8",
-            "name": "Violín",
-            "discipline": "Violín",
-            "description": null,
-            "day_of_week": 4,
-            "start_time": "17:30",
-            "end_time": "18:30",
-            "teacher_name": "Profesor 5",
-            "capacity": 6,
-            "level": "principiante",
-            "room": "Aula 5",
-            "is_active": true,
-            "sort_order": 8
-          },
-          {
-            "id": "seed-sc9",
-            "name": "Canto",
-            "discipline": "Canto",
-            "description": null,
-            "day_of_week": 5,
-            "start_time": "18:30",
-            "end_time": "19:30",
-            "teacher_name": "Profesor 2",
-            "capacity": 10,
-            "level": "todos",
-            "room": "Aula 2",
-            "is_active": true,
-            "sort_order": 9
-          },
-          {
-            "id": "seed-sc10",
-            "name": "Batería",
-            "discipline": "Batería",
-            "description": null,
-            "day_of_week": 6,
-            "start_time": "10:00",
-            "end_time": "11:00",
-            "teacher_name": "Profesor 4",
-            "capacity": 4,
-            "level": "intermedio",
-            "room": "Aula 4",
-            "is_active": true,
-            "sort_order": 10
-          },
-          {
-            "id": "seed-sc11",
-            "name": "Producción musical",
-            "discipline": "Producción",
-            "description": null,
-            "day_of_week": 6,
-            "start_time": "11:30",
-            "end_time": "12:30",
-            "teacher_name": "Profesor 6",
-            "capacity": 10,
-            "level": "intermedio",
-            "room": "Aula 6",
-            "is_active": true,
-            "sort_order": 11
-          },
-          {
-            "id": "seed-sc12",
-            "name": "Ensamble de música",
-            "discipline": "Banda",
-            "description": null,
-            "day_of_week": 6,
-            "start_time": "15:00",
-            "end_time": "16:00",
-            "teacher_name": "Profesor 1",
-            "capacity": 12,
-            "level": "avanzado",
-            "room": "Aula 1",
-            "is_active": true,
-            "sort_order": 12
-          }
-        ]
-      }
-    ]
   },
   {
     "clave": "fotografia",
@@ -6253,6 +5825,2126 @@
             "delivery_note": null,
             "image_url": "https://images.unsplash.com/photo-1768818928341-3b31b8965c6d?auto=format&fit=crop&w=800&q=75",
             "is_featured": false,
+            "is_active": true,
+            "sort_order": 12
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "clave": "musicos",
+    "theme": "stage",
+    "fuente": "setup_demo_05",
+    "logo": {
+      "etiqueta": "MÚSICA",
+      "fondo": "#07060d",
+      "acento": "#b874f8",
+      "texto": "#f0e6ff"
+    },
+    "copy": {
+      "jobTitle": "Música en vivo · Artista",
+      "bio": "Música en vivo en {{ciudad}}. Escucha nuestros lanzamientos, mira las próximas fechas y contáctanos para tu evento.",
+      "aboutMe": "En {{nombre}} hacemos música con pasión y la llevamos al escenario. Escucha nuestros lanzamientos, consigue entradas para las próximas fechas, llévate el merch oficial y escríbenos desde este perfil para contratarnos o colaborar."
+    },
+    "perfil": {
+      "backgroundColor": "#07060d",
+      "buttonColor": "#b874f8",
+      "buttonTextColor": "#07060d",
+      "textColor": "#f0e6ff",
+      "borderColor": "#a855f7",
+      "coverImageURL": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1603910234616-3b5f4a6be2b4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1768405031181-33bb016e2fbb?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "products": [
+        {
+          "id": "mus_1",
+          "name": "Camiseta oficial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Algodón, con el diseño del proyecto.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1693443687750-611ad77f3aba?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_2",
+          "name": "Camiseta edición especial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Otro diseño del proyecto, en algodón.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1759572095384-1a7e646d0d4f?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_3",
+          "name": "Camiseta edición festival",
+          "category": "Merch",
+          "price": "$18.00",
+          "shortDescription": "Diseño exclusivo de la gira. Tallas S a XL.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1620799139834-6b8f844fbe61?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_4",
+          "name": "Póster",
+          "category": "Merch",
+          "price": "$8.00",
+          "shortDescription": "Impresión en papel couché, tamaño A3.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1501612780327-45045538702b?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_5",
+          "name": "Disco físico",
+          "category": "Música",
+          "price": "$10.00",
+          "shortDescription": "Edición física de tu música.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1602848596718-45693ff58c78?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_6",
+          "name": "Vinilo",
+          "category": "Música",
+          "price": "$22.00",
+          "shortDescription": "Edición en vinilo de tu música.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_7",
+          "name": "Vinilo edición limitada",
+          "category": "Música",
+          "price": "$30.00",
+          "shortDescription": "Tirada corta, numerada, con descarga digital.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_8",
+          "name": "Membresía de fans",
+          "category": "Fans",
+          "price": "$5.00",
+          "shortDescription": "Preventa de entradas, contenido exclusivo y descuento en el merch.",
+          "available": true,
+          "subscription": {
+            "monthly": {
+              "price": "$5.00",
+              "installments": 12
+            },
+            "annual": {
+              "price": "$50.00",
+              "installments": 1
+            }
+          },
+          "imageURL": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "releases": [
+        {
+          "id": "rel_1",
+          "title": "Tu primer sencillo",
+          "platform": "Spotify",
+          "url": "https://open.spotify.com/",
+          "coverURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=600&q=75",
+          "releaseDate": "@F(-12)"
+        },
+        {
+          "id": "rel_2",
+          "title": "Tu álbum",
+          "platform": "Apple Music",
+          "url": "https://music.apple.com/",
+          "coverURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=600&q=75",
+          "releaseDate": "@F(-120)"
+        },
+        {
+          "id": "rel_3",
+          "title": "Tu EP",
+          "platform": "YouTube",
+          "url": "https://www.youtube.com/",
+          "coverURL": "https://images.unsplash.com/photo-1591365437381-2db81d59f1e0?auto=format&fit=crop&w=600&q=75",
+          "releaseDate": "@F(-300)"
+        },
+        {
+          "id": "rel_4",
+          "title": "Sesión en vivo",
+          "platform": "SoundCloud",
+          "url": "https://soundcloud.com/",
+          "coverURL": "https://images.unsplash.com/photo-1602848597941-0d3d3a2c1241?auto=format&fit=crop&w=600&q=75",
+          "releaseDate": "@F(-520)"
+        }
+      ],
+      "tourDates": [
+        {
+          "id": "tour_1",
+          "date": "@D(9)",
+          "city": "{{ubicacion}}",
+          "venue": "Concierto de presentación · sala de conciertos",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20concierto",
+          "soldOut": false
+        },
+        {
+          "id": "tour_2",
+          "date": "@D(16)",
+          "city": "{{ubicacion}}",
+          "venue": "Show en vivo · bar con música",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20show",
+          "soldOut": true
+        },
+        {
+          "id": "tour_3",
+          "date": "@D(23)",
+          "city": "{{ubicacion}}",
+          "venue": "Festival de música · escenario principal",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20festival",
+          "soldOut": false
+        },
+        {
+          "id": "tour_4",
+          "date": "@D(37)",
+          "city": "Gira nacional",
+          "venue": "Teatro de la ciudad",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20la%20gira",
+          "soldOut": false
+        },
+        {
+          "id": "tour_5",
+          "date": "@D(58)",
+          "city": "Gira internacional",
+          "venue": "Sala de música en vivo",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20la%20gira",
+          "soldOut": false
+        }
+      ],
+      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
+      "galleryTitle": "Galería",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo los contrato para un evento?",
+          "answer": "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha y lugar.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde compro entradas?",
+          "answer": "En la sección Tour: cada fecha tiene su botón de tickets.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Hacen envíos del merch?",
+          "answer": "Escríbenos por WhatsApp desde este perfil y coordinamos tu pedido.",
+          "order": 3
+        },
+        {
+          "id": "faq_4",
+          "question": "¿Cómo escucho su música?",
+          "answer": "En la sección Lanzamientos: toca cualquier disco para abrirlo en tu plataforma favorita.",
+          "order": 4
+        }
+      ]
+    }
+  },
+  {
+    "clave": "cafeteria",
+    "theme": "gastro",
+    "fuente": "setup_demo_03",
+    "logo": {
+      "etiqueta": "CAFETERÍA",
+      "fondo": "#100b08",
+      "acento": "#d4a373",
+      "texto": "#f7ecdf"
+    },
+    "copy": {
+      "jobTitle": "Cafetería · Café de especialidad",
+      "bio": "Café recién hecho, desayunos y postres en {{ciudad}}. Mira la carta y reserva tu mesa desde este perfil.",
+      "aboutMe": "En {{nombre}} preparamos tu café como te gusta: granos seleccionados, bebidas calientes y frías, desayunos y algo dulce para acompañar. Conoce la carta, reserva tu mesa o pide para llevar desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#100b08",
+      "buttonColor": "#d4a373",
+      "buttonTextColor": "#1a0f08",
+      "textColor": "#f7ecdf",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "07:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "07:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "07:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "07:00",
+          "closeTime": "20:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "07:00",
+          "closeTime": "21:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "21:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "18:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1778142375628-73010ebde16a?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1609050471053-8636409f9f5b?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1783926014847-748a8074eb38?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1775203291807-c086b69cba1a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1583338917451-face2751d8d5?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1770739538932-433941c1267e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1776095721343-beab0e13a126?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "07:00",
+          "end": "20:00"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "07:00",
+          "end": "20:00"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "07:00",
+          "end": "20:00"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "07:00",
+          "end": "20:00"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "07:00",
+          "end": "21:00"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "21:00"
+        },
+        "sunday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "18:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 10,
+        "openTime": "07:00",
+        "closeTime": "21:00",
+        "daysAhead": 30,
+        "autoConfirm": false
+      },
+      "tableCount": 12,
+      "borderColor": "#d4a373",
+      "products": [
+        {
+          "id": "caf_1",
+          "name": "Espresso",
+          "category": "Café caliente",
+          "price": "$1.75",
+          "shortDescription": "Intenso y corto, con crema espesa.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1572286258217-40142c1c6a70?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_2",
+          "name": "Americano",
+          "category": "Café caliente",
+          "price": "$2.00",
+          "shortDescription": "Espresso alargado con agua caliente.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1669872484166-e11b9638b50e?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_3",
+          "name": "Capuchino",
+          "category": "Café caliente",
+          "price": "$2.75",
+          "shortDescription": "Espresso con leche vaporizada y espuma cremosa.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1506372023823-741c83b836fe?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_4",
+          "name": "Latte",
+          "category": "Café caliente",
+          "price": "$3.00",
+          "shortDescription": "Más leche, más suave, con arte en la espuma.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1760163178873-7644a924519e?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_5",
+          "name": "Moccacino",
+          "category": "Café caliente",
+          "price": "$3.50",
+          "shortDescription": "Espresso con chocolate y leche vaporizada.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_6",
+          "name": "Café helado",
+          "category": "Café frío",
+          "price": "$3.25",
+          "shortDescription": "Espresso con leche y hielo, bien frío.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1771210849472-84a07b2e793a?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_7",
+          "name": "Cold brew",
+          "category": "Café frío",
+          "price": "$3.75",
+          "shortDescription": "Infusionado en frío durante 12 horas.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1759259639356-6eee63241869?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_8",
+          "name": "Chocolate caliente",
+          "category": "Otras bebidas",
+          "price": "$3.00",
+          "shortDescription": "Chocolate espeso con malvaviscos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1637572815755-c4b80092dce1?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_9",
+          "name": "Té chai latte",
+          "category": "Otras bebidas",
+          "price": "$3.25",
+          "shortDescription": "Té especiado con leche vaporizada.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1636920272028-c27f1ae474c3?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_10",
+          "name": "Batido de frutas",
+          "category": "Otras bebidas",
+          "price": "$3.50",
+          "shortDescription": "Fruta fresca de temporada, sin azúcar añadida.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1615478503562-ec2d8aa0e24e?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_11",
+          "name": "Croissant de mantequilla",
+          "category": "Para comer",
+          "price": "$2.50",
+          "shortDescription": "Hojaldrado, recién horneado.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1623334044303-241021148842?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_12",
+          "name": "Tostada de aguacate",
+          "category": "Para comer",
+          "price": "$5.50",
+          "shortDescription": "Pan artesanal, aguacate y huevo.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1770306925042-05987831cb6e?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_13",
+          "name": "Sándwich de pollo",
+          "category": "Para comer",
+          "price": "$5.00",
+          "shortDescription": "Pollo, queso y vegetales en pan fresco.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1741414203946-9d8e45350f04?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_14",
+          "name": "Pancakes con frutas",
+          "category": "Para comer",
+          "price": "$6.00",
+          "shortDescription": "Tres pancakes con frutas y miel.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1612182062633-9ff3b3598e96?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_15",
+          "name": "Cheesecake",
+          "category": "Postres",
+          "price": "$4.50",
+          "shortDescription": "Cremoso, con salsa de frutos rojos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1676300185983-d5f242babe34?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "caf_16",
+          "name": "Galletas con chispas de chocolate (3)",
+          "category": "Postres",
+          "price": "$2.50",
+          "shortDescription": "Crujientes por fuera, suaves por dentro.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1782852230919-3471990d385d?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo una mesa?",
+          "answer": "Desde este perfil: elige el día, la hora y el número de personas. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "bar",
+    "theme": "gastro",
+    "fuente": "setup_demo_03",
+    "logo": {
+      "etiqueta": "BAR",
+      "fondo": "#0b0812",
+      "acento": "#f59e0b",
+      "texto": "#fdf2e0"
+    },
+    "copy": {
+      "jobTitle": "Bar · Cócteles y música",
+      "bio": "Cócteles, cerveza y buen ambiente en {{ciudad}}. Mira la carta y reserva tu mesa desde este perfil.",
+      "aboutMe": "En {{nombre}} te esperamos con cócteles bien preparados, cerveza fría y algo para picar. Conoce la carta, reserva tu mesa para el grupo y llega directo a pasarla bien."
+    },
+    "perfil": {
+      "backgroundColor": "#0b0812",
+      "buttonColor": "#f59e0b",
+      "buttonTextColor": "#1a0f02",
+      "textColor": "#fdf2e0",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": false,
+          "openTime": "17:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "17:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "17:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "17:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "17:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "17:00",
+          "closeTime": "23:59"
+        },
+        {
+          "day": "domingo",
+          "isOpen": true,
+          "openTime": "17:00",
+          "closeTime": "23:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1739799120521-c5f44a9335a3?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1777791375006-2384a0d27c23?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1777063660133-bb6854a4fecc?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1767536196118-9f0592594dcc?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1632173517757-1e87c79de596?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1763544161321-26b8ac2f8d69?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1662738221889-2344690f7dc1?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": false,
+          "start": "17:00",
+          "end": "23:59"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "17:00",
+          "end": "23:59"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "17:00",
+          "end": "23:59"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "17:00",
+          "end": "23:59"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "17:00",
+          "end": "23:59"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "17:00",
+          "end": "23:59"
+        },
+        "sunday": {
+          "isActive": true,
+          "start": "17:00",
+          "end": "23:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 10,
+        "openTime": "17:00",
+        "closeTime": "23:59",
+        "daysAhead": 30,
+        "autoConfirm": false
+      },
+      "tableCount": 16,
+      "borderColor": "#f59e0b",
+      "products": [
+        {
+          "id": "bar_1",
+          "name": "Mojito",
+          "category": "Cócteles",
+          "price": "$6.50",
+          "shortDescription": "Ron, menta fresca, lima y soda.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1775717427643-2b0fc39a81f8?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_2",
+          "name": "Margarita",
+          "category": "Cócteles",
+          "price": "$7.00",
+          "shortDescription": "Tequila, limón y sal en el borde.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1763544161321-26b8ac2f8d69?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_3",
+          "name": "Cóctel de la casa",
+          "category": "Cócteles",
+          "price": "$7.50",
+          "shortDescription": "La receta que más piden, preparada al momento.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1763132638659-633d5c791c05?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_4",
+          "name": "Gin tonic",
+          "category": "Cócteles",
+          "price": "$7.50",
+          "shortDescription": "Ginebra, tónica y un toque cítrico.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1573624658129-3f7856192f19?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_5",
+          "name": "Whisky en las rocas",
+          "category": "Cócteles",
+          "price": "$8.00",
+          "shortDescription": "Servido con hielo grande.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1767541865141-e4abf72e9dbc?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_6",
+          "name": "Cerveza artesanal",
+          "category": "Cervezas y vinos",
+          "price": "$4.50",
+          "shortDescription": "Fría, de barril.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1632173517757-1e87c79de596?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_7",
+          "name": "Jarra de cerveza",
+          "category": "Cervezas y vinos",
+          "price": "$9.00",
+          "shortDescription": "Para compartir entre amigos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1720513840843-fd295b4acc35?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_8",
+          "name": "Copa de vino",
+          "category": "Cervezas y vinos",
+          "price": "$5.00",
+          "shortDescription": "Tinto o blanco, a elección.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1662738221889-2344690f7dc1?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_9",
+          "name": "Nachos con queso",
+          "category": "Para picar",
+          "price": "$7.00",
+          "shortDescription": "Totopos con queso fundido y salsas.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1768252688649-13d169feadc0?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_10",
+          "name": "Alitas BBQ (8 uds)",
+          "category": "Para picar",
+          "price": "$8.50",
+          "shortDescription": "Bañadas en salsa barbacoa.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_11",
+          "name": "Hamburguesa de la casa",
+          "category": "Para picar",
+          "price": "$9.50",
+          "shortDescription": "Carne jugosa, queso y vegetales frescos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_12",
+          "name": "Papas fritas",
+          "category": "Para picar",
+          "price": "$4.00",
+          "shortDescription": "Crocantes, con salsas.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1551782450-17144efb9c50?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "bar_13",
+          "name": "Shots (3 uds)",
+          "category": "Shots",
+          "price": "$9.00",
+          "shortDescription": "Para brindar en grupo.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1686723383570-9ef53690258c?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo una mesa?",
+          "answer": "Desde este perfil: elige el día, la hora y el número de personas. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "nutricion",
+    "theme": "medical",
+    "fuente": "setup_demo_07",
+    "logo": {
+      "etiqueta": "NUTRICIÓN",
+      "fondo": "#07130f",
+      "acento": "#34d399",
+      "texto": "#e9fbf3"
+    },
+    "copy": {
+      "jobTitle": "Nutrición y dietética",
+      "bio": "Alimentación saludable y planes a tu medida en {{ciudad}}. Agenda tu consulta desde este perfil.",
+      "aboutMe": "En {{nombre}} te acompañamos a comer mejor sin dietas imposibles: conocemos tu caso, armamos un plan alimenticio a tu medida y damos seguimiento a tu avance. Agenda tu primera consulta desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#07130f",
+      "buttonColor": "#34d399",
+      "buttonTextColor": "#052016",
+      "textColor": "#e9fbf3",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "13:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "08:00",
+          "closeTime": "18:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1675270336539-ffbc2d85f5e1?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1743956345250-4a43d73a7628?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1757592797141-d41e1bfe6b0e?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1543352632-5a4b24e4d2a6?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1591586116988-62fe65164f8d?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1497888329096-51c27beff665?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "18:00"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "18:00"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "18:00"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "18:00"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "08:00",
+          "end": "18:00"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "13:00"
+        },
+        "sunday": {
+          "isActive": false,
+          "start": "08:00",
+          "end": "18:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 1,
+        "openTime": "08:00",
+        "closeTime": "18:00",
+        "daysAhead": 45,
+        "autoConfirm": false
+      },
+      "tableCount": 3,
+      "borderColor": "#34d399",
+      "products": [
+        {
+          "id": "nut_1",
+          "name": "Primera consulta nutricional",
+          "category": "Consultas",
+          "price": "$30.00",
+          "shortDescription": "Revisamos tus hábitos, tu historial y tus objetivos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1675270360889-2c850358e364?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_2",
+          "name": "Consulta de control",
+          "category": "Consultas",
+          "price": "$20.00",
+          "shortDescription": "Seguimiento de tu avance y ajuste del plan.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1675270427967-b8f09d7c939b?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_3",
+          "name": "Consulta virtual",
+          "category": "Consultas",
+          "price": "$25.00",
+          "shortDescription": "Desde donde estés, por videollamada.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1675270597478-0b21922d0c92?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_4",
+          "name": "Valoración antropométrica",
+          "category": "Evaluación",
+          "price": "$15.00",
+          "shortDescription": "Peso, talla, perímetros y composición corporal.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1523901839036-a3030662f220?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_5",
+          "name": "Plan alimenticio personalizado",
+          "category": "Planes",
+          "price": "$35.00",
+          "shortDescription": "Menús a tu medida, fáciles de seguir.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1543352632-5a4b24e4d2a6?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_6",
+          "name": "Plan para bajar de peso",
+          "category": "Planes",
+          "price": "$40.00",
+          "shortDescription": "Un plan realista, sin dietas extremas.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_7",
+          "name": "Plan para ganar masa muscular",
+          "category": "Planes",
+          "price": "$40.00",
+          "shortDescription": "Alimentación para acompañar tu entrenamiento.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1693996045300-521e9d08cabc?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_8",
+          "name": "Nutrición deportiva",
+          "category": "Planes",
+          "price": "$45.00",
+          "shortDescription": "Para mejorar tu rendimiento y tu recuperación.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1558017487-06bf9f82613a?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_9",
+          "name": "Plan mensual con seguimiento",
+          "category": "Planes",
+          "price": "$90.00",
+          "shortDescription": "Cuatro controles y soporte por WhatsApp.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1497888329096-51c27beff665?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_10",
+          "name": "Taller de alimentación saludable",
+          "category": "Educación",
+          "price": "$25.00",
+          "shortDescription": "Aprende a comer mejor, en grupo o en tu empresa.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1591586116988-62fe65164f8d?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "nut_11",
+          "name": "Menú semanal y lista de compras",
+          "category": "Educación",
+          "price": "$12.00",
+          "shortDescription": "Todo listo para organizar tu semana.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "clinicServices": [
+        "Consulta nutricional",
+        "Plan alimenticio",
+        "Control de peso",
+        "Nutrición deportiva",
+        "Valoración corporal",
+        "Seguimiento mensual",
+        "Alimentación infantil",
+        "Asesoría en línea"
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo mi consulta nutricional?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "psicologia",
+    "theme": "medical",
+    "fuente": "setup_demo_07",
+    "logo": {
+      "etiqueta": "PSICOLOGÍA",
+      "fondo": "#0b0b19",
+      "acento": "#a78bfa",
+      "texto": "#eeeaff"
+    },
+    "copy": {
+      "jobTitle": "Psicología y bienestar emocional",
+      "bio": "Terapia y bienestar emocional en {{ciudad}}. Agenda tu sesión desde este perfil.",
+      "aboutMe": "En {{nombre}} te ofrecemos un espacio seguro para trabajar lo que te preocupa, con sesiones individuales, de pareja y familiares, presenciales o en línea. Agenda tu primera sesión desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#0b0b19",
+      "buttonColor": "#a78bfa",
+      "buttonTextColor": "#12082a",
+      "textColor": "#eeeaff",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "19:00"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "18:00"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "13:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "09:00",
+          "closeTime": "19:00"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1765447041709-9f1efbc81606?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1595846723416-99a641e1231a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1585821569995-86966667ca62?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1591195852468-03a01d1375d6?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1577344718665-3e7c0c1ecf6b?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1714976694810-85add1a29c96?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1604881991720-f91add269bed?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "19:00"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "19:00"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "19:00"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "19:00"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "18:00"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "13:00"
+        },
+        "sunday": {
+          "isActive": false,
+          "start": "09:00",
+          "end": "19:00"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 1,
+        "openTime": "09:00",
+        "closeTime": "19:00",
+        "daysAhead": 45,
+        "autoConfirm": false
+      },
+      "tableCount": 3,
+      "borderColor": "#a78bfa",
+      "products": [
+        {
+          "id": "psi_1",
+          "name": "Primera sesión",
+          "category": "Sesiones",
+          "price": "$35.00",
+          "shortDescription": "Nos conocemos y definimos juntos cómo trabajar.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1714976694810-85add1a29c96?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_2",
+          "name": "Sesión individual",
+          "category": "Sesiones",
+          "price": "$30.00",
+          "shortDescription": "Un espacio seguro para ti, 50 minutos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1573495804664-b1c0849525af?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_3",
+          "name": "Sesión en línea",
+          "category": "Sesiones",
+          "price": "$28.00",
+          "shortDescription": "Por videollamada, desde tu casa.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1604881990409-b9f246db39da?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_4",
+          "name": "Paquete de 4 sesiones",
+          "category": "Sesiones",
+          "price": "$110.00",
+          "shortDescription": "Un proceso con continuidad y mejor precio.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_5",
+          "name": "Terapia de pareja",
+          "category": "Terapias",
+          "price": "$45.00",
+          "shortDescription": "Para comunicarse mejor y resolver en conjunto.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1646617747566-b7e784435a48?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_6",
+          "name": "Terapia familiar",
+          "category": "Terapias",
+          "price": "$50.00",
+          "shortDescription": "Acompañamiento para toda la familia.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_7",
+          "name": "Psicología infantil y adolescente",
+          "category": "Terapias",
+          "price": "$35.00",
+          "shortDescription": "Sesiones adaptadas a su edad.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1714976694609-6cf681844f18?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_8",
+          "name": "Evaluación psicológica",
+          "category": "Evaluación",
+          "price": "$60.00",
+          "shortDescription": "Pruebas e informe con recomendaciones.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1577344718665-3e7c0c1ecf6b?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_9",
+          "name": "Orientación vocacional",
+          "category": "Evaluación",
+          "price": "$40.00",
+          "shortDescription": "Para elegir tu carrera con más claridad.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1758273240360-76b908e7582a?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "psi_10",
+          "name": "Taller de manejo del estrés",
+          "category": "Talleres",
+          "price": "$20.00",
+          "shortDescription": "Herramientas prácticas, en grupo.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1714976694895-d38078c1a3c0?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "clinicServices": [
+        "Terapia individual",
+        "Terapia de pareja",
+        "Terapia familiar",
+        "Psicología infantil",
+        "Ansiedad y estrés",
+        "Orientación vocacional",
+        "Evaluación psicológica",
+        "Sesiones en línea"
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo mi primera sesión?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "odontologia",
+    "theme": "medical",
+    "fuente": "setup_demo_07",
+    "logo": {
+      "etiqueta": "ODONTOLOGÍA",
+      "fondo": "#041218",
+      "acento": "#22d3ee",
+      "texto": "#e6faff"
+    },
+    "copy": {
+      "jobTitle": "Odontología · Clínica dental",
+      "bio": "Cuidado dental para toda la familia en {{ciudad}}. Agenda tu cita desde este perfil.",
+      "aboutMe": "En {{nombre}} cuidamos tu sonrisa con tratamientos preventivos, estéticos y de rehabilitación, para niños y adultos. Conoce nuestros servicios y agenda tu cita desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#041218",
+      "buttonColor": "#22d3ee",
+      "buttonTextColor": "#03222a",
+      "textColor": "#e6faff",
+      "showSchedule": true,
+      "businessHours": [
+        {
+          "day": "lunes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "18:30"
+        },
+        {
+          "day": "martes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "18:30"
+        },
+        {
+          "day": "miércoles",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "18:30"
+        },
+        {
+          "day": "jueves",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "18:30"
+        },
+        {
+          "day": "viernes",
+          "isOpen": true,
+          "openTime": "08:30",
+          "closeTime": "18:30"
+        },
+        {
+          "day": "sábado",
+          "isOpen": true,
+          "openTime": "09:00",
+          "closeTime": "14:00"
+        },
+        {
+          "day": "domingo",
+          "isOpen": false,
+          "openTime": "08:30",
+          "closeTime": "18:30"
+        }
+      ],
+      "coverImageURL": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1681939282781-341ac4f61996?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1762625570087-6d98fca29531?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1698749778813-ad5f2814e50f?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1777445374290-eedda5be8e5b?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "openingHours": {
+        "monday": {
+          "isActive": true,
+          "start": "08:30",
+          "end": "18:30"
+        },
+        "tuesday": {
+          "isActive": true,
+          "start": "08:30",
+          "end": "18:30"
+        },
+        "wednesday": {
+          "isActive": true,
+          "start": "08:30",
+          "end": "18:30"
+        },
+        "thursday": {
+          "isActive": true,
+          "start": "08:30",
+          "end": "18:30"
+        },
+        "friday": {
+          "isActive": true,
+          "start": "08:30",
+          "end": "18:30"
+        },
+        "saturday": {
+          "isActive": true,
+          "start": "09:00",
+          "end": "14:00"
+        },
+        "sunday": {
+          "isActive": false,
+          "start": "08:30",
+          "end": "18:30"
+        }
+      },
+      "reservationsEnabled": true,
+      "reservationSettings": {
+        "maxPartySize": 1,
+        "openTime": "08:30",
+        "closeTime": "18:30",
+        "daysAhead": 45,
+        "autoConfirm": false
+      },
+      "tableCount": 3,
+      "borderColor": "#22d3ee",
+      "products": [
+        {
+          "id": "odo_1",
+          "name": "Consulta y diagnóstico",
+          "category": "Consultas",
+          "price": "$15.00",
+          "shortDescription": "Revisión completa y plan de tratamiento.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1777331903190-341a3dd0441b?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_2",
+          "name": "Atención de urgencia dental",
+          "category": "Consultas",
+          "price": "$25.00",
+          "shortDescription": "Para dolor o golpes: te atendemos cuanto antes.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1663755489920-5e09f66d011a?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_3",
+          "name": "Limpieza dental",
+          "category": "Prevención",
+          "price": "$30.00",
+          "shortDescription": "Eliminamos sarro y manchas, y pulimos.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1771442873038-dda05b6ca447?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_4",
+          "name": "Radiografía dental",
+          "category": "Prevención",
+          "price": "$10.00",
+          "shortDescription": "Imagen para un diagnóstico preciso.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_5",
+          "name": "Resina (calza)",
+          "category": "Tratamientos",
+          "price": "$35.00",
+          "shortDescription": "Restauramos tu diente con material del color natural.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1657470179447-0f5aa16daa91?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_6",
+          "name": "Endodoncia",
+          "category": "Tratamientos",
+          "price": "$120.00",
+          "shortDescription": "Tratamiento de conducto para salvar tu diente.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1677026010083-78ec7f1b84ed?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_7",
+          "name": "Extracción simple",
+          "category": "Tratamientos",
+          "price": "$30.00",
+          "shortDescription": "Con anestesia y cuidados posteriores.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1720685193964-4529228a33c1?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_8",
+          "name": "Blanqueamiento dental",
+          "category": "Estética",
+          "price": "$120.00",
+          "shortDescription": "Unos tonos más claros en una sesión.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1548382131-e0ebb1f0cdea?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_9",
+          "name": "Diseño de sonrisa",
+          "category": "Estética",
+          "price": "$150.00",
+          "shortDescription": "Carillas y ajustes para una sonrisa armónica.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1758205307836-0829c799890b?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_10",
+          "name": "Ortodoncia con brackets (valoración)",
+          "category": "Ortodoncia",
+          "price": "$25.00",
+          "shortDescription": "Evaluamos tu caso y te explicamos las opciones.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1593022356769-11f762e25ed9?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_11",
+          "name": "Valoración de implantes",
+          "category": "Implantes",
+          "price": "$20.00",
+          "shortDescription": "Estudio para reponer piezas faltantes.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1777331903190-341a3dd0441b?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "odo_12",
+          "name": "Odontopediatría",
+          "category": "Niños",
+          "price": "$20.00",
+          "shortDescription": "Control y cuidado dental infantil.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1522849696084-818b29dfe210?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "clinicServices": [
+        "Limpieza dental",
+        "Blanqueamiento",
+        "Ortodoncia",
+        "Endodoncia",
+        "Implantes",
+        "Odontopediatría",
+        "Extracciones",
+        "Estética dental"
+      ],
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo agendo mi cita dental?",
+          "answer": "Desde este perfil: elige el servicio, el día y la hora disponible. Recibirás un código de confirmación.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "galleryTitle": "Galería"
+    }
+  },
+  {
+    "clave": "mariachi",
+    "theme": "stage",
+    "fuente": "setup_demo_05",
+    "logo": {
+      "etiqueta": "MARIACHI",
+      "fondo": "#130905",
+      "acento": "#e0a526",
+      "texto": "#fdeccf"
+    },
+    "copy": {
+      "jobTitle": "Mariachi · Serenatas y eventos",
+      "bio": "Mariachi para serenatas, bodas y fiestas en {{ciudad}}. Mira los paquetes y contrátanos desde este perfil.",
+      "aboutMe": "En {{nombre}} llevamos la música ranchera a tu serenata, boda o fiesta. Elige tu paquete, revisa las fechas disponibles y reserva por WhatsApp desde este perfil."
+    },
+    "perfil": {
+      "backgroundColor": "#130905",
+      "buttonColor": "#e0a526",
+      "buttonTextColor": "#1f1203",
+      "textColor": "#fdeccf",
+      "borderColor": "#e0a526",
+      "coverImageURL": "https://images.unsplash.com/photo-1769230367203-7bd409f483c9?auto=format&fit=crop&w=800&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1769230367203-7bd409f483c9?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1781154975904-37809a6493ad?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1654576205088-6503ad4ffb72?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1777430927393-42f8b759f236?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1764636512320-823bdd36da72?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1711336622443-d53a1f1156bc?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "products": [
+        {
+          "id": "mar_1",
+          "name": "Serenata exprés (5 canciones)",
+          "category": "Serenatas",
+          "price": "$40.00",
+          "shortDescription": "Rápida y llena de emoción, a domicilio.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1781154975904-37809a6493ad?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mar_2",
+          "name": "Serenata clásica (10 canciones)",
+          "category": "Serenatas",
+          "price": "$70.00",
+          "shortDescription": "El repertorio ranchero que todos piden.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1769230367203-7bd409f483c9?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mar_3",
+          "name": "Serenata premium (15 canciones)",
+          "category": "Serenatas",
+          "price": "$110.00",
+          "shortDescription": "Con dedicatoria, boleros y baladas a elección.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1654576205088-6503ad4ffb72?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mar_4",
+          "name": "Mariachi para eventos (1 hora)",
+          "category": "Eventos",
+          "price": "$250.00",
+          "shortDescription": "Cumpleaños, aniversarios y fiestas.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1711336622443-d53a1f1156bc?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mar_5",
+          "name": "Música para bodas",
+          "category": "Eventos",
+          "price": "$320.00",
+          "shortDescription": "Ceremonia y recepción con repertorio a tu medida.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1777430927393-42f8b759f236?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mar_6",
+          "name": "Show para empresas",
+          "category": "Eventos",
+          "price": "$400.00",
+          "shortDescription": "Un espectáculo para tu evento corporativo.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1525201548942-d8732f6617a0?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "releases": [
+        {
+          "id": "rel_1",
+          "title": "Repertorio ranchero",
+          "platform": "Spotify",
+          "url": "https://open.spotify.com/",
+          "releaseDate": "@F(-20)"
+        },
+        {
+          "id": "rel_2",
+          "title": "Boleros y baladas",
+          "platform": "Spotify",
+          "url": "https://open.spotify.com/",
+          "releaseDate": "@F(-60)"
+        },
+        {
+          "id": "rel_3",
+          "title": "Serenata en vivo",
+          "platform": "YouTube",
+          "url": "https://www.youtube.com/",
+          "releaseDate": "@F(-90)"
+        },
+        {
+          "id": "rel_4",
+          "title": "Música para bodas",
+          "platform": "YouTube",
+          "url": "https://www.youtube.com/",
+          "releaseDate": "@F(-150)"
+        }
+      ],
+      "tourDates": [
+        {
+          "id": "tour_1",
+          "date": "@D(2)",
+          "city": "{{ubicacion}}",
+          "venue": "Serenata a domicilio · cupo disponible",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20reservar%20una%20serenata",
+          "soldOut": false
+        },
+        {
+          "id": "tour_2",
+          "date": "@D(4)",
+          "city": "{{ubicacion}}",
+          "venue": "Evento privado · agenda llena",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20reservar%20una%20serenata",
+          "soldOut": true
+        },
+        {
+          "id": "tour_3",
+          "date": "@D(7)",
+          "city": "{{ubicacion}}",
+          "venue": "Boda · cupo disponible",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20el%20mariachi%20para%20mi%20boda",
+          "soldOut": false
+        },
+        {
+          "id": "tour_4",
+          "date": "@D(12)",
+          "city": "{{ubicacion}}",
+          "venue": "Fiesta de cumpleaños · cupo disponible",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20el%20mariachi%20para%20un%20cumplea%C3%B1os",
+          "soldOut": false
+        }
+      ],
+      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratar%20el%20mariachi%20para%20un%20evento",
+      "galleryTitle": "Galería",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo contrato una serenata?",
+          "answer": "Escríbenos por WhatsApp desde el botón de contratación de este perfil y coordinamos fecha, hora y lugar.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ]
+    }
+  },
+  {
+    "clave": "academia_musica",
+    "theme": "stage",
+    "fuente": "setup_demo_05",
+    "logo": {
+      "etiqueta": "ACADEMIA",
+      "fondo": "#07060d",
+      "acento": "#b874f8",
+      "texto": "#f0e6ff"
+    },
+    "copy": {
+      "jobTitle": "Academia de música · Clases",
+      "bio": "Clases de música en {{ciudad}}. Mira el horario y reserva tu cupo desde este perfil.",
+      "aboutMe": "En {{nombre}} aprendes música con clases para todos los niveles. Conoce nuestro horario semanal, reserva tu cupo desde este perfil y escríbenos si tienes preguntas."
+    },
+    "perfil": {
+      "backgroundColor": "#07060d",
+      "buttonColor": "#b874f8",
+      "buttonTextColor": "#07060d",
+      "textColor": "#f0e6ff",
+      "borderColor": "#a855f7",
+      "coverImageURL": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=1400&q=75",
+      "galleryMode": "grid",
+      "galleryImageURLs": [
+        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1603910234616-3b5f4a6be2b4?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1768405031181-33bb016e2fbb?auto=format&fit=crop&w=800&q=75",
+        "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=75"
+      ],
+      "albums": [],
+      "products": [
+        {
+          "id": "mus_1",
+          "name": "Camiseta oficial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Algodón, con el diseño del proyecto.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1693443687750-611ad77f3aba?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_2",
+          "name": "Camiseta edición especial",
+          "category": "Merch",
+          "price": "$15.00",
+          "shortDescription": "Otro diseño del proyecto, en algodón.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1759572095384-1a7e646d0d4f?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_3",
+          "name": "Camiseta edición festival",
+          "category": "Merch",
+          "price": "$18.00",
+          "shortDescription": "Diseño exclusivo de la gira. Tallas S a XL.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1620799139834-6b8f844fbe61?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_4",
+          "name": "Póster",
+          "category": "Merch",
+          "price": "$8.00",
+          "shortDescription": "Impresión en papel couché, tamaño A3.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1501612780327-45045538702b?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_5",
+          "name": "Disco físico",
+          "category": "Música",
+          "price": "$10.00",
+          "shortDescription": "Edición física de tu música.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1602848596718-45693ff58c78?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_6",
+          "name": "Vinilo",
+          "category": "Música",
+          "price": "$22.00",
+          "shortDescription": "Edición en vinilo de tu música.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_7",
+          "name": "Vinilo edición limitada",
+          "category": "Música",
+          "price": "$30.00",
+          "shortDescription": "Tirada corta, numerada, con descarga digital.",
+          "available": true,
+          "imageURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=800&q=75"
+        },
+        {
+          "id": "mus_8",
+          "name": "Membresía de fans",
+          "category": "Fans",
+          "price": "$5.00",
+          "shortDescription": "Preventa de entradas, contenido exclusivo y descuento en el merch.",
+          "available": true,
+          "subscription": {
+            "monthly": {
+              "price": "$5.00",
+              "installments": 12
+            },
+            "annual": {
+              "price": "$50.00",
+              "installments": 1
+            }
+          },
+          "imageURL": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=75"
+        }
+      ],
+      "releases": [
+        {
+          "id": "rel_1",
+          "title": "Recital de fin de ciclo",
+          "platform": "YouTube",
+          "url": "https://www.youtube.com/",
+          "coverURL": "https://images.unsplash.com/photo-1779842559943-3ff0f983ca77?auto=format&fit=crop&w=600&q=75",
+          "releaseDate": "@F(-30)"
+        },
+        {
+          "id": "rel_2",
+          "title": "Presentación de alumnos",
+          "platform": "YouTube",
+          "url": "https://www.youtube.com/",
+          "coverURL": "https://images.unsplash.com/photo-1616714109948-c74fe5029a4d?auto=format&fit=crop&w=600&q=75",
+          "releaseDate": "@F(-90)"
+        },
+        {
+          "id": "rel_3",
+          "title": "Ensamble de la academia",
+          "platform": "Spotify",
+          "url": "https://open.spotify.com/",
+          "coverURL": "https://images.unsplash.com/photo-1591365437381-2db81d59f1e0?auto=format&fit=crop&w=600&q=75",
+          "releaseDate": "@F(-150)"
+        },
+        {
+          "id": "rel_4",
+          "title": "Concierto de aniversario",
+          "platform": "YouTube",
+          "url": "https://www.youtube.com/",
+          "coverURL": "https://images.unsplash.com/photo-1602848597941-0d3d3a2c1241?auto=format&fit=crop&w=600&q=75",
+          "releaseDate": "@F(-300)"
+        }
+      ],
+      "tourDates": [
+        {
+          "id": "tour_1",
+          "date": "@D(10)",
+          "city": "{{ubicacion}}",
+          "venue": "Clase abierta · sede de la academia",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20asistir%20a%20la%20clase%20abierta",
+          "soldOut": false
+        },
+        {
+          "id": "tour_2",
+          "date": "@D(24)",
+          "city": "{{ubicacion}}",
+          "venue": "Recital de alumnos · auditorio",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20recital",
+          "soldOut": false
+        },
+        {
+          "id": "tour_3",
+          "date": "@D(45)",
+          "city": "{{ubicacion}}",
+          "venue": "Concierto del ensamble · sala de conciertos",
+          "ticketURL": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20entradas%20para%20el%20concierto",
+          "soldOut": false
+        }
+      ],
+      "bookingLink": "https://wa.me/{{wa593}}?text=Hola%2C%20quiero%20contratarlos%20para%20un%20evento",
+      "galleryTitle": "Galería",
+      "faqs": [
+        {
+          "id": "faq_1",
+          "question": "¿Cómo reservo una clase?",
+          "answer": "En la sección Clases elige el día y la clase, y reserva tu cupo. Recibirás un código para consultarlo o cancelarlo.",
+          "order": 1
+        },
+        {
+          "id": "faq_2",
+          "question": "¿Dónde están ubicados?",
+          "answer": "Encuentra nuestra dirección y el mapa en este perfil.",
+          "order": 2
+        },
+        {
+          "id": "faq_3",
+          "question": "¿Cómo puedo contactarlos?",
+          "answer": "Escríbenos por WhatsApp desde el botón de este perfil y te respondemos.",
+          "order": 3
+        }
+      ],
+      "stage_settings": {
+        "bookingEnabled": true,
+        "bookingDaysAhead": 14,
+        "cancelHours": 2,
+        "timezone": "America/Guayaquil"
+      }
+    },
+    "tablas": [
+      {
+        "tabla": "stage_classes",
+        "propietario": "stage_profile_id",
+        "filas": [
+          {
+            "id": "seed-sc1",
+            "name": "Guitarra inicial",
+            "discipline": "Guitarra",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "17:00",
+            "end_time": "18:00",
+            "teacher_name": "Profesor 1",
+            "capacity": 8,
+            "level": "principiante",
+            "room": "Aula 1",
+            "is_active": true,
+            "sort_order": 1
+          },
+          {
+            "id": "seed-sc2",
+            "name": "Canto",
+            "discipline": "Canto",
+            "description": null,
+            "day_of_week": 1,
+            "start_time": "18:30",
+            "end_time": "19:30",
+            "teacher_name": "Profesor 2",
+            "capacity": 10,
+            "level": "todos",
+            "room": "Aula 2",
+            "is_active": true,
+            "sort_order": 2
+          },
+          {
+            "id": "seed-sc3",
+            "name": "Piano",
+            "discipline": "Piano",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "16:00",
+            "end_time": "17:00",
+            "teacher_name": "Profesor 3",
+            "capacity": 6,
+            "level": "principiante",
+            "room": "Aula 3",
+            "is_active": true,
+            "sort_order": 3
+          },
+          {
+            "id": "seed-sc4",
+            "name": "Lenguaje musical",
+            "discipline": "Teoría",
+            "description": null,
+            "day_of_week": 2,
+            "start_time": "18:00",
+            "end_time": "19:00",
+            "teacher_name": "Profesor 2",
+            "capacity": 12,
+            "level": "todos",
+            "room": "Aula 2",
+            "is_active": true,
+            "sort_order": 4
+          },
+          {
+            "id": "seed-sc5",
+            "name": "Guitarra inicial",
+            "discipline": "Guitarra",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "17:00",
+            "end_time": "18:00",
+            "teacher_name": "Profesor 1",
+            "capacity": 8,
+            "level": "principiante",
+            "room": "Aula 1",
+            "is_active": true,
+            "sort_order": 5
+          },
+          {
+            "id": "seed-sc6",
+            "name": "Batería",
+            "discipline": "Batería",
+            "description": null,
+            "day_of_week": 3,
+            "start_time": "18:30",
+            "end_time": "19:30",
+            "teacher_name": "Profesor 4",
+            "capacity": 4,
+            "level": "intermedio",
+            "room": "Aula 4",
+            "is_active": true,
+            "sort_order": 6
+          },
+          {
+            "id": "seed-sc7",
+            "name": "Piano",
+            "discipline": "Piano",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "16:00",
+            "end_time": "17:00",
+            "teacher_name": "Profesor 3",
+            "capacity": 6,
+            "level": "principiante",
+            "room": "Aula 3",
+            "is_active": true,
+            "sort_order": 7
+          },
+          {
+            "id": "seed-sc8",
+            "name": "Violín",
+            "discipline": "Violín",
+            "description": null,
+            "day_of_week": 4,
+            "start_time": "17:30",
+            "end_time": "18:30",
+            "teacher_name": "Profesor 5",
+            "capacity": 6,
+            "level": "principiante",
+            "room": "Aula 5",
+            "is_active": true,
+            "sort_order": 8
+          },
+          {
+            "id": "seed-sc9",
+            "name": "Canto",
+            "discipline": "Canto",
+            "description": null,
+            "day_of_week": 5,
+            "start_time": "18:30",
+            "end_time": "19:30",
+            "teacher_name": "Profesor 2",
+            "capacity": 10,
+            "level": "todos",
+            "room": "Aula 2",
+            "is_active": true,
+            "sort_order": 9
+          },
+          {
+            "id": "seed-sc10",
+            "name": "Batería",
+            "discipline": "Batería",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "teacher_name": "Profesor 4",
+            "capacity": 4,
+            "level": "intermedio",
+            "room": "Aula 4",
+            "is_active": true,
+            "sort_order": 10
+          },
+          {
+            "id": "seed-sc11",
+            "name": "Producción musical",
+            "discipline": "Producción",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "11:30",
+            "end_time": "12:30",
+            "teacher_name": "Profesor 6",
+            "capacity": 10,
+            "level": "intermedio",
+            "room": "Aula 6",
+            "is_active": true,
+            "sort_order": 11
+          },
+          {
+            "id": "seed-sc12",
+            "name": "Ensamble de música",
+            "discipline": "Banda",
+            "description": null,
+            "day_of_week": 6,
+            "start_time": "15:00",
+            "end_time": "16:00",
+            "teacher_name": "Profesor 1",
+            "capacity": 12,
+            "level": "avanzado",
+            "room": "Aula 1",
             "is_active": true,
             "sort_order": 12
           }
