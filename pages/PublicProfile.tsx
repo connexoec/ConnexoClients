@@ -11,7 +11,7 @@ import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { FaWhatsapp, FaEnvelope, FaShareAlt, FaPhoneAlt, FaMapMarkerAlt, FaTimes, FaChevronLeft, FaChevronRight, FaQrcode } from 'react-icons/fa';
 import { QRCodeCanvas } from 'qrcode.react';
 import { supabase } from '../src/lib/supabase';
-import { findProfileByUsername, profilePath } from '../src/lib/profileLookup';
+import { findProfileByUsername, profilePath, decodeProfileKey, shareSlugFor, type ProfileSuggestion } from '../src/lib/profileLookup';
 import { trackProfileView as recordProfileView, trackLinkClick as recordLinkClick } from '../src/lib/analytics';
 // Plantillas cargadas bajo demanda: cada perfil solo descarga el chunk de su theme
 const ProfileBarberTemplate = React.lazy(() => import('../components/ProfileBarberTemplate').then(m => ({ default: m.ProfileBarberTemplate })));
@@ -232,16 +232,11 @@ const PublicProfile: React.FC = () => {
    * Se decodifica porque el navegador escapa los espacios y las tildes
    * (`/jose%20enrique`), y en la base están guardados sin escapar.
    */
-  const perfilKey = React.useMemo(() => {
-    const bruto = (location.pathname || '').replace(/^\/+/, '').replace(/\/+$/, '');
-    if (!bruto) return username || '';
-    try {
-      return decodeURIComponent(bruto);
-    } catch (_) {
-      // Porcentaje mal formado en la URL: se busca tal cual antes que reventar.
-      return bruto;
-    }
-  }, [location.pathname, username]);
+  const perfilKey = React.useMemo(
+    // Decodifica varias veces: hay apps que re-codifican el enlace (`%20` → `%2520`).
+    () => decodeProfileKey(location.pathname || '', username || ''),
+    [location.pathname, username]
+  );
 
   console.log('PublicProfile - MOUNTED - Received username:', perfilKey); // <-- LOG AÑADIDO
 
@@ -256,6 +251,8 @@ const PublicProfile: React.FC = () => {
   // antes los dos casos mostraban «Perfil no encontrado».
   const [loadError, setLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0); // el botón «Reintentar» lo incrementa
+  // Perfiles parecidos al que se pidió, para ofrecerlos cuando el enlace llegó roto o cortado.
+  const [suggestions, setSuggestions] = useState<ProfileSuggestion[]>([]);
   const [isVCardLoading, setIsVCardLoading] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -354,6 +351,7 @@ const PublicProfile: React.FC = () => {
       setLoading(true);
       setIsLoading(true);
       setLoadError(false);
+      setSuggestions([]);
       setAdminDraft(false);
       let esBorrador = false; // inactivo, visto por un administrador de plataforma
       let foundUserId = null; // Variable para guardar el ID
@@ -382,6 +380,7 @@ const PublicProfile: React.FC = () => {
           return;
         }
         const profileSnap = lookup.data ? [lookup.data] : [];
+        if (!lookup.data && lookup.suggestions && lookup.suggestions.length > 0) setSuggestions(lookup.suggestions);
 
         if (profileSnap && profileSnap.length > 0) {
           userProfile = {
@@ -431,17 +430,25 @@ const PublicProfile: React.FC = () => {
           perfilListo = true;
           console.log("Profile found for username. User ID:", foundUserId);
 
-          // Llegó por una variante (otras mayúsculas, con espacios, sin tildes…): se deja la barra de
-          // direcciones con la forma oficial, para que lo que se vuelva a compartir desde aquí sea el
-          // enlace correcto. Sin tocar el estado del enrutador: sólo la URL visible.
-          if (lookup.via === 'loose') {
+          // La barra de direcciones se deja con el enlace MÁS SEGURO para compartir: lo que el visitante
+          // copie o comparta desde aquí (botón COMPARTIR, QR) sale de `window.location.href`.
+          //   · Username con espacios, tildes o mayúsculas («Fundación Arupo») → la versión limpia
+          //     («/fundacion-arupo»), si ningún otro perfil comparte esa clave: es la que no se rompe
+          //     al cortarse en el espacio ni al re-codificarse.
+          //   · Llegó por una variante y no hay versión limpia → la dirección oficial tal cual.
+          // Sin tocar el estado del enrutador: sólo la URL visible. En segundo plano, para no retrasar
+          // el perfil; y sólo si el visitante sigue en esa misma dirección cuando termina.
+          const pathAlLlegar = window.location.pathname;
+          const viaAlLlegar = lookup.via;
+          (async () => {
             try {
-              window.history.replaceState(
-                window.history.state, '',
-                profilePath(userProfile.username) + window.location.search + window.location.hash
-              );
+              const slug = await shareSlugFor(supabase, userProfile.username, userProfile.id);
+              const destino = slug ? `/${slug}` : (viaAlLlegar !== 'exact' ? profilePath(userProfile.username) : null);
+              if (!destino || window.location.pathname !== pathAlLlegar) return;
+              if (window.location.pathname === destino) return;
+              window.history.replaceState(window.history.state, '', destino + window.location.search + window.location.hash);
             } catch (_) { /* no es crítico */ }
-          }
+          })();
 
           // Enable heatmap tracking for ULTRA plan
           if (userProfile.plan === 'ultra') {
@@ -1321,6 +1328,26 @@ const PublicProfile: React.FC = () => {
           <h1 className="text-2xl mb-4">Perfil no encontrado</h1>
           <p>No se pudo encontrar el perfil para: <strong>{perfilKey}</strong></p>
           <p className="text-white/60 text-sm mt-2 mb-3">Revisa que el enlace esté completo y bien escrito.</p>
+          {suggestions.length > 0 && (
+            <div className="my-4 mx-auto max-w-xs text-left">
+              <p className="text-white/80 text-sm mb-2 text-center">¿Buscabas alguno de estos perfiles?</p>
+              <ul className="space-y-2">
+                {suggestions.map((s) => (
+                  <li key={s.username}>
+                    <a
+                      href={profilePath(s.username)}
+                      className="block rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm hover:bg-white/10"
+                    >
+                      <span className="font-semibold">{s.displayName || s.username}</span>
+                      {s.displayName && s.displayName !== s.username && (
+                        <span className="block text-xs text-white/50">{s.username}</span>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <button onClick={() => navigate('/dashboard')} className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm flex items-center space-x-1">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
             <span>Dashboard</span>

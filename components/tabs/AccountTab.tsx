@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, Button, Input } from '../ui';
 import { supabase } from '../../src/lib/supabase';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { slugifyUsernameLive, normalizeUsername, usernameProblem, usernameTaken, profilePath } from '../../src/lib/profileLookup';
+import { slugifyUsernameLive, normalizeUsername, usernameProblem, usernameTaken, profilePath, shareSlugFor } from '../../src/lib/profileLookup';
 
 interface AccountTabProps {
     showNotification: (message: string, type: 'success' | 'error') => void;
@@ -21,6 +21,28 @@ export const AccountTab: React.FC<AccountTabProps> = ({
     const [isSavingDetails, setIsSavingDetails] = useState(false);
     const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
     const [passwords, setPasswords] = useState({ current: '', new: '', confirm: '' });
+
+    // Enlace para COMPARTIR. Un username con espacios, tildes o mayúsculas («Fundación Arupo») da un
+    // enlace que se rompe al pegarlo en muchas apps (se corta en el espacio o se re-codifica); si ningún
+    // otro perfil comparte su clave, se ofrece la versión limpia («/fundacion-arupo»), que abre el mismo perfil.
+    const savedUsername = useRef<string>('');
+    const [shareSlug, setShareSlug] = useState<string | null>(null);
+    const refreshShareSlug = async (username: string) => {
+        savedUsername.current = username;
+        setShareSlug(username && user?.id ? await shareSlugFor(supabase, username, user.id) : null);
+    };
+    useEffect(() => {
+        let vivo = true;
+        (async () => {
+            if (!user?.id) return;
+            const { data } = await supabase.from('profiles').select('username').eq('id', user.id).maybeSingle();
+            if (vivo && data?.username) await refreshShareSlug(data.username);
+        })();
+        return () => { vivo = false; };
+    }, [user?.id]);
+    // Lo que se muestra y se copia: la versión limpia sólo mientras el campo coincida con lo guardado.
+    const enlaceCompartir = (u: string) =>
+        window.location.origin + (shareSlug && u === savedUsername.current ? `/${shareSlug}` : profilePath(u));
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPasswords(prev => ({ ...prev, [e.target.id]: e.target.value }));
@@ -60,6 +82,7 @@ export const AccountTab: React.FC<AccountTabProps> = ({
                 }).eq('id', user.id);
                 if (dbError) throw dbError;
                 setProfileData((prev: any) => ({ ...prev, username: newUsername }));
+                void refreshShareSlug(newUsername);
             }
 
             showNotification(t('account_updated_success'), 'success');
@@ -206,14 +229,14 @@ export const AccountTab: React.FC<AccountTabProps> = ({
                         {profileData?.username ? (
                             <div className="mt-2 flex items-center gap-2 min-w-0">
                                 <span className="text-xs text-[var(--text-secondary)] truncate select-all" data-testid="account-public-link">
-                                    {window.location.origin}{profilePath(profileData.username)}
+                                    {enlaceCompartir(profileData.username)}
                                 </span>
                                 <button
                                     type="button"
                                     className="shrink-0 text-xs font-semibold text-[var(--primary-orange)] hover:underline"
                                     onClick={async () => {
                                         try {
-                                            await navigator.clipboard.writeText(`${window.location.origin}${profilePath(profileData.username)}`);
+                                            await navigator.clipboard.writeText(enlaceCompartir(profileData.username));
                                             showNotification(t('public_profile_copied_clipboard'), 'success');
                                         } catch (_) { /* sin portapapeles: el enlace sigue visible para copiarlo a mano */ }
                                     }}

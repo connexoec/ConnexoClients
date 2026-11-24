@@ -106,7 +106,7 @@ const likePattern = (key: string): string => {
   return `%${parts.join('%')}%`;
 };
 
-interface Candidate { id: string; username: string; is_active?: boolean | null; created_at?: string | null }
+interface Candidate { id: string; username: string; displayName?: string | null; is_active?: boolean | null; created_at?: string | null }
 
 /** Entre varios candidatos con la misma clave, el que más se parece a lo que se pidió. */
 const elegir = (cands: Candidate[], pedido: string): Candidate => {
@@ -120,14 +120,73 @@ const elegir = (cands: Candidate[], pedido: string): Candidate => {
   })[0];
 };
 
+/**
+ * Dirección LIMPIA para compartir un perfil cuyo username es frágil (espacios, tildes, mayúsculas).
+ *
+ * «Fundación Arupo» se comparte como `/Fundaci%C3%B3n%20Arupo`, y ese enlace se rompe en cuanto una
+ * app lo corta en el espacio o lo vuelve a codificar. `/fundacion-arupo` no tiene nada que romper, y
+ * la búsqueda tolerante lo resuelve al mismo perfil.
+ *
+ * Sólo se devuelve si NINGÚN otro perfil comparte esa clave (si «jose enrique» y «jose-enrique»
+ * existieran los dos, `/jose-enrique` apuntaría al equivocado). `null` = compartir la dirección tal cual.
+ */
+export async function shareSlugFor(
+  client: { from: (t: string) => any },
+  username: string,
+  myId: string,
+): Promise<string | null> {
+  try {
+    const slug = normalizeUsername(username);
+    if (!slug || slug === username || usernameProblem(slug)) return null;
+    const key = usernameKey(username);
+    if (usernameKey(slug) !== key) return null; // la limpieza cambió letras: no sirve para encontrarlo
+    const { data, error } = await client.from('profiles').select('id, username').ilike('username', likePattern(key)).limit(500);
+    if (error || !data) return null;
+    const mismos = (data as Candidate[]).filter((c) => typeof c?.username === 'string' && usernameKey(c.username) === key);
+    return mismos.length === 1 && mismos[0].id === myId ? slug : null;
+  } catch {
+    return null;
+  }
+}
+
+export interface ProfileSuggestion { username: string; displayName: string | null }
+
 export interface ProfileLookupResult {
   /** Fila completa del perfil, o `null` si de verdad no existe. */
   data: any | null;
   /** Hubo un FALLO al consultar (red, servidor): NO significa que el perfil no exista. */
   error: unknown | null;
-  /** `exact` = coincidió tal cual; `loose` = hizo falta la búsqueda tolerante. */
-  via: 'exact' | 'loose' | null;
+  /**
+   * `exact` = coincidió tal cual; `loose` = hizo falta la búsqueda tolerante;
+   * `prefix` = el enlace llegó CORTADO (p. ej. `/Fundación` en vez de `/Fundación Arupo`)
+   * y sólo un perfil activo empieza así.
+   */
+  via: 'exact' | 'loose' | 'prefix' | null;
+  /** Si no hubo coincidencia pero hay perfiles parecidos, hasta 6 para ofrecérselos al visitante. */
+  suggestions?: ProfileSuggestion[];
 }
+
+/**
+ * Convierte la ruta del navegador (`/Fundaci%C3%B3n%20Arupo`) en el texto a buscar.
+ *
+ * Decodifica VARIAS veces, no una: algunas apps (mensajería, redes) vuelven a codificar el
+ * enlace al reenviarlo y `%20` llega como `%2520`. Con una sola pasada la clave quedaba como
+ * «Fundaci%C3%B3n%20Arupo» y no coincidía con nada. Es seguro porque un username nunca lleva `%`.
+ */
+export const decodeProfileKey = (pathname: string, fallback = ''): string => {
+  let s = String(pathname ?? '').replace(/^\/+/, '').replace(/\/+$/, '');
+  if (!s) return fallback;
+  for (let i = 0; i < 3 && /%[0-9a-f]{2}/i.test(s); i++) {
+    try {
+      const d = decodeURIComponent(s);
+      if (d === s) break;
+      s = d;
+    } catch {
+      break; // porcentaje mal formado: se busca tal cual antes que reventar
+    }
+  }
+  return s;
+};
 
 /**
  * Busca el perfil de `raw`. Nunca lanza: devuelve `{ data, error }`.
@@ -154,20 +213,37 @@ export async function findProfileByUsername(
 
     const cand = await client
       .from('profiles')
-      .select('id, username, is_active, created_at')
+      .select('id, username, displayName, is_active, created_at')
       .ilike('username', likePattern(key))
       .limit(500);
     if (cand.error) return { data: null, error: cand.error, via: null };
 
-    const iguales: Candidate[] = (cand.data || []).filter(
-      (c: Candidate) => typeof c?.username === 'string' && usernameKey(c.username) === key
-    );
-    if (iguales.length === 0) return { data: null, error: null, via: null };
+    const todos: Candidate[] = (cand.data || []).filter((c: Candidate) => typeof c?.username === 'string');
+    const iguales = todos.filter((c) => usernameKey(c.username) === key);
 
-    const elegido = elegir(iguales, pedido);
-    const full = await client.from('profiles').select('*').eq('id', elegido.id).limit(1);
-    if (full.error) return { data: null, error: full.error, via: null };
-    if (full.data && full.data.length > 0) return { data: full.data[0], error: null, via: 'loose' };
+    // Trae la fila completa del candidato elegido.
+    const completo = async (c: Candidate, via: 'loose' | 'prefix'): Promise<ProfileLookupResult> => {
+      const full = await client.from('profiles').select('*').eq('id', c.id).limit(1);
+      if (full.error) return { data: null, error: full.error, via: null };
+      if (full.data && full.data.length > 0) return { data: full.data[0], error: null, via };
+      return { data: null, error: null, via: null };
+    };
+
+    if (iguales.length > 0) return completo(elegir(iguales, pedido), 'loose');
+
+    // 3) Enlace CORTADO. Los nombres con espacios son frágiles: muchas apps parten el enlace en el
+    // primer espacio y el visitante recibe `/Fundación` en vez de `/Fundación Arupo`. Si un solo
+    // perfil ACTIVO empieza así, es ese. Si hay varios, no se adivina: se le ofrecen al visitante.
+    if (key.length >= 4) {
+      const activos = todos.filter((c) => c.is_active !== false);
+      const empiezan = activos.filter((c) => usernameKey(c.username).startsWith(key));
+      if (empiezan.length === 1) return completo(empiezan[0], 'prefix');
+
+      const parecidos = (empiezan.length > 1 ? empiezan : activos.filter((c) => usernameKey(c.username).includes(key)))
+        .slice(0, 6)
+        .map((c) => ({ username: c.username, displayName: c.displayName ?? null }));
+      return { data: null, error: null, via: null, suggestions: parecidos };
+    }
     return { data: null, error: null, via: null };
   } catch (error) {
     return { data: null, error, via: null };
