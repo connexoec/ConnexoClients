@@ -11,6 +11,7 @@ import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { FaWhatsapp, FaEnvelope, FaShareAlt, FaPhoneAlt, FaMapMarkerAlt, FaTimes, FaChevronLeft, FaChevronRight, FaQrcode } from 'react-icons/fa';
 import { QRCodeCanvas } from 'qrcode.react';
 import { supabase } from '../src/lib/supabase';
+import { findProfileByUsername, profilePath } from '../src/lib/profileLookup';
 import { trackProfileView as recordProfileView, trackLinkClick as recordLinkClick } from '../src/lib/analytics';
 // Plantillas cargadas bajo demanda: cada perfil solo descarga el chunk de su theme
 const ProfileBarberTemplate = React.lazy(() => import('../components/ProfileBarberTemplate').then(m => ({ default: m.ProfileBarberTemplate })));
@@ -251,6 +252,10 @@ const PublicProfile: React.FC = () => {
   const [appearance, setAppearance] = useState<AppearanceSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  // La consulta del perfil FALLÓ (red, servidor). No es lo mismo que «no existe»:
+  // antes los dos casos mostraban «Perfil no encontrado».
+  const [loadError, setLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0); // el botón «Reintentar» lo incrementa
   const [isVCardLoading, setIsVCardLoading] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -348,15 +353,35 @@ const PublicProfile: React.FC = () => {
 
       setLoading(true);
       setIsLoading(true);
+      setLoadError(false);
       setAdminDraft(false);
       let esBorrador = false; // inactivo, visto por un administrador de plataforma
       let foundUserId = null; // Variable para guardar el ID
       let userProfile: any = null; // Declarar fuera del bloque
+      let perfilListo = false; // el perfil ya está en pantalla: un fallo posterior no debe quitarlo
 
       try {
-        // 1. Buscar el perfil por username
+        // 1. Buscar el perfil por username.
+        // Primero la búsqueda exacta de siempre y, si no hay resultado, una tolerante
+        // (mayúsculas, espacios, tildes, puntuación pegada al enlace). Ver src/lib/profileLookup.ts.
         console.log("Fetching profile for username:", perfilKey);
-        const { data: profileSnap, error: profileError } = await supabase.from('profiles').select('*').eq('username', perfilKey).limit(1);
+        let lookup = await findProfileByUsername(supabase, perfilKey);
+        if (lookup.error) {
+          // Un fallo de red o de servidor NO significa que el perfil no exista: se reintenta una vez.
+          await new Promise((r) => setTimeout(r, 700));
+          lookup = await findProfileByUsername(supabase, perfilKey);
+        }
+        if (lookup.error) {
+          console.error("No se pudo consultar el perfil:", lookup.error);
+          setProfile(null);
+          setLinks([]);
+          setFoundUserId(null);
+          setLoadError(true);
+          setLoading(false);
+          setIsLoading(false);
+          return;
+        }
+        const profileSnap = lookup.data ? [lookup.data] : [];
 
         if (profileSnap && profileSnap.length > 0) {
           userProfile = {
@@ -403,7 +428,20 @@ const PublicProfile: React.FC = () => {
           }
 
           setProfile(userProfile);
+          perfilListo = true;
           console.log("Profile found for username. User ID:", foundUserId);
+
+          // Llegó por una variante (otras mayúsculas, con espacios, sin tildes…): se deja la barra de
+          // direcciones con la forma oficial, para que lo que se vuelva a compartir desde aquí sea el
+          // enlace correcto. Sin tocar el estado del enrutador: sólo la URL visible.
+          if (lookup.via === 'loose') {
+            try {
+              window.history.replaceState(
+                window.history.state, '',
+                profilePath(userProfile.username) + window.location.search + window.location.hash
+              );
+            } catch (_) { /* no es crítico */ }
+          }
 
           // Enable heatmap tracking for ULTRA plan
           if (userProfile.plan === 'ultra') {
@@ -448,7 +486,12 @@ const PublicProfile: React.FC = () => {
           "Error fetching public profile data:",
           error?.message || error || 'Ocurrió un error desconocido'
         );
-        setProfile(null);
+        // Si el perfil ya se había cargado, un fallo posterior (p. ej. al traer los enlaces)
+        // no debe dejar al visitante mirando «Perfil no encontrado»: se conserva lo que ya hay.
+        if (!perfilListo) {
+          setProfile(null);
+          setLoadError(true);
+        }
         setLinks([]);
       } finally {
         setLoading(false);
@@ -457,7 +500,7 @@ const PublicProfile: React.FC = () => {
     };
 
     fetchData();
-  }, [perfilKey]); // <-- Depende de la ruta completa, no sólo del primer segmento
+  }, [perfilKey, reloadKey]); // <-- Depende de la ruta completa, no sólo del primer segmento
 
   // Aviso fijo mientras un administrador mira un perfil inactivo. Se pega al <body> en vez de
   // tocar las 11 ramas de render de las plantillas; no intercepta clics.
@@ -1251,6 +1294,24 @@ const PublicProfile: React.FC = () => {
     );
   }
 
+  // La consulta falló (sin conexión, servidor ocupado…): no es que el perfil no exista.
+  if (!profile && loadError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#210900] text-white px-6">
+        <div className="text-center max-w-sm">
+          <h1 className="text-2xl mb-3">No pudimos cargar este perfil</h1>
+          <p className="text-white/70 mb-5">Revisa tu conexión a internet e inténtalo de nuevo.</p>
+          <button
+            onClick={() => setReloadKey(k => k + 1)}
+            className="bg-orange-500 text-white px-5 py-2 rounded-full text-sm font-semibold"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Guardia extra: verificar que los datos necesarios existen
   if (!profile || !foundUserId) {
     console.error("PublicProfile: profile or foundUserId missing!", { profile, foundUserId });
@@ -1259,6 +1320,7 @@ const PublicProfile: React.FC = () => {
         <div className="text-center">
           <h1 className="text-2xl mb-4">Perfil no encontrado</h1>
           <p>No se pudo encontrar el perfil para: <strong>{perfilKey}</strong></p>
+          <p className="text-white/60 text-sm mt-2 mb-3">Revisa que el enlace esté completo y bien escrito.</p>
           <button onClick={() => navigate('/dashboard')} className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm flex items-center space-x-1">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
             <span>Dashboard</span>

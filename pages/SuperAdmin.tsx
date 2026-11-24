@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../src/lib/supabase';
+import { normalizeUsername, usernameProblem, usernameTaken } from '../src/lib/profileLookup';
 import KodaProspectsTab from '../components/KodaProspectsTab';
 
 const COUNTRY_KEY = 'connexo_admin_country';
@@ -678,18 +679,27 @@ const SuperAdmin: React.FC = () => {
     if (!form.email || !form.password || !form.username) {
       setCreateMsg({ ok: false, text: 'Email, contraseña y username son requeridos.' }); return;
     }
-    // ⚠️ El username ES la dirección pública del cliente. Una barra parte la URL
-    // en dos y el perfil dejaba de abrirse; '?' y '#' cortan la dirección por la
-    // mitad. Se avisa aquí en vez de crear un perfil que nace inaccesible.
-    const usuarioLimpio = form.username.toLowerCase().trim();
-    const invalido = /[\/?#%]/.test(usuarioLimpio);
-    if (invalido) {
+    // ⚠️ El username ES la dirección pública del cliente, así que lo que se guarda tiene que ser
+    // EXACTAMENTE lo que se le comunica. Antes la vista previa mostraba la dirección sin espacios
+    // ("/joseenrique") pero se guardaba con ellos ("jose enrique"): el enlace que recibía el
+    // cliente no abría. Ahora vista previa y valor guardado salen de la misma función:
+    // minúsculas, sin tildes, espacios y barras → guion, y sin símbolos que rompan la URL.
+    const usuarioLimpio = normalizeUsername(form.username);
+    const problema = usernameProblem(usuarioLimpio);
+    if (problema) {
       setCreateMsg({
         ok: false,
-        text: 'El nombre de usuario no puede llevar / ? # ni %.\n' +
-              'Es la dirección web del cliente y esos símbolos la rompen.\n' +
-              'Usa guiones: por ejemplo "marcelo-mariapaz".',
+        text: problema === 'reserved'
+          ? `"${usuarioLimpio}" es una dirección reservada de la plataforma. Elige otra.`
+          : 'El nombre de usuario es muy corto o no tiene letras ni números válidos.\n' +
+            'Es la dirección web del cliente: usa al menos 3 caracteres, por ejemplo "marcelo-mariapaz".',
       });
+      return;
+    }
+    // Antes de crear la cuenta de acceso: si la dirección ya es de otro perfil, fallaría DESPUÉS
+    // de haber creado el usuario y quedaría una cuenta huérfana.
+    if (await usernameTaken(supabase, usuarioLimpio, '00000000-0000-0000-0000-000000000000')) {
+      setCreateMsg({ ok: false, text: `La dirección "${usuarioLimpio}" ya pertenece a otro perfil. Elige otra.` });
       return;
     }
     setCreating(true); setCreateMsg(null);
@@ -752,7 +762,7 @@ const SuperAdmin: React.FC = () => {
         : formSubType === 'mensual' ? 'Mensual activo'
         : formSubType === 'anual' ? 'Anual activo'
         : 'Sin suscripción';
-      setCreateMsg({ ok: true, text: `Cliente creado correctamente\n${form.email}\n@${form.username} · ${form.plan.toUpperCase()}\nPaís: ${country}\n${subNote}` });
+      setCreateMsg({ ok: true, text: `Cliente creado correctamente\n${form.email}\nEnlace: ${window.location.host}/${usuarioLimpio} · ${form.plan.toUpperCase()}\nPaís: ${country}\n${subNote}` });
       setForm({ email: '', password: '', username: '', displayName: '', plan: 'pro', theme: 'default' });
       setFormSubType('none');
       setFormCampaign('');
@@ -2074,7 +2084,7 @@ const SuperAdmin: React.FC = () => {
                       />
                       {f.key === 'username' && form.username && (
                         <div style={{ marginTop: '6px', fontSize: '11px', color: 'rgba(255,107,53,0.5)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                          <Ico.Link /> {window.location.host}/{form.username.toLowerCase().replace(/\s+/g, '')}
+                          <Ico.Link /> {window.location.host}/{normalizeUsername(form.username)}
                         </div>
                       )}
                     </div>

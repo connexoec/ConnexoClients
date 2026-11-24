@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, Button, Input } from '../ui';
 import { supabase } from '../../src/lib/supabase';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { slugifyUsernameLive, normalizeUsername, usernameProblem, usernameTaken, profilePath } from '../../src/lib/profileLookup';
 
 interface AccountTabProps {
     showNotification: (message: string, type: 'success' | 'error') => void;
@@ -32,14 +33,34 @@ export const AccountTab: React.FC<AccountTabProps> = ({
         e.preventDefault();
         if (!user) return;
 
-        const newUsername = profileData.username;
-
         setIsSavingDetails(true);
         try {
-            const { error: dbError } = await supabase.from('profiles').update({
-                username: newUsername
-            }).eq('id', user.id);
-            if (dbError) throw dbError;
+            // ⚠️ El username ES la dirección pública del perfil: lo que se guarda tiene que servir como
+            // enlace. Antes se guardaba cualquier texto ("Mi Negocio", "JuniorDev", con espacios o
+            // tildes) y los enlaces compartidos terminaban en «Perfil no encontrado».
+            const { data: actual, error: actualError } = await supabase.from('profiles').select('username').eq('id', user.id).maybeSingle();
+            // Sin saber qué hay guardado no se puede decidir si el campo se tocó: mejor no hacer nada.
+            if (actualError || !actual) throw actualError || new Error(t('account_save_error'));
+            const actualUsername: string = actual.username ?? '';
+
+            // Si no se tocó el campo, no se toca la dirección: un cliente que ya la compartió con
+            // espacios o mayúsculas no debe verla cambiar sólo por pulsar «Guardar».
+            if ((profileData.username ?? '') !== actualUsername) {
+                const newUsername = normalizeUsername(profileData.username ?? '');
+                if (usernameProblem(newUsername)) {
+                    showNotification(t('account_username_invalid'), 'error');
+                    return;
+                }
+                if (await usernameTaken(supabase, newUsername, user.id)) {
+                    showNotification(t('account_username_taken'), 'error');
+                    return;
+                }
+                const { error: dbError } = await supabase.from('profiles').update({
+                    username: newUsername
+                }).eq('id', user.id);
+                if (dbError) throw dbError;
+                setProfileData((prev: any) => ({ ...prev, username: newUsername }));
+            }
 
             showNotification(t('account_updated_success'), 'success');
 
@@ -171,12 +192,37 @@ export const AccountTab: React.FC<AccountTabProps> = ({
                 </div>
                 <form className="space-y-6" onSubmit={handleProfileUpdate}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="min-w-0">
                         <Input
                             id="username"
                             label={t('account_username_label')}
                             value={profileData?.username || ''}
-                            onChange={(e) => setProfileData(prev => ({ ...prev, username: e.target.value }))}
+                            onChange={(e) => setProfileData(prev => ({ ...prev, username: slugifyUsernameLive(e.target.value) }))}
+                            autoCapitalize="none"
+                            autoCorrect="off"
+                            spellCheck={false}
                         />
+                        <p className="text-xs text-[var(--text-muted)] mt-1.5">{t('account_username_hint')}</p>
+                        {profileData?.username ? (
+                            <div className="mt-2 flex items-center gap-2 min-w-0">
+                                <span className="text-xs text-[var(--text-secondary)] truncate select-all" data-testid="account-public-link">
+                                    {window.location.origin}{profilePath(profileData.username)}
+                                </span>
+                                <button
+                                    type="button"
+                                    className="shrink-0 text-xs font-semibold text-[var(--primary-orange)] hover:underline"
+                                    onClick={async () => {
+                                        try {
+                                            await navigator.clipboard.writeText(`${window.location.origin}${profilePath(profileData.username)}`);
+                                            showNotification(t('public_profile_copied_clipboard'), 'success');
+                                        } catch (_) { /* sin portapapeles: el enlace sigue visible para copiarlo a mano */ }
+                                    }}
+                                >
+                                    {t('account_link_copy')}
+                                </button>
+                            </div>
+                        ) : null}
+                        </div>
                         <div>
                             <Input
                                 id="email"
